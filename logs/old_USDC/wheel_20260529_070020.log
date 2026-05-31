@@ -1,0 +1,15 @@
+2026-05-29 09:00:20,929 [INFO] main: ======================================================================
+2026-05-29 09:00:20,930 [INFO] main: WHEEL STRATEGY BOT — 2026-05-29 07:00 UTC
+2026-05-29 09:00:20,930 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive', 'daily']
+2026-05-29 09:00:20,930 [INFO] main: Testnet: True | Settlement: BTC | Dry-run: True
+2026-05-29 09:00:20,930 [INFO] main: ======================================================================
+2026-05-29 09:00:20,930 [INFO] main: DRY RUN mode — no orders will be placed.
+2026-05-29 09:00:20,930 [INFO] state_manager: Settlement changed to BTC. Re-initializing state for 'conservative'.
+2026-05-29 09:00:20,930 [INFO] main: [conservative] State: cash=0.5000 phase=selling_puts trades=0
+2026-05-29 09:00:20,930 [INFO] state_manager: Settlement changed to BTC. Re-initializing state for 'moderate'.
+2026-05-29 09:00:20,930 [INFO] main: [moderate] State: cash=0.5000 phase=selling_puts trades=0
+2026-05-29 09:00:20,930 [INFO] state_manager: Settlement changed to BTC. Re-initializing state for 'aggressive'.
+2026-05-29 09:00:20,930 [INFO] main: [aggressive] State: cash=0.5000 phase=selling_puts trades=0
+2026-05-29 09:00:20,931 [INFO] state_manager: Initialized new state for 'daily' (budget=0.5000)
+2026-05-29 09:00:20,931 [INFO] main: [daily] State: cash=0.5000 phase=selling_puts trades=0
+2026-05-29 09:00:20,931 [INFO] main: Dry run complete. No trades executed.

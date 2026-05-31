@@ -1,0 +1,40 @@
+2026-04-17 07:35:03,038 [INFO] main: ======================================================================
+2026-04-17 07:35:03,038 [INFO] main: WHEEL STRATEGY BOT — 2026-04-17 05:35 UTC
+2026-04-17 07:35:03,038 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive']
+2026-04-17 07:35:03,039 [INFO] main: Testnet: True | Dry-run: False
+2026-04-17 07:35:03,039 [INFO] main: ======================================================================
+2026-04-17 07:35:04,346 [INFO] deribit_client: DeribitClient initialized (testnet=True, markets=5295)
+2026-04-17 07:35:04,410 [INFO] main: BTC Price: 74682.00 USDC
+2026-04-17 07:35:04,410 [INFO] strategy: ============================================================
+2026-04-17 07:35:04,410 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit)
+2026-04-17 07:35:04,410 [INFO] strategy: ============================================================
+2026-04-17 07:35:04,414 [INFO] state_manager: Loaded state for 'conservative' (cash=10239.50, phase=selling_puts)
+2026-04-17 07:35:04,488 [INFO] strategy: [conservative] BTC=74682 | Cash=10239.50 | Phase=selling_puts | Equity=10239.50
+2026-04-17 07:35:04,618 [INFO] strategy: [conservative] END: Equity=10239.50 | Cash=10239.50 | DD=0.0% | Trades=3
+2026-04-17 07:35:04,618 [INFO] strategy: ============================================================
+2026-04-17 07:35:04,619 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE)
+2026-04-17 07:35:04,619 [INFO] strategy: ============================================================
+2026-04-17 07:35:04,622 [INFO] state_manager: Loaded state for 'moderate' (cash=9948.00, phase=selling_puts)
+2026-04-17 07:35:04,704 [INFO] strategy: [moderate] BTC=74682 | Cash=9948.00 | Phase=selling_puts | Equity=9948.00
+2026-04-17 07:35:04,844 [INFO] strategy: [moderate] Risk check: All risk checks passed.
+2026-04-17 07:35:43,700 [INFO] strategy: [moderate] Selling PUT BTC/USDC:USDC-260501-71000-P | strike=71000 delta=-0.258 dte=14.1
+2026-04-17 07:35:43,912 [INFO] deribit_client: SELL OPTION: BTC/USDC:USDC-260501-71000-P amount=0.1000
+2026-04-17 07:35:44,125 [INFO] strategy: [moderate] END: Equity=10047.00 | Cash=10047.00 | DD=0.0% | Trades=7
+2026-04-17 07:35:44,125 [INFO] strategy: ============================================================
+2026-04-17 07:35:44,125 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry)
+2026-04-17 07:35:44,126 [INFO] strategy: ============================================================
+2026-04-17 07:35:44,126 [INFO] state_manager: Loaded state for 'aggressive' (cash=10060.00, phase=selling_calls)
+2026-04-17 07:35:44,191 [INFO] strategy: [aggressive] BTC=74682 | Cash=10060.00 | Phase=selling_calls | Equity=10835.05
+2026-04-17 07:35:44,191 [INFO] strategy: [aggressive] END: Equity=10835.05 | Cash=10060.00 | DD=-5.3% | Trades=3
+2026-04-17 07:35:44,191 [INFO] main: ----------------------------------------------------------------------
+2026-04-17 07:35:44,191 [INFO] main: Exporting reports...
+2026-04-17 07:35:44,192 [INFO] export: Exported 3 trades to /home/piotrek/Dokumenty/wheel/output/conservative_trades.csv
+2026-04-17 07:35:44,192 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/conservative_cashflow.csv
+2026-04-17 07:35:44,193 [INFO] export: Exported 7 trades to /home/piotrek/Dokumenty/wheel/output/moderate_trades.csv
+2026-04-17 07:35:44,193 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/moderate_cashflow.csv
+2026-04-17 07:35:44,194 [INFO] export: Exported 3 trades to /home/piotrek/Dokumenty/wheel/output/aggressive_trades.csv
+2026-04-17 07:35:44,194 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/aggressive_cashflow.csv
+2026-04-17 07:35:44,195 [INFO] export: Exported summary to /home/piotrek/Dokumenty/wheel/output/summary.csv
+2026-04-17 07:35:44,195 [INFO] main: ======================================================================
+2026-04-17 07:35:44,195 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/wheel/logs/wheel_20260417_053501.log
+2026-04-17 07:35:44,196 [INFO] main: ======================================================================

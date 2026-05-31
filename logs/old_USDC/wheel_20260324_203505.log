@@ -1,0 +1,13 @@
+2026-03-24 21:35:05,706 [INFO] main: ======================================================================
+2026-03-24 21:35:05,707 [INFO] main: WHEEL STRATEGY BOT — 2026-03-24 20:35 UTC
+2026-03-24 21:35:05,707 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive']
+2026-03-24 21:35:05,707 [INFO] main: Testnet: True | Dry-run: True
+2026-03-24 21:35:05,707 [INFO] main: ======================================================================
+2026-03-24 21:35:05,707 [INFO] main: DRY RUN mode — no orders will be placed.
+2026-03-24 21:35:05,707 [INFO] state_manager: Initialized new state for 'conservative' (budget=10000.00)
+2026-03-24 21:35:05,707 [INFO] main: [conservative] State: cash=10000.00 phase=selling_puts trades=0
+2026-03-24 21:35:05,707 [INFO] state_manager: Initialized new state for 'moderate' (budget=10000.00)
+2026-03-24 21:35:05,707 [INFO] main: [moderate] State: cash=10000.00 phase=selling_puts trades=0
+2026-03-24 21:35:05,707 [INFO] state_manager: Initialized new state for 'aggressive' (budget=10000.00)
+2026-03-24 21:35:05,707 [INFO] main: [aggressive] State: cash=10000.00 phase=selling_puts trades=0
+2026-03-24 21:35:05,707 [INFO] main: Dry run complete. No trades executed.

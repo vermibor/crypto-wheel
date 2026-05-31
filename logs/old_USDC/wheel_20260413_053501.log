@@ -1,0 +1,39 @@
+2026-04-13 07:35:02,370 [INFO] main: ======================================================================
+2026-04-13 07:35:02,370 [INFO] main: WHEEL STRATEGY BOT — 2026-04-13 05:35 UTC
+2026-04-13 07:35:02,370 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive']
+2026-04-13 07:35:02,371 [INFO] main: Testnet: True | Dry-run: False
+2026-04-13 07:35:02,371 [INFO] main: ======================================================================
+2026-04-13 07:35:03,622 [INFO] deribit_client: DeribitClient initialized (testnet=True, markets=5386)
+2026-04-13 07:35:03,693 [INFO] main: BTC Price: 70810.00 USDC
+2026-04-13 07:35:03,694 [INFO] strategy: ============================================================
+2026-04-13 07:35:03,694 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit)
+2026-04-13 07:35:03,694 [INFO] strategy: ============================================================
+2026-04-13 07:35:03,697 [INFO] state_manager: Loaded state for 'conservative' (cash=10141.00, phase=selling_puts)
+2026-04-13 07:35:03,759 [INFO] strategy: [conservative] BTC=70810 | Cash=10141.00 | Phase=selling_puts | Equity=10141.00
+2026-04-13 07:35:03,880 [INFO] strategy: [conservative] Risk check: All risk checks passed.
+2026-04-13 07:35:42,229 [WARNING] strategy: [conservative] No suitable put found.
+2026-04-13 07:35:42,230 [INFO] strategy: [conservative] END: Equity=10141.00 | Cash=10141.00 | DD=0.0% | Trades=2
+2026-04-13 07:35:42,230 [INFO] strategy: ============================================================
+2026-04-13 07:35:42,230 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE)
+2026-04-13 07:35:42,231 [INFO] strategy: ============================================================
+2026-04-13 07:35:42,234 [INFO] state_manager: Loaded state for 'moderate' (cash=9942.50, phase=selling_puts)
+2026-04-13 07:35:42,299 [INFO] strategy: [moderate] BTC=70816 | Cash=9942.50 | Phase=selling_puts | Equity=9942.50
+2026-04-13 07:35:42,419 [INFO] strategy: [moderate] END: Equity=9942.50 | Cash=9942.50 | DD=0.7% | Trades=5
+2026-04-13 07:35:42,419 [INFO] strategy: ============================================================
+2026-04-13 07:35:42,420 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry)
+2026-04-13 07:35:42,420 [INFO] strategy: ============================================================
+2026-04-13 07:35:42,423 [INFO] state_manager: Loaded state for 'aggressive' (cash=10060.00, phase=selling_calls)
+2026-04-13 07:35:42,479 [INFO] strategy: [aggressive] BTC=70816 | Cash=10060.00 | Phase=selling_calls | Equity=10448.45
+2026-04-13 07:35:42,480 [INFO] strategy: [aggressive] END: Equity=10448.45 | Cash=10060.00 | DD=-1.6% | Trades=3
+2026-04-13 07:35:42,480 [INFO] main: ----------------------------------------------------------------------
+2026-04-13 07:35:42,480 [INFO] main: Exporting reports...
+2026-04-13 07:35:42,481 [INFO] export: Exported 2 trades to /home/piotrek/Dokumenty/wheel/output/conservative_trades.csv
+2026-04-13 07:35:42,481 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/conservative_cashflow.csv
+2026-04-13 07:35:42,482 [INFO] export: Exported 5 trades to /home/piotrek/Dokumenty/wheel/output/moderate_trades.csv
+2026-04-13 07:35:42,483 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/moderate_cashflow.csv
+2026-04-13 07:35:42,483 [INFO] export: Exported 3 trades to /home/piotrek/Dokumenty/wheel/output/aggressive_trades.csv
+2026-04-13 07:35:42,484 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/aggressive_cashflow.csv
+2026-04-13 07:35:42,485 [INFO] export: Exported summary to /home/piotrek/Dokumenty/wheel/output/summary.csv
+2026-04-13 07:35:42,485 [INFO] main: ======================================================================
+2026-04-13 07:35:42,485 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/wheel/logs/wheel_20260413_053501.log
+2026-04-13 07:35:42,485 [INFO] main: ======================================================================

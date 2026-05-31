@@ -1,0 +1,39 @@
+2026-04-05 07:35:03,319 [INFO] main: ======================================================================
+2026-04-05 07:35:03,319 [INFO] main: WHEEL STRATEGY BOT — 2026-04-05 05:35 UTC
+2026-04-05 07:35:03,320 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive']
+2026-04-05 07:35:03,320 [INFO] main: Testnet: True | Dry-run: False
+2026-04-05 07:35:03,320 [INFO] main: ======================================================================
+2026-04-05 07:35:04,601 [INFO] deribit_client: DeribitClient initialized (testnet=True, markets=5518)
+2026-04-05 07:35:04,681 [INFO] main: BTC Price: 67090.00 USDC
+2026-04-05 07:35:04,681 [INFO] strategy: ============================================================
+2026-04-05 07:35:04,681 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit)
+2026-04-05 07:35:04,681 [INFO] strategy: ============================================================
+2026-04-05 07:35:04,685 [INFO] state_manager: Loaded state for 'conservative' (cash=10106.00, phase=selling_puts)
+2026-04-05 07:35:04,741 [INFO] strategy: [conservative] BTC=67090 | Cash=10106.00 | Phase=selling_puts | Equity=10106.00
+2026-04-05 07:35:04,799 [INFO] strategy: [conservative] END: Equity=10106.00 | Cash=10106.00 | DD=0.0% | Trades=1
+2026-04-05 07:35:04,800 [INFO] strategy: ============================================================
+2026-04-05 07:35:04,800 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE)
+2026-04-05 07:35:04,800 [INFO] strategy: ============================================================
+2026-04-05 07:35:04,803 [INFO] state_manager: Loaded state for 'moderate' (cash=9691.00, phase=selling_puts)
+2026-04-05 07:35:04,859 [INFO] strategy: [moderate] BTC=67090 | Cash=9691.00 | Phase=selling_puts | Equity=9691.00
+2026-04-05 07:35:04,986 [INFO] strategy: [moderate] Risk check: BTC 67090 < SMA50 68722. Trend filter blocks new puts.
+2026-04-05 07:35:04,986 [INFO] strategy: [moderate] END: Equity=9691.00 | Cash=9691.00 | DD=3.3% | Trades=2
+2026-04-05 07:35:04,986 [INFO] strategy: ============================================================
+2026-04-05 07:35:04,987 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry)
+2026-04-05 07:35:04,987 [INFO] strategy: ============================================================
+2026-04-05 07:35:04,990 [INFO] state_manager: Loaded state for 'aggressive' (cash=9928.00, phase=selling_calls)
+2026-04-05 07:35:05,040 [INFO] strategy: [aggressive] BTC=67090 | Cash=9928.00 | Phase=selling_calls | Equity=9943.85
+2026-04-05 07:35:05,166 [INFO] strategy: [aggressive] Risk check: BTC 67090 < SMA50 68722. Trend filter blocks new puts.
+2026-04-05 07:35:05,166 [INFO] strategy: [aggressive] END: Equity=9943.85 | Cash=9928.00 | DD=1.9% | Trades=2
+2026-04-05 07:35:05,166 [INFO] main: ----------------------------------------------------------------------
+2026-04-05 07:35:05,166 [INFO] main: Exporting reports...
+2026-04-05 07:35:05,167 [INFO] export: Exported 1 trades to /home/piotrek/Dokumenty/wheel/output/conservative_trades.csv
+2026-04-05 07:35:05,168 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/conservative_cashflow.csv
+2026-04-05 07:35:05,168 [INFO] export: Exported 2 trades to /home/piotrek/Dokumenty/wheel/output/moderate_trades.csv
+2026-04-05 07:35:05,169 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/moderate_cashflow.csv
+2026-04-05 07:35:05,169 [INFO] export: Exported 2 trades to /home/piotrek/Dokumenty/wheel/output/aggressive_trades.csv
+2026-04-05 07:35:05,170 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/aggressive_cashflow.csv
+2026-04-05 07:35:05,171 [INFO] export: Exported summary to /home/piotrek/Dokumenty/wheel/output/summary.csv
+2026-04-05 07:35:05,171 [INFO] main: ======================================================================
+2026-04-05 07:35:05,171 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/wheel/logs/wheel_20260405_053502.log
+2026-04-05 07:35:05,172 [INFO] main: ======================================================================

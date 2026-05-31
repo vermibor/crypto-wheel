@@ -1,0 +1,49 @@
+2026-05-12 07:35:03,329 [INFO] main: ======================================================================
+2026-05-12 07:35:03,330 [INFO] main: WHEEL STRATEGY BOT — 2026-05-12 05:35 UTC
+2026-05-12 07:35:03,330 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive', 'daily']
+2026-05-12 07:35:03,330 [INFO] main: Testnet: True | Dry-run: False
+2026-05-12 07:35:03,330 [INFO] main: ======================================================================
+2026-05-12 07:35:04,572 [INFO] deribit_client: DeribitClient initialized (testnet=True, markets=5357)
+2026-05-12 07:35:04,648 [INFO] main: BTC Price: 79378.00 USDC
+2026-05-12 07:35:04,648 [INFO] strategy: ============================================================
+2026-05-12 07:35:04,648 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit)
+2026-05-12 07:35:04,648 [INFO] strategy: ============================================================
+2026-05-12 07:35:04,652 [INFO] state_manager: Loaded state for 'conservative' (cash=10415.00, phase=selling_puts)
+2026-05-12 07:35:04,721 [INFO] strategy: [conservative] BTC=79378 | Cash=10415.00 | Phase=selling_puts | Equity=10415.00
+2026-05-12 07:35:04,786 [INFO] strategy: [conservative] END: Equity=10415.00 | Cash=10415.00 | DD=0.0% | Trades=7
+2026-05-12 07:35:04,787 [INFO] strategy: ============================================================
+2026-05-12 07:35:04,787 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE)
+2026-05-12 07:35:04,787 [INFO] strategy: ============================================================
+2026-05-12 07:35:04,790 [INFO] state_manager: Loaded state for 'moderate' (cash=10344.00, phase=selling_puts)
+2026-05-12 07:35:04,846 [INFO] strategy: [moderate] BTC=79378 | Cash=10344.00 | Phase=selling_puts | Equity=10344.00
+2026-05-12 07:35:04,966 [INFO] strategy: [moderate] END: Equity=10344.00 | Cash=10344.00 | DD=0.0% | Trades=11
+2026-05-12 07:35:04,967 [INFO] strategy: ============================================================
+2026-05-12 07:35:04,967 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry)
+2026-05-12 07:35:04,967 [INFO] strategy: ============================================================
+2026-05-12 07:35:04,971 [INFO] state_manager: Loaded state for 'aggressive' (cash=10734.85, phase=selling_puts)
+2026-05-12 07:35:05,021 [INFO] strategy: [aggressive] BTC=79378 | Cash=10734.85 | Phase=selling_puts | Equity=10734.85
+2026-05-12 07:35:05,022 [INFO] strategy: [aggressive] END: Equity=10734.85 | Cash=10734.85 | DD=6.6% | Trades=7
+2026-05-12 07:35:05,022 [INFO] strategy: ============================================================
+2026-05-12 07:35:05,022 [INFO] strategy: Running strategy: daily (Collect premium daily, don't be afraid of being assigned)
+2026-05-12 07:35:05,022 [INFO] strategy: ============================================================
+2026-05-12 07:35:05,023 [INFO] state_manager: Loaded state for 'daily' (cash=9820.41, phase=selling_calls)
+2026-05-12 07:35:05,086 [INFO] strategy: [daily] BTC=79378 | Cash=9820.41 | Phase=selling_calls | Equity=9786.93
+2026-05-12 07:35:05,087 [INFO] strategy: [daily] CALL EXPIRED OTM: BTC 79378 < strike 79500. Premium kept, still holding future.
+2026-05-12 07:35:05,219 [INFO] strategy: [daily] Risk check: All risk checks passed.
+2026-05-12 07:35:54,144 [INFO] strategy: [daily] Selling CALL BTC/USDC:USDC-260513-81500-C | strike=81500 delta=0.508 dte=1.1
+2026-05-12 07:35:54,341 [INFO] deribit_client: SELL OPTION: BTC/USDC:USDC-260513-81500-C amount=0.1000
+2026-05-12 07:35:54,563 [INFO] strategy: [daily] END: Equity=9801.93 | Cash=9835.41 | DD=3.4% | Trades=19
+2026-05-12 07:35:54,564 [INFO] main: ----------------------------------------------------------------------
+2026-05-12 07:35:54,564 [INFO] main: Exporting reports...
+2026-05-12 07:35:54,565 [INFO] export: Exported 7 trades to /home/piotrek/Dokumenty/wheel/output/conservative_trades.csv
+2026-05-12 07:35:54,566 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/conservative_cashflow.csv
+2026-05-12 07:35:54,566 [INFO] export: Exported 11 trades to /home/piotrek/Dokumenty/wheel/output/moderate_trades.csv
+2026-05-12 07:35:54,568 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/moderate_cashflow.csv
+2026-05-12 07:35:54,568 [INFO] export: Exported 7 trades to /home/piotrek/Dokumenty/wheel/output/aggressive_trades.csv
+2026-05-12 07:35:54,569 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/aggressive_cashflow.csv
+2026-05-12 07:35:54,571 [INFO] export: Exported 19 trades to /home/piotrek/Dokumenty/wheel/output/daily_trades.csv
+2026-05-12 07:35:54,572 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/daily_cashflow.csv
+2026-05-12 07:35:54,573 [INFO] export: Exported summary to /home/piotrek/Dokumenty/wheel/output/summary.csv
+2026-05-12 07:35:54,573 [INFO] main: ======================================================================
+2026-05-12 07:35:54,573 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/wheel/logs/wheel_20260512_053501.log
+2026-05-12 07:35:54,574 [INFO] main: ======================================================================

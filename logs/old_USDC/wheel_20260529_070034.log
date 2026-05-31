@@ -1,0 +1,43 @@
+2026-05-29 09:00:34,986 [INFO] main: ======================================================================
+2026-05-29 09:00:34,987 [INFO] main: WHEEL STRATEGY BOT — 2026-05-29 07:00 UTC
+2026-05-29 09:00:34,987 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive', 'daily']
+2026-05-29 09:00:34,987 [INFO] main: Testnet: True | Settlement: BTC | Dry-run: False
+2026-05-29 09:00:34,987 [INFO] main: ======================================================================
+2026-05-29 09:00:35,506 [INFO] deribit_client: DeribitClient initialized (testnet=True, settlement=BTC, markets=5760)
+2026-05-29 09:00:35,655 [INFO] main: BTC Price: 73719.00 BTC
+2026-05-29 09:00:35,655 [INFO] strategy: ============================================================
+2026-05-29 09:00:35,655 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit) | Settlement: BTC
+2026-05-29 09:00:35,655 [INFO] strategy: ============================================================
+2026-05-29 09:00:35,655 [INFO] state_manager: Loaded state for 'conservative' (cash=0.5000, phase=selling_puts)
+2026-05-29 09:00:35,726 [INFO] strategy: [conservative] BTC=73719 | Cash=0.5000 | Phase=selling_puts | Equity=0.5000
+2026-05-29 09:00:35,846 [INFO] strategy: [conservative] Risk check: BTC 73719 < SMA50 77131. Trend filter blocks new puts.
+2026-05-29 09:00:35,847 [INFO] strategy: [conservative] END: Equity=0.5000 | Cash=0.5000 | DD=0.0% | Trades=0
+2026-05-29 09:00:35,847 [INFO] strategy: ============================================================
+2026-05-29 09:00:35,847 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE) | Settlement: BTC
+2026-05-29 09:00:35,847 [INFO] strategy: ============================================================
+2026-05-29 09:00:35,847 [INFO] state_manager: Loaded state for 'moderate' (cash=0.5000, phase=selling_puts)
+2026-05-29 09:00:35,908 [INFO] strategy: [moderate] BTC=73719 | Cash=0.5000 | Phase=selling_puts | Equity=0.5000
+2026-05-29 09:00:36,019 [INFO] strategy: [moderate] Risk check: BTC 73719 < SMA50 77131. Trend filter blocks new puts.
+2026-05-29 09:00:36,019 [INFO] strategy: [moderate] END: Equity=0.5000 | Cash=0.5000 | DD=0.0% | Trades=0
+2026-05-29 09:00:36,019 [INFO] strategy: ============================================================
+2026-05-29 09:00:36,019 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry) | Settlement: BTC
+2026-05-29 09:00:36,019 [INFO] strategy: ============================================================
+2026-05-29 09:00:36,019 [INFO] state_manager: Loaded state for 'aggressive' (cash=0.5000, phase=selling_puts)
+2026-05-29 09:00:36,075 [INFO] strategy: [aggressive] BTC=73719 | Cash=0.5000 | Phase=selling_puts | Equity=0.5000
+2026-05-29 09:00:36,269 [INFO] strategy: [aggressive] Risk check: BTC 73719 < SMA50 77131. Trend filter blocks new puts.
+2026-05-29 09:00:36,269 [INFO] strategy: [aggressive] END: Equity=0.5000 | Cash=0.5000 | DD=0.0% | Trades=0
+2026-05-29 09:00:36,269 [INFO] strategy: ============================================================
+2026-05-29 09:00:36,269 [INFO] strategy: Running strategy: daily (Collect premium daily, don't be afraid of being assigned) | Settlement: BTC
+2026-05-29 09:00:36,269 [INFO] strategy: ============================================================
+2026-05-29 09:00:36,270 [INFO] state_manager: Loaded state for 'daily' (cash=0.5000, phase=selling_puts)
+2026-05-29 09:00:36,381 [INFO] strategy: [daily] BTC=73719 | Cash=0.5000 | Phase=selling_puts | Equity=0.5000
+2026-05-29 09:00:36,557 [INFO] strategy: [daily] Risk check: BTC 73719 < SMA50 77131. Trend filter blocks new puts.
+2026-05-29 09:00:36,557 [INFO] strategy: [daily] END: Equity=0.5000 | Cash=0.5000 | DD=0.0% | Trades=0
+2026-05-29 09:00:36,557 [INFO] main: ----------------------------------------------------------------------
+2026-05-29 09:00:36,557 [INFO] main: Exporting reports...
+2026-05-29 09:00:36,558 [INFO] export: Exported 0 trades to /shared/wheel/output/conservative_trades.csv
+2026-05-29 09:00:36,558 [INFO] export: Exported cash flow to /shared/wheel/output/conservative_cashflow.csv
+2026-05-29 09:00:36,558 [INFO] export: Exported 0 trades to /shared/wheel/output/moderate_trades.csv
+2026-05-29 09:00:36,558 [INFO] export: Exported cash flow to /shared/wheel/output/moderate_cashflow.csv
+2026-05-29 09:00:36,558 [INFO] export: Exported 0 trades to /shared/wheel/output/aggressive_trades.csv
+2026-05-29 09:00:36,558 [INFO] export: Exported cash flow to /shared/wheel/output/aggressive_cashflow.csv

@@ -1,0 +1,96 @@
+2026-04-29 07:35:02,775 [INFO] main: ======================================================================
+2026-04-29 07:35:02,775 [INFO] main: WHEEL STRATEGY BOT — 2026-04-29 05:35 UTC
+2026-04-29 07:35:02,776 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive', 'daily']
+2026-04-29 07:35:02,776 [INFO] main: Testnet: True | Dry-run: False
+2026-04-29 07:35:02,776 [INFO] main: ======================================================================
+2026-04-29 07:35:03,921 [INFO] deribit_client: DeribitClient initialized (testnet=True, markets=4571)
+2026-04-29 07:35:03,991 [INFO] main: BTC Price: 76452.00 USDC
+2026-04-29 07:35:03,991 [INFO] strategy: ============================================================
+2026-04-29 07:35:03,992 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit)
+2026-04-29 07:35:03,992 [INFO] strategy: ============================================================
+2026-04-29 07:35:03,995 [INFO] state_manager: Loaded state for 'conservative' (cash=10330.50, phase=selling_puts)
+2026-04-29 07:35:04,061 [INFO] strategy: [conservative] BTC=76452 | Cash=10330.50 | Phase=selling_puts | Equity=10330.50
+2026-04-29 07:35:04,122 [INFO] strategy: [conservative] END: Equity=10330.50 | Cash=10330.50 | DD=0.0% | Trades=5
+2026-04-29 07:35:04,122 [INFO] strategy: ============================================================
+2026-04-29 07:35:04,122 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE)
+2026-04-29 07:35:04,122 [INFO] strategy: ============================================================
+2026-04-29 07:35:04,125 [INFO] state_manager: Loaded state for 'moderate' (cash=10080.00, phase=selling_puts)
+2026-04-29 07:35:04,192 [INFO] strategy: [moderate] BTC=76452 | Cash=10080.00 | Phase=selling_puts | Equity=10080.00
+2026-04-29 07:35:04,304 [INFO] strategy: [moderate] Risk check: All risk checks passed.
+2026-04-29 07:35:35,021 [WARNING] strategy: [moderate] No suitable put found.
+2026-04-29 07:35:35,022 [INFO] strategy: [moderate] END: Equity=10080.00 | Cash=10080.00 | DD=0.0% | Trades=8
+2026-04-29 07:35:35,022 [INFO] strategy: ============================================================
+2026-04-29 07:35:35,022 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry)
+2026-04-29 07:35:35,022 [INFO] strategy: ============================================================
+2026-04-29 07:35:35,025 [INFO] state_manager: Loaded state for 'aggressive' (cash=10612.85, phase=selling_puts)
+2026-04-29 07:35:35,074 [INFO] strategy: [aggressive] BTC=76452 | Cash=10612.85 | Phase=selling_puts | Equity=10612.85
+2026-04-29 07:35:35,075 [INFO] strategy: [aggressive] END: Equity=10612.85 | Cash=10612.85 | DD=7.6% | Trades=5
+2026-04-29 07:35:35,075 [INFO] strategy: ============================================================
+2026-04-29 07:35:35,075 [INFO] strategy: Running strategy: daily (Collect premium daily, don't be afraid of being assigned)
+2026-04-29 07:35:35,075 [INFO] strategy: ============================================================
+2026-04-29 07:35:35,076 [INFO] state_manager: Loaded state for 'daily' (cash=10054.00, phase=selling_calls)
+2026-04-29 07:35:35,126 [INFO] strategy: [daily] BTC=76452 | Cash=10054.00 | Phase=selling_calls | Equity=9943.71
+2026-04-29 07:35:35,127 [INFO] strategy: [daily] CALL EXPIRED OTM: BTC 76452 < strike 77500. Premium kept, still holding future.
+2026-04-29 07:35:35,238 [INFO] strategy: [daily] Risk check: All risk checks passed.
+2026-04-29 07:36:05,043 [INFO] strategy: [daily] Selling CALL BTC/USDC:USDC-260430-76000-C | strike=76000 delta=0.559 dte=1.1
+2026-04-29 07:36:05,250 [INFO] deribit_client: SELL OPTION: BTC/USDC:USDC-260430-76000-C amount=0.1000
+2026-04-29 07:36:05,451 [ERROR] main: Strategy 'daily' failed: deribit {"jsonrpc":"2.0","error":{"code":10019,"message":"locked_by_admin"},"usIn":1777440965423868,"usOut":1777440965424740,"usDiff":872,"testnet":true}
+Traceback (most recent call last):
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/exchange.py", line 691, in fetch
+    response.raise_for_status()
+  File "/home/piotrek/.local/lib/python3.12/site-packages/requests/models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://test.deribit.com/api/v2/private/sell?instrument_name=BTC_USDC-30APR26-76000-C&amount=0.1&type=market
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/piotrek/Dokumenty/wheel/main.py", line 111, in main
+    state = run_strategy(client, strat_config, global_config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/Dokumenty/wheel/strategy.py", line 588, in run_strategy
+    state = _action_sell_call(
+            ^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/Dokumenty/wheel/strategy.py", line 243, in _action_sell_call
+    order = client.sell_option(symbol, size)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/Dokumenty/wheel/deribit_client.py", line 183, in sell_option
+    order = self.exchange.create_order(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/deribit.py", line 2053, in create_order
+    response = self.privateGetSell(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/types.py", line 35, in unbound_method
+    return _self.request(self.path, self.api, self.method, params, config=self.config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/exchange.py", line 5335, in request
+    return self.fetch2(path, api, method, params, headers, body, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/exchange.py", line 5331, in fetch2
+    raise e
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/exchange.py", line 5319, in fetch2
+    return self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/exchange.py", line 707, in fetch
+    skip_further_error_handling = self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/deribit.py", line 3763, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions, errorCode, feedback)
+  File "/home/piotrek/.local/lib/python3.12/site-packages/ccxt/base/exchange.py", line 5737, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.PermissionDenied: deribit {"jsonrpc":"2.0","error":{"code":10019,"message":"locked_by_admin"},"usIn":1777440965423868,"usOut":1777440965424740,"usDiff":872,"testnet":true}
+2026-04-29 07:36:05,465 [INFO] state_manager: Loaded state for 'daily' (cash=10054.00, phase=selling_calls)
+2026-04-29 07:36:05,466 [INFO] main: ----------------------------------------------------------------------
+2026-04-29 07:36:05,466 [INFO] main: Exporting reports...
+2026-04-29 07:36:05,467 [INFO] export: Exported 5 trades to /home/piotrek/Dokumenty/wheel/output/conservative_trades.csv
+2026-04-29 07:36:05,467 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/conservative_cashflow.csv
+2026-04-29 07:36:05,468 [INFO] export: Exported 8 trades to /home/piotrek/Dokumenty/wheel/output/moderate_trades.csv
+2026-04-29 07:36:05,468 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/moderate_cashflow.csv
+2026-04-29 07:36:05,469 [INFO] export: Exported 5 trades to /home/piotrek/Dokumenty/wheel/output/aggressive_trades.csv
+2026-04-29 07:36:05,469 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/aggressive_cashflow.csv
+2026-04-29 07:36:05,470 [INFO] export: Exported 8 trades to /home/piotrek/Dokumenty/wheel/output/daily_trades.csv
+2026-04-29 07:36:05,470 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/daily_cashflow.csv
+2026-04-29 07:36:05,471 [INFO] export: Exported summary to /home/piotrek/Dokumenty/wheel/output/summary.csv
+2026-04-29 07:36:05,471 [INFO] main: ======================================================================
+2026-04-29 07:36:05,471 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/wheel/logs/wheel_20260429_053501.log
+2026-04-29 07:36:05,471 [INFO] main: ======================================================================

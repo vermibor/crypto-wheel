@@ -1,0 +1,41 @@
+2026-03-27 07:35:02,597 [INFO] main: ======================================================================
+2026-03-27 07:35:02,597 [INFO] main: WHEEL STRATEGY BOT — 2026-03-27 06:35 UTC
+2026-03-27 07:35:02,597 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive']
+2026-03-27 07:35:02,598 [INFO] main: Testnet: True | Dry-run: False
+2026-03-27 07:35:02,598 [INFO] main: ======================================================================
+2026-03-27 07:35:04,124 [INFO] deribit_client: DeribitClient initialized (testnet=True, markets=6890)
+2026-03-27 07:35:04,185 [INFO] main: BTC Price: 68727.00 USDC
+2026-03-27 07:35:04,185 [INFO] strategy: ============================================================
+2026-03-27 07:35:04,185 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit)
+2026-03-27 07:35:04,185 [INFO] strategy: ============================================================
+2026-03-27 07:35:04,189 [INFO] state_manager: Loaded state for 'conservative' (cash=10106.00, phase=selling_puts)
+2026-03-27 07:35:04,243 [INFO] strategy: [conservative] BTC=68727 | Cash=10106.00 | Phase=selling_puts | Equity=10106.00
+2026-03-27 07:35:04,295 [INFO] strategy: [conservative] END: Equity=10106.00 | Cash=10106.00 | DD=0.0% | Trades=1
+2026-03-27 07:35:04,295 [INFO] strategy: ============================================================
+2026-03-27 07:35:04,296 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE)
+2026-03-27 07:35:04,296 [INFO] strategy: ============================================================
+2026-03-27 07:35:04,299 [INFO] state_manager: Loaded state for 'moderate' (cash=10017.50, phase=selling_puts)
+2026-03-27 07:35:04,363 [INFO] strategy: [moderate] BTC=68727 | Cash=10017.50 | Phase=selling_puts | Equity=10017.50
+2026-03-27 07:35:04,483 [INFO] strategy: [moderate] STOP LOSS triggered at 882.9% (limit: 200%)
+2026-03-27 07:35:04,484 [INFO] deribit_client: BUY OPTION (close): BTC/USDC:USDC-260410-66000-P amount=0.1000
+2026-03-27 07:35:04,688 [INFO] state_manager: Strategy 'moderate' phase -> selling_puts
+2026-03-27 07:35:04,805 [INFO] strategy: [moderate] Risk check: BTC 68727 < SMA50 68870. Trend filter blocks new puts.
+2026-03-27 07:35:04,805 [INFO] strategy: [moderate] END: Equity=9691.00 | Cash=9691.00 | DD=3.3% | Trades=2
+2026-03-27 07:35:04,805 [INFO] strategy: ============================================================
+2026-03-27 07:35:04,806 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry)
+2026-03-27 07:35:04,806 [INFO] strategy: ============================================================
+2026-03-27 07:35:04,809 [INFO] state_manager: Loaded state for 'aggressive' (cash=10136.00, phase=selling_puts)
+2026-03-27 07:35:04,863 [INFO] strategy: [aggressive] BTC=68727 | Cash=10136.00 | Phase=selling_puts | Equity=10136.00
+2026-03-27 07:35:04,863 [INFO] strategy: [aggressive] END: Equity=10136.00 | Cash=10136.00 | DD=0.0% | Trades=1
+2026-03-27 07:35:04,863 [INFO] main: ----------------------------------------------------------------------
+2026-03-27 07:35:04,863 [INFO] main: Exporting reports...
+2026-03-27 07:35:04,864 [INFO] export: Exported 1 trades to /home/piotrek/Dokumenty/wheel/output/conservative_trades.csv
+2026-03-27 07:35:04,864 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/conservative_cashflow.csv
+2026-03-27 07:35:04,865 [INFO] export: Exported 2 trades to /home/piotrek/Dokumenty/wheel/output/moderate_trades.csv
+2026-03-27 07:35:04,865 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/moderate_cashflow.csv
+2026-03-27 07:35:04,865 [INFO] export: Exported 1 trades to /home/piotrek/Dokumenty/wheel/output/aggressive_trades.csv
+2026-03-27 07:35:04,866 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/wheel/output/aggressive_cashflow.csv
+2026-03-27 07:35:04,866 [INFO] export: Exported summary to /home/piotrek/Dokumenty/wheel/output/summary.csv
+2026-03-27 07:35:04,866 [INFO] main: ======================================================================
+2026-03-27 07:35:04,866 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/wheel/logs/wheel_20260327_063501.log
+2026-03-27 07:35:04,867 [INFO] main: ======================================================================
