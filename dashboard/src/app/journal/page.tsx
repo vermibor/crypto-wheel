@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
 import { AlertCircle, AlertTriangle, Terminal, Cpu, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export default function JournalPage() {
   const { data, loading, error } = useDashboard();
+  const [days, setDays] = useState<string>('30');
 
   if (loading) {
     return (
@@ -27,11 +29,49 @@ export default function JournalPage() {
   const logs = data.logs || [];
   const snapshots = data.daily_snapshots || [];
 
+  // Establish base date from last generation timestamp
+  const baseDate = data.generated_at ? new Date(data.generated_at) : new Date();
+
+  // Filter logs based on selection
+  const filteredLogs = logs.filter(log => {
+    if (days === 'all') return true;
+    const logDate = new Date(log.timestamp);
+    const diffTime = baseDate.getTime() - logDate.getTime();
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+    return diffDays <= parseInt(days, 10);
+  });
+
+  // Filter snapshots based on selection
+  const filteredSnapshots = snapshots.filter(snap => {
+    if (days === 'all') return true;
+    const snapDate = new Date(snap.date + 'T00:00:00');
+    const diffTime = baseDate.getTime() - snapDate.getTime();
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+    return diffDays <= parseInt(days, 10);
+  });
+
+  // Sort logs by date descending
+  const sortedLogs = [...filteredLogs].sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
+
+  // Sort snapshots by date descending
+  const sortedSnapshots = [...filteredSnapshots].sort(
+    (a, b) => new Date(b.date + 'T00:00:00').getTime() - new Date(a.date + 'T00:00:00').getTime()
+  );
+
   return (
     <>
       <div className="top-header">
         <div className="header-title">
           <h1>System Journal & Execution Logs</h1>
+        </div>
+        
+        <div className="time-toggles">
+          <button onClick={() => setDays('1')} className={`time-toggle ${days === '1' ? 'active' : ''}`}>1 day</button>
+          <button onClick={() => setDays('7')} className={`time-toggle ${days === '7' ? 'active' : ''}`}>7 days</button>
+          <button onClick={() => setDays('30')} className={`time-toggle ${days === '30' ? 'active' : ''}`}>30 days</button>
+          <button onClick={() => setDays('all')} className={`time-toggle ${days === 'all' ? 'active' : ''}`}>All time</button>
         </div>
       </div>
 
@@ -41,7 +81,7 @@ export default function JournalPage() {
         <div className="section" style={{ padding: '1.5rem' }}>
           <h2 className="section-title" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <ShieldAlert size={20} color="var(--accent-primary)" />
-            Daily Execution Snapshots
+            Daily Execution Snapshots {days !== 'all' ? `(Last ${days} days)` : '(All time)'}
           </h2>
           <div className="table-container" style={{ border: 'none', borderRadius: 0 }}>
             <table>
@@ -56,7 +96,7 @@ export default function JournalPage() {
                 </tr>
               </thead>
               <tbody>
-                {snapshots.map((snap, i) => (
+                {sortedSnapshots.map((snap, i) => (
                   <tr key={i}>
                     <td style={{ fontWeight: 600 }}>{snap.date}</td>
                     <td>${snap.btc_price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
@@ -96,10 +136,10 @@ export default function JournalPage() {
                     </td>
                   </tr>
                 ))}
-                {snapshots.length === 0 && (
+                {sortedSnapshots.length === 0 && (
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-muted)' }}>
-                      No daily snapshots recorded.
+                      No daily snapshots recorded in this period.
                     </td>
                   </tr>
                 )}
@@ -113,7 +153,7 @@ export default function JournalPage() {
           <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem' }}>
             <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Terminal size={20} color="var(--accent-primary)" />
-              Error and Warning Logs
+              Error and Warning Logs {days !== 'all' ? `(Last ${days} days)` : '(All time)'}
             </h2>
           </div>
           <div className="table-container" style={{ border: 'none', borderRadius: 0 }}>
@@ -127,7 +167,7 @@ export default function JournalPage() {
                 </tr>
               </thead>
               <tbody>
-                {logs.map((log, i) => {
+                {sortedLogs.map((log, i) => {
                   const isError = log.level === 'ERROR';
                   const isWarning = log.level === 'WARNING';
                   
@@ -167,11 +207,11 @@ export default function JournalPage() {
                     </tr>
                   );
                 })}
-                {logs.length === 0 && (
+                {sortedLogs.length === 0 && (
                   <tr>
                     <td colSpan={4} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
                       <Terminal size={32} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-                      No warnings or errors found in logs.
+                      No warnings or errors found in this period.
                     </td>
                   </tr>
                 )}
