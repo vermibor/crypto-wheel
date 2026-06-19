@@ -13,6 +13,7 @@ Designed to be invoked once daily via cron.
 import sys
 import json
 import os
+import subprocess
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
@@ -139,6 +140,20 @@ def main():
         export_cashflow_csv(state, btc_price)
 
     export_summary_csv(final_states, btc_price)
+
+    # Run publish pipeline to generate dashboard data and push to GitHub
+    try:
+        logger.info("Running publish pipeline...")
+        publish_result = subprocess.run(
+            [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "publish.py")],
+            capture_output=True, text=True, timeout=120
+        )
+        if publish_result.returncode == 0:
+            logger.info("Publish pipeline completed successfully")
+        else:
+            logger.warning("Publish pipeline failed: %s", publish_result.stderr)
+    except Exception as e:
+        logger.warning("Failed to run publish pipeline: %s", e)
 
     logger.info("=" * 70)
     logger.info("COMPLETE. Log saved to %s", log_file)

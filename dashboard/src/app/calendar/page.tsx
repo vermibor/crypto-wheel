@@ -1,33 +1,67 @@
-import { getSummaryData, getTradesForStrategy, getSettlementCurrency, TradeRow } from '@/lib/data';
+'use client';
+
+import { useState } from 'react';
+import { useDashboard } from '@/lib/DashboardContext';
+import { currencySymbol, pricePrecision } from '@/lib/data';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+export default function CalendarPage() {
+  const { data, loading, error } = useDashboard();
+  const [strategyFilter, setStrategyFilter] = useState<string | null>(null);
 
-export default async function CalendarPage({ searchParams }: { searchParams: Promise<{ strategy?: string }> }) {
-  const params = await searchParams;
-  const strategyParam = params.strategy;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading returns calendar...</p>
+      </div>
+    );
+  }
 
-  const summaryData = getSummaryData();
-  const settlement = getSettlementCurrency();
-  const isBTC = settlement === 'BTC';
-  const currencySymbol = isBTC ? '₿' : '$';
-  const pricePrecision = isBTC ? 4 : 2;
-  const strategies = summaryData.map(s => s.strategy_id);
+  if (error || !data) {
+    return (
+      <div className="error-container">
+        <h2>Failed to load calendar data</h2>
+        <p>{error || 'No data found.'}</p>
+      </div>
+    );
+  }
+
+  const strategies = Object.keys(data.strategies);
+  const settlement = data.settlement;
+  const currSym = currencySymbol(settlement);
+  const precision = pricePrecision(settlement);
+
+  interface FlatTrade {
+    timestamp: string;
+    action: string;
+    symbol: string;
+    strike: number | null;
+    delta: number | null;
+    dte: number | null;
+    amount_btc: number;
+    premium: number;
+    pnl: number;
+    btc_price: number;
+    order_id: string;
+    notes: string;
+    strategy_id: string;
+  }
   
-  let allTrades: TradeRow[] = [];
-  summaryData.forEach(s => {
-    const trades = getTradesForStrategy(s.strategy_id);
-    const mapped = trades.map(t => ({ ...t, strategy_id: s.strategy_id }));
+  let allTrades: FlatTrade[] = [];
+  Object.entries(data.strategies).forEach(([id, sData]) => {
+    const mapped = sData.trades.map(t => ({ ...t, strategy_id: id }));
     allTrades = [...allTrades, ...mapped];
   });
   
   // Filter trades if a specific strategy is selected
-  const filteredTrades = strategyParam ? allTrades.filter((t: any) => t.strategy_id === strategyParam) : allTrades;
+  const filteredTrades = strategyFilter 
+    ? allTrades.filter(t => t.strategy_id === strategyFilter) 
+    : allTrades;
   
   // Aggregate daily
-  const dailyData: Record<string, { pnl: number, count: number, dateObj: Date, trades: any[] }> = {};
-  filteredTrades.forEach((t: any) => {
+  const dailyData: Record<string, { pnl: number; count: number; dateObj: Date; trades: FlatTrade[] }> = {};
+  filteredTrades.forEach(t => {
     if (!t.timestamp) return;
     const d = new Date(t.timestamp);
     const dateKey = d.toISOString().split('T')[0];
@@ -36,7 +70,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
     }
     dailyData[dateKey].count++;
     dailyData[dateKey].trades.push(t);
-    if (t.pnl) dailyData[dateKey].pnl += parseFloat(t.pnl);
+    if (t.pnl) dailyData[dateKey].pnl += t.pnl;
   });
 
   const calendarDays = Object.values(dailyData).sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
@@ -45,22 +79,26 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
     <>
       <div className="top-header">
         <div className="header-title">
-          <h1>Calendar</h1>
+          <h1>Returns Calendar</h1>
         </div>
         
         <div className="time-toggles">
-          <Link href="/calendar" className={`time-toggle ${!strategyParam ? 'active' : ''}`}>
+          <button 
+            onClick={() => setStrategyFilter(null)} 
+            className={`time-toggle ${!strategyFilter ? 'active' : ''}`}
+            style={{ cursor: 'pointer', background: 'transparent', border: 'none' }}
+          >
             All
-          </Link>
+          </button>
           {strategies.map(s => (
-            <Link 
+            <button 
               key={s} 
-              href={`/calendar?strategy=${s}`} 
-              className={`time-toggle ${strategyParam === s ? 'active' : ''}`} 
-              style={{ textTransform: 'capitalize' }}
+              onClick={() => setStrategyFilter(s)} 
+              className={`time-toggle ${strategyFilter === s ? 'active' : ''}`} 
+              style={{ textTransform: 'capitalize', cursor: 'pointer', background: 'transparent', border: 'none' }}
             >
               {s}
-            </Link>
+            </button>
           ))}
         </div>
       </div>
@@ -73,7 +111,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                 <th>Date</th>
                 <th>Total Trades</th>
                 <th className="text-right">Daily PNL</th>
-                <th>Activity summary</th>
+                <th>Activity Summary</th>
               </tr>
             </thead>
             <tbody>
@@ -93,8 +131,8 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                     </td>
                     <td>{day.count}</td>
                     <td className="text-right" style={{ color: isProfit ? 'var(--success)' : (isLoss ? 'var(--danger)' : 'inherit'), fontWeight: 600 }}>
-                      {day.pnl > 0 ? '+' : (day.pnl < 0 ? '-' : '')}{currencySymbol}{Math.abs(day.pnl).toLocaleString(undefined, { minimumFractionDigits: pricePrecision, maximumFractionDigits: pricePrecision })}
-                      {day.pnl === 0 && day.count === 0 ? `${currencySymbol}0.00` : ''}
+                      {day.pnl > 0 ? '+' : (day.pnl < 0 ? '-' : '')}{currSym}{Math.abs(day.pnl).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}
+                      {day.pnl === 0 && day.count === 0 ? `${currSym}0.00` : ''}
                     </td>
                     <td style={{ color: 'var(--text-secondary)' }}>
                       {Array.from(new Set(day.trades.map(t => t.strategy_id))).join(', ')} strategies active

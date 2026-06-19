@@ -1,12 +1,13 @@
 "use client";
 
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import { CashflowRow } from '@/lib/data';
+import type { CashflowEntry } from '@/lib/types';
+import { currencySymbol, pricePrecision } from '@/lib/data';
 
-export default function ChartClient({ data, settlement }: { data: CashflowRow[], settlement?: string }) {
+export default function ChartClient({ data, settlement }: { data: CashflowEntry[], settlement: string }) {
   const isBTC = settlement === 'BTC';
-  const currencySymbol = isBTC ? '₿' : '$';
-  const pricePrecision = isBTC ? 4 : 2;
+  const currSym = currencySymbol(settlement);
+  const precision = pricePrecision(settlement);
 
   if (!data || data.length === 0) {
     return <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>No cashflow data available</div>;
@@ -14,7 +15,7 @@ export default function ChartClient({ data, settlement }: { data: CashflowRow[],
 
   const chartData = data.map(row => ({
     time: new Date(row.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-    cash: parseFloat(row.cash_after || '0'),
+    cash: row.cash_after || 0,
   })).filter(d => d.cash > 0);
 
   if (chartData.length === 0) return null;
@@ -50,7 +51,7 @@ export default function ChartClient({ data, settlement }: { data: CashflowRow[],
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${currencySymbol}${value.toLocaleString(undefined, { minimumFractionDigits: isBTC ? 3 : 0, maximumFractionDigits: pricePrecision })}`}
+          tickFormatter={(value) => `${currSym}${value.toLocaleString(undefined, { minimumFractionDigits: isBTC ? 3 : 0, maximumFractionDigits: precision })}`}
         />
         <Tooltip 
           contentStyle={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', borderRadius: '8px' }}

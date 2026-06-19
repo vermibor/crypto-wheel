@@ -1,28 +1,62 @@
-import { getSummaryData, getTradesForStrategy, getSettlementCurrency, TradeRow } from '@/lib/data';
-import Link from 'next/link';
+'use client';
 
-export const dynamic = 'force-dynamic';
+import { useState } from 'react';
+import { useDashboard } from '@/lib/DashboardContext';
+import { currencySymbol, pricePrecision } from '@/lib/data';
 
-export default async function TradesPage({ searchParams }: { searchParams: Promise<{ strategy?: string }> }) {
-  const params = await searchParams;
-  const strategyParam = params.strategy;
+export default function TradesPage() {
+  const { data, loading, error } = useDashboard();
+  const [strategyFilter, setStrategyFilter] = useState<string | null>(null);
 
-  const summaryData = getSummaryData();
-  const strategies = summaryData.map(s => s.strategy_id);
-  const settlement = getSettlementCurrency();
-  const isBTC = settlement === 'BTC';
-  const currencySymbol = isBTC ? '₿' : '$';
-  const pricePrecision = isBTC ? 4 : 2;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading trade history...</p>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="error-container">
+        <h2>Failed to load trade history</h2>
+        <p>{error || 'No data found.'}</p>
+      </div>
+    );
+  }
+
+  const strategies = Object.keys(data.strategies);
+  const settlement = data.settlement;
+  const currSym = currencySymbol(settlement);
+  const precision = pricePrecision(settlement);
+
+  interface FlatTrade {
+    timestamp: string;
+    action: string;
+    symbol: string;
+    strike: number | null;
+    delta: number | null;
+    dte: number | null;
+    amount_btc: number;
+    premium: number;
+    pnl: number;
+    btc_price: number;
+    order_id: string;
+    notes: string;
+    strategy_id: string;
+  }
   
-  let allTrades: TradeRow[] = [];
-  summaryData.forEach(s => {
-    const trades = getTradesForStrategy(s.strategy_id);
-    const mapped = trades.map(t => ({ ...t, strategy_id: s.strategy_id }));
+  let allTrades: FlatTrade[] = [];
+  Object.entries(data.strategies).forEach(([id, sData]) => {
+    const mapped = sData.trades.map(t => ({ ...t, strategy_id: id }));
     allTrades = [...allTrades, ...mapped];
   });
   
   // Filter trades by selected strategy
-  const filteredTrades = strategyParam ? allTrades.filter((t: any) => t.strategy_id === strategyParam) : allTrades;
+  const filteredTrades = strategyFilter 
+    ? allTrades.filter(t => t.strategy_id === strategyFilter) 
+    : allTrades;
 
   // Sort by most recent first
   filteredTrades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
@@ -35,18 +69,22 @@ export default async function TradesPage({ searchParams }: { searchParams: Promi
         </div>
         
         <div className="time-toggles">
-          <Link href="/trades" className={`time-toggle ${!strategyParam ? 'active' : ''}`}>
+          <button 
+            onClick={() => setStrategyFilter(null)} 
+            className={`time-toggle ${!strategyFilter ? 'active' : ''}`}
+            style={{ cursor: 'pointer', background: 'transparent', border: 'none' }}
+          >
             All
-          </Link>
+          </button>
           {strategies.map(s => (
-            <Link 
+            <button 
               key={s} 
-              href={`/trades?strategy=${s}`} 
-              className={`time-toggle ${strategyParam === s ? 'active' : ''}`} 
-              style={{ textTransform: 'capitalize' }}
+              onClick={() => setStrategyFilter(s)} 
+              className={`time-toggle ${strategyFilter === s ? 'active' : ''}`} 
+              style={{ textTransform: 'capitalize', cursor: 'pointer', background: 'transparent', border: 'none' }}
             >
               {s}
-            </Link>
+            </button>
           ))}
         </div>
       </div>
@@ -68,11 +106,10 @@ export default async function TradesPage({ searchParams }: { searchParams: Promi
               </tr>
             </thead>
             <tbody>
-              {filteredTrades.map((trade: any, i) => {
-                const isProfit = trade.pnl && parseFloat(trade.pnl) > 0;
-                const isLoss = trade.pnl && parseFloat(trade.pnl) < 0;
+              {filteredTrades.map((trade, i) => {
+                const isProfit = trade.pnl && trade.pnl > 0;
+                const isLoss = trade.pnl && trade.pnl < 0;
                 
-                // Determine instrument type based on symbol format (e.g. BTC-24MAY24-60000-P vs BTC-PERPETUAL)
                 const isOption = trade.symbol && (trade.symbol.endsWith('-P') || trade.symbol.endsWith('-C'));
                 const instrumentType = isOption ? 'Option' : (trade.symbol ? 'Future' : '-');
 
@@ -104,12 +141,12 @@ export default async function TradesPage({ searchParams }: { searchParams: Promi
                       {trade.symbol ? trade.symbol.split('-').slice(1).join('-') : '-'}
                     </td>
                     <td>{trade.strike ? `$${trade.strike}` : '-'}</td>
-                    <td>{trade.dte ? parseFloat(trade.dte).toFixed(1) : '-'}</td>
-                    <td className="text-right" style={{ color: parseFloat(trade.premium) > 0 ? 'var(--success)' : 'inherit', fontWeight: 500 }}>
-                      {trade.premium ? `${currencySymbol}${parseFloat(trade.premium).toFixed(pricePrecision)}` : '-'}
+                    <td>{trade.dte ? trade.dte.toFixed(1) : '-'}</td>
+                    <td className="text-right" style={{ color: trade.premium > 0 ? 'var(--success)' : 'inherit', fontWeight: 500 }}>
+                      {trade.premium ? `${currSym}${trade.premium.toFixed(precision)}` : '-'}
                     </td>
                     <td className="text-right" style={{ color: isProfit ? 'var(--success)' : (isLoss ? 'var(--danger)' : 'inherit'), fontWeight: 600 }}>
-                      {trade.pnl ? `${currencySymbol}${parseFloat(trade.pnl).toFixed(pricePrecision)}` : '-'}
+                      {trade.pnl ? `${currSym}${trade.pnl.toFixed(precision)}` : '-'}
                     </td>
                   </tr>
                 );

@@ -4,3 +4,14 @@ __pycache__/
 venv/
 state/
 output/
+
+# Dashboard build artifacts
+dashboard/out/
+dashboard/.next/
+dashboard/node_modules/
+
+# Cache files
+docs/data/.btc_price_cache.json
+
+# Logs
+logs/

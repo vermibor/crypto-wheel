@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, Calendar, LayoutDashboard, LineChart, BookOpen, FileText, Users, DownloadCloud, MoreVertical, RefreshCw } from 'lucide-react';
+import { Activity, Calendar, LayoutDashboard, LineChart, BookOpen, FileText, Users, DownloadCloud, MoreVertical, RefreshCw, TrendingUp } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -12,6 +12,7 @@ export default function Sidebar() {
     { name: 'Calendar', href: '/calendar', icon: Calendar },
     { name: 'Reports', href: '/reports', icon: FileText },
     { name: 'Trades', href: '/trades', icon: LineChart },
+    { name: 'HODL vs BTC', href: '/hodl', icon: TrendingUp },
     { name: 'Journal', href: '/journal', icon: BookOpen },
   ];
 

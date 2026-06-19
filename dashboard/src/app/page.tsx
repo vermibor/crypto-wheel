@@ -1,51 +1,82 @@
-import { getSummaryData, getTradesForStrategy, getCashflowForStrategy, getSettlementCurrency, TradeRow } from '@/lib/data';
+'use client';
+
+import { useState } from 'react';
+import { useDashboard } from '@/lib/DashboardContext';
+import { currencySymbol, pricePrecision } from '@/lib/data';
 import { MoreVertical, FileText, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { MiniSparkline, DonutChart, GaugeChart } from './components/DashboardCharts';
-import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+export default function Dashboard() {
+  const { data, loading, error } = useDashboard();
+  const [days, setDays] = useState<string>('30');
+  const [strategy, setStrategy] = useState<string | null>(null);
 
-export default async function Dashboard({ searchParams }: { searchParams: Promise<{ days?: string, strategy?: string }> }) {
-  const params = await searchParams;
-  const daysParam = params.days || '30';
-  const days = parseInt(daysParam, 10);
-  const isAllTime = isNaN(days) || daysParam === 'all';
-  const strategyParam = params.strategy;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading dashboard metrics...</p>
+      </div>
+    );
+  }
 
-  const summaryData = getSummaryData();
-  const settlement = getSettlementCurrency();
+  if (error || !data) {
+    return (
+      <div className="error-container">
+        <h2>Failed to load dashboard data</h2>
+        <p>{error || 'No data found. Make sure the simulation has run and generated dashboard.json.'}</p>
+      </div>
+    );
+  }
+
+  const settlement = data.settlement;
   const isBTC = settlement === 'BTC';
-  const currencySymbol = isBTC ? '₿' : '$';
-  const pricePrecision = isBTC ? 4 : 2;
+  const currSym = currencySymbol(settlement);
+  const precision = pricePrecision(settlement);
   
   // Collect all trades across strategies
-  let allTrades: (TradeRow & { strategy_id: string })[] = [];
-  summaryData.forEach(s => {
-    const trades = getTradesForStrategy(s.strategy_id);
-    const mapped = trades.map(t => ({ ...t, strategy_id: s.strategy_id }));
+  interface AggregatedTrade {
+    timestamp: string;
+    action: string;
+    symbol: string;
+    strike: number | null;
+    delta: number | null;
+    dte: number | null;
+    amount_btc: number;
+    premium: number;
+    pnl: number;
+    btc_price: number;
+    order_id: string;
+    notes: string;
+    strategy_id: string;
+  }
+
+  let allTrades: AggregatedTrade[] = [];
+  Object.entries(data.strategies).forEach(([id, sData]) => {
+    const mapped = sData.trades.map(t => ({ ...t, strategy_id: id }));
     allTrades = [...allTrades, ...mapped];
   });
   
   // Sort by date
   allTrades.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
-  // Determine the cutoff date based on the latest trade to accurately reflect "last X days" of the simulation
+  // Determine the cutoff date based on the latest trade
   const latestTradeDate = allTrades.length > 0 ? new Date(allTrades[allTrades.length - 1].timestamp) : new Date();
   const cutoffDate = new Date(latestTradeDate);
-  if (!isAllTime) {
-    cutoffDate.setDate(cutoffDate.getDate() - days);
+  if (days !== 'all') {
+    cutoffDate.setDate(cutoffDate.getDate() - parseInt(days, 10));
   } else {
-    cutoffDate.setFullYear(2000); // effectively all time
+    cutoffDate.setFullYear(2000); // all time
   }
 
   // Filter trades by cutoff
   const filteredTrades = allTrades.filter(t => t.timestamp && new Date(t.timestamp) >= cutoffDate);
 
   // Filter for metrics and calendar based on selected strategy
-  const metricsTrades = strategyParam ? filteredTrades.filter(t => t.strategy_id === strategyParam) : filteredTrades;
+  const metricsTrades = strategy ? filteredTrades.filter(t => t.strategy_id === strategy) : filteredTrades;
 
   // Aggregate daily
-  const dailyData: Record<string, { pnl: number, count: number, dateObj: Date }> = {};
+  const dailyData: Record<string, { pnl: number; count: number; dateObj: Date }> = {};
   metricsTrades.forEach(t => {
     if (!t.timestamp) return;
     const d = new Date(t.timestamp);
@@ -54,33 +85,33 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       dailyData[dateKey] = { pnl: 0, count: 0, dateObj: d };
     }
     dailyData[dateKey].count++;
-    if (t.pnl) dailyData[dateKey].pnl += parseFloat(t.pnl);
+    if (t.pnl) dailyData[dateKey].pnl += t.pnl;
   });
 
   const calendarDays = Object.values(dailyData).sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
   
   // Map all strategies for display
-  const strategyCharts = summaryData.map(s => {
-    const rawCashflow = getCashflowForStrategy(s.strategy_id);
+  const strategyCharts = Object.entries(data.strategies).map(([id, sData]) => {
+    const rawCashflow = sData.cashflow;
     
     const priorCashflow = rawCashflow.filter(c => c.timestamp && new Date(c.timestamp) < cutoffDate);
     const filteredCashflow = rawCashflow.filter(c => c.timestamp && new Date(c.timestamp) >= cutoffDate);
     
     const startingBalance = priorCashflow.length > 0 
-      ? parseFloat(priorCashflow[priorCashflow.length - 1].cash_after) 
-      : parseFloat(s.initial_budget);
+      ? priorCashflow[priorCashflow.length - 1].cash_after 
+      : sData.summary.initial_budget;
 
-    const data = [{ value: startingBalance }];
+    const chartPoints = [{ value: startingBalance }];
     filteredCashflow.forEach(c => {
-      const val = parseFloat(c.cash_after || '0');
-      if (val > 0) data.push({ value: val });
+      const val = c.cash_after || 0;
+      if (val > 0) chartPoints.push({ value: val });
     });
     
     // Calculate custom metrics for the period
-    const stratTrades = filteredTrades.filter(t => t.strategy_id === s.strategy_id && t.pnl);
-    const stratWins = stratTrades.filter(t => parseFloat(t.pnl) > 0);
+    const stratTrades = filteredTrades.filter(t => t.strategy_id === id && t.pnl);
+    const stratWins = stratTrades.filter(t => t.pnl > 0);
     const stratWinRate = stratTrades.length > 0 ? (stratWins.length / stratTrades.length) * 100 : 0;
-    const stratPnl = stratTrades.reduce((acc, t) => acc + parseFloat(t.pnl), 0);
+    const stratPnl = stratTrades.reduce((acc, t) => acc + t.pnl, 0);
     
     // ROI relative to the start of this specific time period
     const stratReturnPct = startingBalance > 0 ? (stratPnl / startingBalance) * 100 : 0;
@@ -88,10 +119,12 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     const isPositive = stratPnl >= 0;
 
     return {
-      id: s.strategy_id,
-      name: s.strategy_id.toUpperCase(),
-      date: filteredCashflow[0]?.timestamp ? new Date(filteredCashflow[0].timestamp).toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short'}) : 'No trades in period',
-      data,
+      id,
+      name: id.toUpperCase(),
+      date: filteredCashflow[0]?.timestamp 
+        ? new Date(filteredCashflow[0].timestamp).toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' }) 
+        : 'No trades in period',
+      data: chartPoints,
       color: isPositive ? 'var(--success)' : 'var(--danger)',
       returnPct: stratReturnPct,
       winRate: stratWinRate,
@@ -100,35 +133,38 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   });
 
   // Calculate Win vs Loss avg for the metrics
-  const winTrades = metricsTrades.filter(t => t.pnl && parseFloat(t.pnl) > 0);
-  const lossTrades = metricsTrades.filter(t => t.pnl && parseFloat(t.pnl) < 0);
+  const winTrades = metricsTrades.filter(t => t.pnl && t.pnl > 0);
+  const lossTrades = metricsTrades.filter(t => t.pnl && t.pnl < 0);
   
-  const avgWin = winTrades.length ? winTrades.reduce((acc, t) => acc + parseFloat(t.pnl), 0) / winTrades.length : 0;
-  const avgLoss = lossTrades.length ? Math.abs(lossTrades.reduce((acc, t) => acc + parseFloat(t.pnl), 0)) / lossTrades.length : 0;
+  const avgWin = winTrades.length ? winTrades.reduce((acc, t) => acc + t.pnl, 0) / winTrades.length : 0;
+  const avgLoss = lossTrades.length ? Math.abs(lossTrades.reduce((acc, t) => acc + t.pnl, 0)) / lossTrades.length : 0;
   
-  const tradesWithPnl = metricsTrades.filter(t => t.pnl);
+  const tradesWithPnl = metricsTrades.filter(t => t.pnl !== null);
   const winRate = tradesWithPnl.length ? (winTrades.length / tradesWithPnl.length) * 100 : 0;
   
-  const profitFactor = avgLoss === 0 ? (winTrades.length > 0 ? 2 : 0) : (avgWin * winTrades.length) / (avgLoss * lossTrades.length);
+  const profitFactor = avgLoss === 0 
+    ? (winTrades.length > 0 ? 2 : 0) 
+    : (avgWin * winTrades.length) / (avgLoss * lossTrades.length);
 
   return (
     <>
       <div className="top-header">
         <div className="header-title">
-          <h1>Dashboard</h1>
+          <h1>Dashboard Overview</h1>
+          <span className="last-updated">Last simulation run: {new Date(data.generated_at).toLocaleString()}</span>
         </div>
         
         <div className="time-toggles">
-          <Link href={`/?days=30${strategyParam ? `&strategy=${strategyParam}` : ''}`} className={`time-toggle ${days === 30 ? 'active' : ''}`}>30 days</Link>
-          <Link href={`/?days=60${strategyParam ? `&strategy=${strategyParam}` : ''}`} className={`time-toggle ${days === 60 ? 'active' : ''}`}>60 days</Link>
-          <Link href={`/?days=90${strategyParam ? `&strategy=${strategyParam}` : ''}`} className={`time-toggle ${days === 90 ? 'active' : ''}`}>90 days</Link>
-          <Link href={`/?days=all${strategyParam ? `&strategy=${strategyParam}` : ''}`} className={`time-toggle ${isAllTime ? 'active' : ''}`}>All time</Link>
+          <button onClick={() => setDays('30')} className={`time-toggle ${days === '30' ? 'active' : ''}`}>30 days</button>
+          <button onClick={() => setDays('60')} className={`time-toggle ${days === '60' ? 'active' : ''}`}>60 days</button>
+          <button onClick={() => setDays('90')} className={`time-toggle ${days === '90' ? 'active' : ''}`}>90 days</button>
+          <button onClick={() => setDays('all')} className={`time-toggle ${days === 'all' ? 'active' : ''}`}>All time</button>
         </div>
       </div>
 
       <div className="section">
         <div className="section-header">
-          <h2 className="section-title">Daily Trades Aggregation</h2>
+          <h2 className="section-title">Daily Trades Aggregation {strategy ? `(${strategy.toUpperCase()})` : ''}</h2>
         </div>
         
         <div className="calendar-row">
@@ -136,18 +172,19 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
             const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
             const dateNum = day.dateObj.toLocaleDateString('en-US', { day: '2-digit' });
             return (
-            <div key={i} className="day-card">
-              <div className="day-header">
-                <span className="day-date">{dateNum} {weekday}</span>
-                <FileText size={14} />
+              <div key={i} className="day-card">
+                <div className="day-header">
+                  <span className="day-date">{dateNum} {weekday}</span>
+                  <FileText size={14} />
+                </div>
+                <div className={`day-pnl ${day.pnl > 0 ? 'text-success' : (day.pnl < 0 ? 'text-danger' : 'text-neutral')}`}>
+                  {day.pnl > 0 ? '+' : ''}{currSym}{Math.abs(day.pnl).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: precision })}
+                  {day.pnl === 0 && day.count === 0 ? `${currSym}0` : ''}
+                </div>
+                <div className="day-trades">{day.count} trades</div>
               </div>
-              <div className={`day-pnl ${day.pnl > 0 ? 'text-success' : (day.pnl < 0 ? 'text-danger' : 'text-neutral')}`}>
-                {day.pnl > 0 ? '+' : ''}{currencySymbol}{Math.abs(day.pnl).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: pricePrecision })}
-                {day.pnl === 0 && day.count === 0 ? `${currencySymbol}0` : ''}
-              </div>
-              <div className="day-trades">{day.count} trades</div>
-            </div>
-          )})}
+            );
+          })}
           {calendarDays.length === 0 && (
             <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>No trade history found for this period.</div>
           )}
@@ -158,10 +195,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <h2 className="section-title">Strategy Performance Overview</h2>
-            {strategyParam && (
-              <Link href={`/?days=${daysParam}`} className="btn-outline" style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)' }}>
-                View All Strategies
-              </Link>
+            {strategy && (
+              <button 
+                onClick={() => setStrategy(null)} 
+                className="btn-outline" 
+                style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)', background: 'transparent', cursor: 'pointer', borderRadius: '4px' }}
+              >
+                Clear Strategy Filter
+              </button>
             )}
           </div>
           <MoreVertical size={16} color="var(--text-muted)" />
@@ -169,8 +210,21 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         
         <div className="charts-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
           {strategyCharts.map((chart, i) => (
-            <Link key={i} href={`/?days=${daysParam}&strategy=${chart.id}`} style={{ display: 'block', textDecoration: 'none' }}>
-              <div className="chart-card section" style={{ height: '180px', transition: 'border-color 0.2s', borderColor: strategyParam === chart.id ? 'var(--accent-primary)' : 'var(--border-color)', borderWidth: strategyParam === chart.id ? '2px' : '1px' }}>
+            <div 
+              key={i} 
+              onClick={() => setStrategy(chart.id)} 
+              style={{ display: 'block', textDecoration: 'none', cursor: 'pointer' }}
+            >
+              <div 
+                className="chart-card section" 
+                style={{ 
+                  height: '180px', 
+                  transition: 'all 0.2s', 
+                  borderColor: strategy === chart.id ? 'var(--accent-primary)' : 'var(--border-color)', 
+                  borderWidth: strategy === chart.id ? '2px' : '1px',
+                  boxShadow: strategy === chart.id ? '0 0 10px rgba(59, 130, 246, 0.2)' : 'none'
+                }}
+              >
                 <div className="chart-header">
                   <span>{chart.date}</span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: chart.pnl >= 0 ? 'var(--success)' : 'var(--danger)', fontWeight: 600 }}>
@@ -186,7 +240,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                   <MiniSparkline data={chart.data} color={chart.color} />
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
@@ -194,7 +248,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       <div className="metrics-grid">
         <div className="metric-card">
           <div className="metric-header">
-            <span>Profit factor</span>
+            <span>Profit Factor</span>
             <MoreVertical size={16} />
           </div>
           <div className="metric-value-large">{profitFactor.toFixed(2)}</div>
@@ -216,14 +270,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
         <div className="metric-card">
           <div className="metric-header">
-            <span>Average Winning Trade VS<br/>Losing Trade</span>
+            <span>Average Winning VS Losing Trade</span>
             <MoreVertical size={16} />
           </div>
           <div className="metric-value-large">{(avgWin / (avgLoss || 1)).toFixed(2)}</div>
           <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-              <span>{currencySymbol}{avgWin.toFixed(pricePrecision)}</span>
-              <span>{currencySymbol}{avgLoss.toFixed(pricePrecision)}</span>
+              <span>{currSym}{avgWin.toFixed(precision)}</span>
+              <span>{currSym}{avgLoss.toFixed(precision)}</span>
             </div>
             <div style={{ display: 'flex', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{ flex: avgWin, background: 'var(--success)' }}></div>
