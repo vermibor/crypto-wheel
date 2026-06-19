@@ -12,7 +12,7 @@ export default function Sidebar() {
     { name: 'Calendar', href: '/calendar', icon: Calendar },
     { name: 'Reports', href: '/reports', icon: FileText },
     { name: 'Trades', href: '/trades', icon: LineChart },
-    { name: 'HODL vs BTC', href: '/hodl', icon: TrendingUp },
+    { name: 'Wheel vs HODL BTC', href: '/hodl', icon: TrendingUp },
     { name: 'Journal', href: '/journal', icon: BookOpen },
   ];
 

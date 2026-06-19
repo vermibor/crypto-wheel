@@ -1,18 +1,20 @@
 'use client';
 
+import { useState } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
 import { currencySymbol } from '@/lib/data';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { TrendingUp, Award, DollarSign } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 
 export default function HodlPage() {
   const { data, loading, error } = useDashboard();
+  const [days, setDays] = useState<string>('30');
 
   if (loading) {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p>Loading HODL comparison data...</p>
+        <p>Loading comparison data...</p>
       </div>
     );
   }
@@ -41,17 +43,48 @@ export default function HodlPage() {
 
   const totalInitialBudget = Object.values(data.strategies).reduce((acc, s) => acc + s.summary.initial_budget, 0);
 
-  // Map and align dates for comparison
-  const comparisonData = hodl.prices.map(item => {
+  // Sort prices by date ascending
+  const allPrices = [...hodl.prices].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+   
+  // Determine the cutoff date based on the latest date in the dataset
+  const latestDate = allPrices.length > 0 ? new Date(allPrices[allPrices.length - 1].date) : new Date();
+  const cutoffDate = new Date(latestDate);
+  if (days !== 'all') {
+    cutoffDate.setDate(cutoffDate.getDate() - parseInt(days, 10));
+  } else {
+    cutoffDate.setFullYear(2000); // all time
+  }
+
+  // Filter prices
+  const filteredPrices = allPrices.filter(p => new Date(p.date) >= cutoffDate);
+
+  if (filteredPrices.length === 0) {
+    return (
+      <div className="error-container">
+        <h2>No data in selected timeframe</h2>
+        <p>Try extending the time range filter.</p>
+      </div>
+    );
+  }
+
+  // Establish baseline (0% start point)
+  const baselinePriceObj = filteredPrices[0];
+  const baselineBtcPrice = baselinePriceObj.price;
+  
+  const firstDateStr = baselinePriceObj.date;
+  const baselinePortEquity = dailyPortfolioEquity[firstDateStr] || totalInitialBudget;
+
+  // Map and align dates for comparison relative to baseline
+  const comparisonData = filteredPrices.map(item => {
     const dateStr = item.date;
     const btcPrice = item.price;
     
-    // HODL return percentage
-    const hodlReturn = ((btcPrice - hodl.start_price) / hodl.start_price) * 100;
+    // HODL return percentage relative to baseline (0% on start date)
+    const hodlReturn = ((btcPrice - baselineBtcPrice) / baselineBtcPrice) * 100;
     
-    // Portfolio return percentage (sum of strategy equities vs total initial budget)
+    // Portfolio return percentage relative to baseline (0% on start date)
     const portEquity = dailyPortfolioEquity[dateStr] || totalInitialBudget;
-    const portReturn = ((portEquity - totalInitialBudget) / totalInitialBudget) * 100;
+    const portReturn = ((portEquity - baselinePortEquity) / baselinePortEquity) * 100;
 
     return {
       date: new Date(dateStr).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
@@ -62,10 +95,13 @@ export default function HodlPage() {
     };
   });
 
-  // Calculate final metrics
-  const finalPortfolioEquity = Object.values(data.strategies).reduce((acc, s) => acc + s.summary.equity, 0);
-  const finalPortfolioReturn = ((finalPortfolioEquity - totalInitialBudget) / totalInitialBudget) * 100;
-  const finalHodlReturn = hodl.return_pct;
+  // Calculate final metrics for the period
+  const finalPriceObj = filteredPrices[filteredPrices.length - 1];
+  const finalBtcPrice = finalPriceObj.price;
+  const finalPortfolioEquity = dailyPortfolioEquity[finalPriceObj.date] || totalInitialBudget;
+
+  const finalPortfolioReturn = ((finalPortfolioEquity - baselinePortEquity) / baselinePortEquity) * 100;
+  const finalHodlReturn = ((finalBtcPrice - baselineBtcPrice) / baselineBtcPrice) * 100;
 
   const outperforming = finalPortfolioReturn > finalHodlReturn;
 
@@ -73,8 +109,15 @@ export default function HodlPage() {
     <>
       <div className="top-header">
         <div className="header-title">
-          <h1>HODL vs. Portfolio Comparison</h1>
-          <span className="last-updated">Benchmark: Buy & Hold BTC starting on {new Date(hodl.start_date).toLocaleDateString()}</span>
+          <h1>Wheel vs HODL BTC</h1>
+          <span className="last-updated">Benchmark: Buy & Hold BTC starting on {new Date(firstDateStr).toLocaleDateString()} (Baseline: 0%)</span>
+        </div>
+
+        <div className="time-toggles">
+          <button onClick={() => setDays('30')} className={`time-toggle ${days === '30' ? 'active' : ''}`}>30 days</button>
+          <button onClick={() => setDays('60')} className={`time-toggle ${days === '60' ? 'active' : ''}`}>60 days</button>
+          <button onClick={() => setDays('90')} className={`time-toggle ${days === '90' ? 'active' : ''}`}>90 days</button>
+          <button onClick={() => setDays('all')} className={`time-toggle ${days === 'all' ? 'active' : ''}`}>All time</button>
         </div>
       </div>
 
@@ -100,7 +143,7 @@ export default function HodlPage() {
             {finalHodlReturn >= 0 ? '+' : ''}{finalHodlReturn.toFixed(2)}%
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-            BTC Price: ${hodl.current_price.toLocaleString()} (vs ${hodl.start_price.toLocaleString()} start)
+            BTC Price: ${finalBtcPrice.toLocaleString()} (vs ${baselineBtcPrice.toLocaleString()} start)
           </div>
         </div>
 
@@ -179,19 +222,19 @@ export default function HodlPage() {
             <thead>
               <tr>
                 <th>Strategy / Benchmark</th>
-                <th className="text-right">Initial Capital</th>
-                <th className="text-right">Final Value</th>
-                <th className="text-right">Total Profit</th>
+                <th className="text-right">Baseline Value ({new Date(firstDateStr).toLocaleDateString()})</th>
+                <th className="text-right">Ending Value ({new Date(finalPriceObj.date).toLocaleDateString()})</th>
+                <th className="text-right">Window Profit</th>
                 <th className="text-right">Total Return (%)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td style={{ fontWeight: 600 }}>Theta Wheel Options Portfolio</td>
-                <td className="text-right">{currSym}{totalInitialBudget.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                <td className="text-right">{currSym}{baselinePortEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td className="text-right">{currSym}{finalPortfolioEquity.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                 <td className="text-right" style={{ color: finalPortfolioReturn >= 0 ? 'var(--success)' : 'var(--danger)' }}>
-                  {currSym}{(finalPortfolioEquity - totalInitialBudget).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  {currSym}{(finalPortfolioEquity - baselinePortEquity).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </td>
                 <td className="text-right" style={{ color: finalPortfolioReturn >= 0 ? 'var(--success)' : 'var(--danger)', fontWeight: 700 }}>
                   {finalPortfolioReturn >= 0 ? '+' : ''}{finalPortfolioReturn.toFixed(2)}%
@@ -199,10 +242,10 @@ export default function HodlPage() {
               </tr>
               <tr>
                 <td style={{ fontWeight: 600 }}>Buy & Hold BTC (HODL)</td>
-                <td className="text-right">${hodl.start_price.toLocaleString()}</td>
-                <td className="text-right">${hodl.current_price.toLocaleString()}</td>
+                <td className="text-right">${baselineBtcPrice.toLocaleString()}</td>
+                <td className="text-right">${finalBtcPrice.toLocaleString()}</td>
                 <td className="text-right" style={{ color: finalHodlReturn >= 0 ? 'var(--success)' : 'var(--danger)' }}>
-                  ${(hodl.current_price - hodl.start_price).toLocaleString()}
+                  ${(finalBtcPrice - baselineBtcPrice).toLocaleString()}
                 </td>
                 <td className="text-right" style={{ color: finalHodlReturn >= 0 ? 'var(--success)' : 'var(--danger)', fontWeight: 700 }}>
                   {finalHodlReturn >= 0 ? '+' : ''}{finalHodlReturn.toFixed(2)}%
