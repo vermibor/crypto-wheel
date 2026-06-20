@@ -646,8 +646,10 @@ def git_publish():
     except subprocess.CalledProcessError as e:
         logger.error("Git operation failed: %s\nstdout: %s\nstderr: %s",
                       e, e.stdout, e.stderr)
+        sys.exit(1)
     except FileNotFoundError:
         logger.error("git binary not found — skipping publish")
+        sys.exit(1)
 
 
 # ===========================================================================
