@@ -9,6 +9,7 @@ import { TrendingUp } from 'lucide-react';
 export default function HodlPage() {
   const { data, loading, error } = useDashboard();
   const [days, setDays] = useState<string>('30');
+  const [selectedStrategiesState, setSelectedStrategies] = useState<string[] | null>(null);
 
   if (loading) {
     return (
@@ -32,16 +33,37 @@ export default function HodlPage() {
   const currSym = currencySymbol(settlement);
   const hodl = data.hodl;
 
-  // Calculate daily portfolio equity
-  const dailyPortfolioEquity: Record<string, number> = {};
-  Object.values(data.strategies).forEach(strategy => {
-    strategy.daily_pnl.forEach(day => {
-      const dateKey = day.date; // e.g. "YYYY-MM-DD"
-      dailyPortfolioEquity[dateKey] = (dailyPortfolioEquity[dateKey] || 0) + day.equity;
-    });
-  });
+  // Initialize selected strategies if not already set
+  const selectedStrategies = selectedStrategiesState || Object.keys(data.strategies);
 
-  const totalInitialBudget = Object.values(data.strategies).reduce((acc, s) => acc + s.summary.initial_budget, 0);
+  const toggleStrategy = (id: string) => {
+    setSelectedStrategies(prev => {
+      const current = prev || Object.keys(data.strategies);
+      if (current.includes(id)) {
+        if (current.length === 1) return current;
+        return current.filter(x => x !== id);
+      } else {
+        return [...current, id];
+      }
+    });
+  };
+
+  const selectAll = () => setSelectedStrategies(Object.keys(data.strategies));
+
+  // Calculate daily portfolio equity for selected strategies
+  const dailyPortfolioEquity: Record<string, number> = {};
+  Object.entries(data.strategies)
+    .filter(([id]) => selectedStrategies.includes(id))
+    .forEach(([_, strategy]) => {
+      strategy.daily_pnl.forEach(day => {
+        const dateKey = day.date; // e.g. "YYYY-MM-DD"
+        dailyPortfolioEquity[dateKey] = (dailyPortfolioEquity[dateKey] || 0) + day.equity;
+      });
+    });
+
+  const totalInitialBudget = Object.entries(data.strategies)
+    .filter(([id]) => selectedStrategies.includes(id))
+    .reduce((acc, [_, s]) => acc + s.summary.initial_budget, 0);
 
   // Sort prices by date ascending
   const allPrices = [...hodl.prices].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -142,6 +164,98 @@ export default function HodlPage() {
           <button onClick={() => setDays('60')} className={`time-toggle ${days === '60' ? 'active' : ''}`}>60 days</button>
           <button onClick={() => setDays('90')} className={`time-toggle ${days === '90' ? 'active' : ''}`}>90 days</button>
           <button onClick={() => setDays('all')} className={`time-toggle ${days === 'all' ? 'active' : ''}`}>All time</button>
+        </div>
+      </div>
+
+      {/* Strategy Selector Filter */}
+      <div 
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '0.75rem', 
+          marginBottom: '2rem', 
+          padding: '1.25rem 1.5rem', 
+          background: 'var(--bg-card)', 
+          borderRadius: '16px', 
+          border: '1px solid var(--border-color)' 
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Filter Strategies
+          </span>
+          {selectedStrategies.length < Object.keys(data.strategies).length && (
+            <button 
+              onClick={selectAll} 
+              style={{ 
+                fontSize: '0.8rem', 
+                color: 'var(--accent-secondary)', 
+                fontWeight: 600,
+                background: 'transparent',
+                border: 'none',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '4px',
+                transition: 'background 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              Select All
+            </button>
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {Object.entries(data.strategies).map(([id, strat]) => {
+            const isSelected = selectedStrategies.includes(id);
+            return (
+              <button
+                key={id}
+                onClick={() => toggleStrategy(id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  border: isSelected ? '1px solid var(--accent-secondary)' : '1px solid var(--border-color)',
+                  background: isSelected ? 'rgba(59, 130, 246, 0.1)' : 'rgba(255, 255, 255, 0.02)',
+                  color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer'
+                }}
+                onMouseOver={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.borderColor = 'var(--text-muted)';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.borderColor = 'var(--border-color)';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                  }
+                }}
+              >
+                {/* Visual Checkbox Dot */}
+                <span 
+                  style={{ 
+                    width: '8px', 
+                    height: '8px', 
+                    borderRadius: '50%', 
+                    background: isSelected ? 'var(--accent-secondary)' : 'transparent',
+                    border: isSelected ? 'none' : '1px solid var(--text-muted)',
+                    transition: 'all 0.2s'
+                  }} 
+                />
+                <span style={{ textTransform: 'capitalize' }}>{id}</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400 }}>
+                  ({currSym}{strat.summary.initial_budget.toLocaleString(undefined, { minimumFractionDigits: precision === 4 ? 2 : 0 })})
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
