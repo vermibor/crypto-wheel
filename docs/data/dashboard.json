@@ -2854,7 +2854,7 @@
       "date": "2026-07-16",
       "btc_price": 64883.5,
       "strategies_run": 4,
-      "trades_executed": 0,
+      "trades_executed": 4,
       "risk_filter_blocks": 0,
       "risk_filter_reasons": []
     },

@@ -583,8 +583,12 @@ def parse_log_files(max_age_days: int = 30) -> tuple[list[dict], list[dict]]:
                             reason_m.group(1).rstrip(".")
                         )
 
-                # Track trades: look for "sell_put", "sell_call" etc actions in messages
-                if any(action in message for action in ("Opened CSP", "Opened CC", "SELL_PUT", "SELL_CALL", "sell_put", "sell_call")):
+                # Track trades: look for trade executions/actions in messages
+                trade_actions = (
+                    "Opened CSP", "Opened CC", "SELL_PUT", "SELL_CALL", "sell_put", "sell_call",
+                    "Selling PUT", "Selling CALL", "PUT ASSIGNED", "CALL ASSIGNED", "TAKE PROFIT", "STOP LOSS"
+                )
+                if any(action in message for action in trade_actions):
                     daily_data[log_date]["trades_executed"] += 1
 
                 # Collect WARNING/ERROR entries, and strategy-tagged entries
