@@ -1,0 +1,67 @@
+2026-07-19 18:37:59,103 [INFO] main: ======================================================================
+2026-07-19 18:37:59,103 [INFO] main: WHEEL STRATEGY BOT — 2026-07-19 16:37 UTC
+2026-07-19 18:37:59,103 [INFO] main: Strategies: ['conservative', 'moderate', 'aggressive', 'daily']
+2026-07-19 18:37:59,104 [INFO] main: Testnet: True | Settlement: BTC | Dry-run: False
+2026-07-19 18:37:59,104 [INFO] main: ======================================================================
+2026-07-19 18:38:00,387 [INFO] deribit_client: DeribitClient initialized (testnet=True, settlement=BTC, markets=4800)
+2026-07-19 18:38:00,482 [INFO] main: BTC Price: 64530.50 BTC
+2026-07-19 18:38:00,483 [INFO] strategy: ============================================================
+2026-07-19 18:38:00,483 [INFO] strategy: Running strategy: conservative (Low delta, longer DTE, early exit) | Settlement: BTC
+2026-07-19 18:38:00,483 [INFO] strategy: ============================================================
+2026-07-19 18:38:00,486 [INFO] state_manager: Loaded state for 'conservative' (cash=0.1012, phase=selling_puts)
+2026-07-19 18:38:00,588 [INFO] strategy: [conservative] BTC=64530 | Cash=0.1012 | Phase=selling_puts | Equity=0.1012
+2026-07-19 18:38:00,748 [INFO] strategy: [conservative] END: Equity=0.1012 | Cash=0.1012 | DD=0.0% | Trades=1
+2026-07-19 18:38:00,748 [INFO] strategy: ============================================================
+2026-07-19 18:38:00,748 [INFO] strategy: Running strategy: moderate (Moderate delta and DTE) | Settlement: BTC
+2026-07-19 18:38:00,748 [INFO] strategy: ============================================================
+2026-07-19 18:38:00,752 [INFO] state_manager: Loaded state for 'moderate' (cash=0.1011, phase=selling_puts)
+2026-07-19 18:38:00,817 [INFO] strategy: [moderate] BTC=64530 | Cash=0.1011 | Phase=selling_puts | Equity=0.1011
+2026-07-19 18:38:00,973 [INFO] strategy: [moderate] END: Equity=0.1011 | Cash=0.1011 | DD=0.0% | Trades=1
+2026-07-19 18:38:00,974 [INFO] strategy: ============================================================
+2026-07-19 18:38:00,974 [INFO] strategy: Running strategy: aggressive (Higher delta, shorter DTE, hold to expiry) | Settlement: BTC
+2026-07-19 18:38:00,974 [INFO] strategy: ============================================================
+2026-07-19 18:38:00,977 [INFO] state_manager: Loaded state for 'aggressive' (cash=0.1013, phase=selling_puts)
+2026-07-19 18:38:01,033 [INFO] strategy: [aggressive] BTC=64530 | Cash=0.1013 | Phase=selling_puts | Equity=0.1013
+2026-07-19 18:38:01,108 [INFO] strategy: [aggressive] END: Equity=0.1013 | Cash=0.1013 | DD=0.0% | Trades=1
+2026-07-19 18:38:01,108 [INFO] strategy: ============================================================
+2026-07-19 18:38:01,108 [INFO] strategy: Running strategy: daily (Collect premium daily, don't be afraid of being assigned) | Settlement: BTC
+2026-07-19 18:38:01,108 [INFO] strategy: ============================================================
+2026-07-19 18:38:01,113 [INFO] state_manager: Loaded state for 'daily' (cash=0.0997, phase=selling_calls)
+2026-07-19 18:38:01,179 [INFO] strategy: [daily] BTC=64530 | Cash=0.0997 | Phase=selling_calls | Equity=0.0997
+2026-07-19 18:38:01,179 [INFO] strategy: [daily] END: Equity=0.0997 | Cash=0.0997 | DD=1.0% | Trades=3
+2026-07-19 18:38:01,179 [INFO] main: ----------------------------------------------------------------------
+2026-07-19 18:38:01,179 [INFO] main: Exporting reports...
+2026-07-19 18:38:01,183 [INFO] export: Exported 1 trades to /home/piotrek/Dokumenty/crypto-wheel/output/conservative_trades.csv
+2026-07-19 18:38:01,184 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/crypto-wheel/output/conservative_cashflow.csv
+2026-07-19 18:38:01,184 [INFO] export: Exported 1 trades to /home/piotrek/Dokumenty/crypto-wheel/output/moderate_trades.csv
+2026-07-19 18:38:01,185 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/crypto-wheel/output/moderate_cashflow.csv
+2026-07-19 18:38:01,185 [INFO] export: Exported 1 trades to /home/piotrek/Dokumenty/crypto-wheel/output/aggressive_trades.csv
+2026-07-19 18:38:01,186 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/crypto-wheel/output/aggressive_cashflow.csv
+2026-07-19 18:38:01,187 [INFO] export: Exported 3 trades to /home/piotrek/Dokumenty/crypto-wheel/output/daily_trades.csv
+2026-07-19 18:38:01,188 [INFO] export: Exported cash flow to /home/piotrek/Dokumenty/crypto-wheel/output/daily_cashflow.csv
+2026-07-19 18:38:01,188 [INFO] export: Exported summary to /home/piotrek/Dokumenty/crypto-wheel/output/summary.csv
+2026-07-19 18:38:01,189 [INFO] main: Running publish pipeline...
+2026-07-19 18:38:04,420 [WARNING] main: Publish pipeline failed: 2026-07-19 18:38:01 [INFO] publish: Starting publish pipeline
+2026-07-19 18:38:01 [INFO] publish: Loaded 4 strategy states (settlement=BTC)
+2026-07-19 18:38:02 [INFO] publish: Fetched 91 daily BTC prices from CoinGecko
+2026-07-19 18:38:02 [INFO] publish: Built data for strategy 'aggressive' (1 trades)
+2026-07-19 18:38:02 [INFO] publish: Built data for strategy 'conservative' (1 trades)
+2026-07-19 18:38:02 [INFO] publish: Built data for strategy 'daily' (3 trades)
+2026-07-19 18:38:02 [INFO] publish: Built data for strategy 'moderate' (1 trades)
+2026-07-19 18:38:02 [INFO] publish: Parsed 353 log entries, 27 daily snapshots
+2026-07-19 18:38:02 [INFO] publish: Wrote /home/piotrek/Dokumenty/crypto-wheel/docs/data/dashboard.json (89048 bytes)
+2026-07-19 18:38:04 [ERROR] publish: Git operation failed: Command '['git', 'push']' returned non-zero exit status 1.
+stdout: 
+stderr: To github.com:vermibor/crypto-wheel.git
+ ! [rejected]        main -> main (fetch first)
+error: nie można wypchnąć niektórych referencji do „github.com:vermibor/crypto-wheel.git”
+podpowiedź: Aktualizacje zostały odrzucone, ponieważ zdalne repozytorium zawiera
+podpowiedź: pracę, której nie ma u ciebie lokalnie. Jest to zwykle spowodowane innym
+podpowiedź: repozytorium wypychającym na tę samą referencję. Możesz najpierw chcieć
+podpowiedź: zintegrować zdalne zmiany (np. „git pull ...”) przed kolejnym wypchnięciem.
+podpowiedź: Zobacz szczegóły w „Uwadze o przewijaniu” w „git push --help”.
+
+
+2026-07-19 18:38:04,420 [INFO] main: ======================================================================
+2026-07-19 18:38:04,421 [INFO] main: COMPLETE. Log saved to /home/piotrek/Dokumenty/crypto-wheel/logs/wheel_20260719_163757.log
+2026-07-19 18:38:04,421 [INFO] main: ======================================================================
