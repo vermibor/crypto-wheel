@@ -46,7 +46,9 @@ class DeribitClient:
         if testnet:
             self.exchange.set_sandbox_mode(True)
 
-        self._retry_call(self.exchange.load_markets)
+        # For initial market loading, retry over a longer window (~10 mins)
+        # to handle transient exchange downtime or maintenance.
+        self._retry_call(self.exchange.load_markets, max_retries=8, retry_delay=5.0)
         logger.info(
             "DeribitClient initialized (testnet=%s, settlement=%s, markets=%d)",
             testnet, settlement, len(self.exchange.markets),
