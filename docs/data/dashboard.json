@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-19T16:47:52Z",
-  "btc_price": 63928.08,
+  "generated_at": "2026-07-19T16:51:03Z",
+  "btc_price": 64541.76,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -425,8 +425,8 @@
   "hodl": {
     "start_date": "2026-05-31",
     "start_price": 73876.61,
-    "current_price": 63928.08,
-    "return_pct": -13.47,
+    "current_price": 64541.76,
+    "return_pct": -12.64,
     "prices": [
       {
         "date": "2026-05-31",
@@ -622,7 +622,11 @@
       },
       {
         "date": "2026-07-18",
-        "price": 63928.08
+        "price": 64774.66
+      },
+      {
+        "date": "2026-07-19",
+        "price": 64541.76
       }
     ]
   },
@@ -635,78 +639,6 @@
     "total_trades": 6
   },
   "logs": [
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "BTC=63044 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "Risk check: BTC 63044 < SMA50 72602. Trend filter blocks new puts.",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "BTC=63044 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "Risk check: BTC 63044 < SMA50 72602. Trend filter blocks new puts.",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "BTC=63044 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "Risk check: BTC 63044 < SMA50 72602. Trend filter blocks new puts.",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:32",
-      "level": "INFO",
-      "message": "BTC=63044 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:33",
-      "level": "INFO",
-      "message": "Risk check: BTC 63044 < SMA50 72602. Trend filter blocks new puts.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-06-19T21:00:33",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "daily"
-    },
     {
       "timestamp": "2026-06-20T07:35:04",
       "level": "INFO",
@@ -2718,67 +2650,60 @@
       "strategy": "daily"
     },
     {
-      "timestamp": "2026-07-19T10:37:18",
+      "timestamp": "2026-07-19T18:38:00",
+      "level": "INFO",
+      "message": "BTC=64530 | Cash=0.1012 | Phase=selling_puts | Equity=0.1012",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:00",
+      "level": "INFO",
+      "message": "END: Equity=0.1012 | Cash=0.1012 | DD=0.0% | Trades=1",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:00",
+      "level": "INFO",
+      "message": "BTC=64530 | Cash=0.1011 | Phase=selling_puts | Equity=0.1011",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:00",
+      "level": "INFO",
+      "message": "END: Equity=0.1011 | Cash=0.1011 | DD=0.0% | Trades=1",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:01",
+      "level": "INFO",
+      "message": "BTC=64530 | Cash=0.1013 | Phase=selling_puts | Equity=0.1013",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:01",
+      "level": "INFO",
+      "message": "END: Equity=0.1013 | Cash=0.1013 | DD=0.0% | Trades=1",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:01",
+      "level": "INFO",
+      "message": "BTC=64530 | Cash=0.0997 | Phase=selling_calls | Equity=0.0997",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:01",
+      "level": "INFO",
+      "message": "END: Equity=0.0997 | Cash=0.0997 | DD=1.0% | Trades=3",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-07-19T18:38:04",
       "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 1/5). Retrying in 2.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway <!DOCTYPE html>"
-    },
-    {
-      "timestamp": "2026-07-19T10:37:21",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 2/5). Retrying in 4.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway <!DOCTYPE html>"
-    },
-    {
-      "timestamp": "2026-07-19T10:37:25",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 3/5). Retrying in 8.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway <!DOCTYPE html>"
-    },
-    {
-      "timestamp": "2026-07-19T10:37:33",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 4/5). Retrying in 16.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway <!DOCTYPE html>"
-    },
-    {
-      "timestamp": "2026-07-19T10:37:49",
-      "level": "ERROR",
-      "message": "Exchange call load_markets failed after 5 attempts: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway <!DOCTYPE html>"
-    },
-    {
-      "timestamp": "2026-07-19T10:43:42",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 1/5). Retrying in 2.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway"
-    },
-    {
-      "timestamp": "2026-07-19T10:43:44",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 2/5). Retrying in 4.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway"
-    },
-    {
-      "timestamp": "2026-07-19T10:43:48",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 3/5). Retrying in 8.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway"
-    },
-    {
-      "timestamp": "2026-07-19T10:43:56",
-      "level": "WARNING",
-      "message": "Exchange call load_markets failed (attempt 4/5). Retrying in 16.0s... Error: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway"
-    },
-    {
-      "timestamp": "2026-07-19T10:44:12",
-      "level": "ERROR",
-      "message": "Exchange call load_markets failed after 5 attempts: deribit GET https://test.deribit.com/api/v2/public/get_currencies 502 Bad Gateway"
+      "message": "Publish pipeline failed: 2026-07-19 18:38:01 [INFO] publish: Starting publish pipeline"
     }
   ],
   "daily_snapshots": [
-    {
-      "date": "2026-06-19",
-      "btc_price": 63044.0,
-      "strategies_run": 4,
-      "trades_executed": 0,
-      "risk_filter_blocks": 4,
-      "risk_filter_reasons": [
-        "BTC 63044 < SMA50 72602"
-      ]
-    },
     {
       "date": "2026-06-20",
       "btc_price": 63681.0,
@@ -3044,8 +2969,8 @@
     },
     {
       "date": "2026-07-19",
-      "btc_price": null,
-      "strategies_run": 0,
+      "btc_price": 64530.5,
+      "strategies_run": 4,
       "trades_executed": 0,
       "risk_filter_blocks": 0,
       "risk_filter_reasons": []
