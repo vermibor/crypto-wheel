@@ -6,6 +6,8 @@ Handles all exchange interactions for the Wheel strategy bot.
 import ccxt
 import os
 import logging
+import time
+import requests
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
@@ -28,11 +30,43 @@ class DeribitClient:
         if testnet:
             self.exchange.set_sandbox_mode(True)
 
-        self.exchange.load_markets()
+        self._retry_call(self.exchange.load_markets)
         logger.info(
             "DeribitClient initialized (testnet=%s, settlement=%s, markets=%d)",
             testnet, settlement, len(self.exchange.markets),
         )
+
+    def _retry_call(self, func, *args, max_retries: int = 5, retry_delay: float = 2.0, **kwargs):
+        """Execute a ccxt read/public method with retries.
+        
+        Does not wrap write operations to avoid duplicate execution.
+        """
+        current_delay = retry_delay
+        for attempt in range(max_retries):
+            try:
+                return func(*args, **kwargs)
+            except (ccxt.BaseError, requests.RequestException) as e:
+                err_msg = str(e)
+                if len(err_msg) > 500:
+                    err_msg = err_msg[:500] + "... [truncated]"
+                
+                if attempt == max_retries - 1:
+                    logger.error(
+                        "Exchange call %s failed after %d attempts: %s",
+                        getattr(func, "__name__", str(func)), max_retries, err_msg
+                    )
+                    raise e
+                
+                logger.warning(
+                    "Exchange call %s failed (attempt %d/%d). Retrying in %.1fs... Error: %s",
+                    getattr(func, "__name__", str(func)),
+                    attempt + 1,
+                    max_retries,
+                    current_delay,
+                    err_msg
+                )
+                time.sleep(current_delay)
+                current_delay *= 2
 
     # ------------------------------------------------------------------
     # Market data
@@ -42,16 +76,21 @@ class DeribitClient:
         """Get the current BTC index price."""
         try:
             symbol = "BTC/USDC" if self.settlement == "USDC" else "BTC/USD:BTC"
-            ticker = self.exchange.fetch_ticker(symbol)
+            ticker = self._retry_call(self.exchange.fetch_ticker, symbol)
             return float(ticker["last"])
-        except Exception:
+        except Exception as e:
             # Fallback to fetching index price via public API
             try:
-                response = self.exchange.publicGetGetIndexPrice({"index_name": "btc_usd"})
+                response = self._retry_call(
+                    self.exchange.publicGetGetIndexPrice, {"index_name": "btc_usd"}
+                )
                 return float(response.get("result", {}).get("index_price", 0))
-            except Exception as e:
-                logger.warning("Failed to fetch index price: %s", e)
-                raise e
+            except Exception as ex:
+                err_msg = str(ex)
+                if len(err_msg) > 500:
+                    err_msg = err_msg[:500] + "... [truncated]"
+                logger.warning("Failed to fetch index price: %s", err_msg)
+                raise ex
 
     def get_btc_ohlcv(self, timeframe: str = "1d", limit: int = 60) -> list:
         """Fetch daily OHLCV candles for BTC.
@@ -60,10 +99,13 @@ class DeribitClient:
         """
         symbol = "BTC/USD:BTC" if self.settlement == "BTC" else "BTC/USDC:USDC"
         try:
-            ohlcv = self.exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
+            ohlcv = self._retry_call(self.exchange.fetch_ohlcv, symbol, timeframe=timeframe, limit=limit)
             return ohlcv
-        except Exception:
-            logger.warning("OHLCV fetch failed for %s, falling back to index", symbol)
+        except Exception as e:
+            err_msg = str(e)
+            if len(err_msg) > 500:
+                err_msg = err_msg[:500] + "... [truncated]"
+            logger.warning("OHLCV fetch failed for %s: %s, falling back to index", symbol, err_msg)
             return []
 
     def get_dvol(self) -> float | None:
@@ -73,21 +115,27 @@ class DeribitClient:
         """
         try:
             # ccxt may not expose DVOL natively; try via public API call
-            response = self.exchange.publicGetGetVolatilityIndexData({
-                "currency": "BTC",
-                "resolution": "1D",
-                "start_timestamp": int(
-                    (datetime.now(timezone.utc).timestamp() - 86400) * 1000
-                ),
-                "end_timestamp": int(
-                    datetime.now(timezone.utc).timestamp() * 1000
-                ),
-            })
+            response = self._retry_call(
+                self.exchange.publicGetGetVolatilityIndexData,
+                {
+                    "currency": "BTC",
+                    "resolution": "1D",
+                    "start_timestamp": int(
+                        (datetime.now(timezone.utc).timestamp() - 86400) * 1000
+                    ),
+                    "end_timestamp": int(
+                        datetime.now(timezone.utc).timestamp() * 1000
+                    ),
+                }
+            )
             data = response.get("result", {}).get("data", [])
             if data:
                 return float(data[-1][1])  # Last DVOL value
         except Exception as e:
-            logger.warning("Failed to fetch DVOL: %s", e)
+            err_msg = str(e)
+            if len(err_msg) > 500:
+                err_msg = err_msg[:500] + "... [truncated]"
+            logger.warning("Failed to fetch DVOL: %s", err_msg)
         return None
 
     # ------------------------------------------------------------------
@@ -133,7 +181,7 @@ class DeribitClient:
                     continue
 
             try:
-                ticker = self.exchange.fetch_ticker(symbol)
+                ticker = self._retry_call(self.exchange.fetch_ticker, symbol, max_retries=2, retry_delay=1.0)
                 greeks = ticker.get("info", {}).get("greeks", {})
                 chain.append({
                     "symbol": symbol,
@@ -259,10 +307,10 @@ class DeribitClient:
 
     def get_positions(self) -> list[dict]:
         """Fetch all open positions on the account."""
-        positions = self.exchange.fetch_positions()
+        positions = self._retry_call(self.exchange.fetch_positions)
         return [p for p in positions if float(p.get("contracts", 0)) != 0]
 
     def get_balance(self) -> dict:
         """Fetch account balance summary."""
-        balance = self.exchange.fetch_balance()
+        balance = self._retry_call(self.exchange.fetch_balance)
         return balance

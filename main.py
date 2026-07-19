@@ -107,9 +107,19 @@ def main():
         return
 
     # Initialize API client
-    client = DeribitClient(testnet=global_config["testnet"], settlement=settlement)
-    btc_price = client.get_btc_price()
-    logger.info("BTC Price: %.2f %s", btc_price, settlement)
+    try:
+        client = DeribitClient(testnet=global_config["testnet"], settlement=settlement)
+        btc_price = client.get_btc_price()
+        logger.info("BTC Price: %.2f %s", btc_price, settlement)
+    except Exception as e:
+        err_msg = str(e)
+        if len(err_msg) > 500:
+            err_msg = err_msg[:500] + "... [truncated]"
+        logger.critical("Failed to initialize Deribit client or fetch initial BTC price: %s", err_msg)
+        logger.info("=" * 70)
+        logger.info("ABORTED. Log saved to %s", log_file)
+        logger.info("=" * 70)
+        sys.exit(1)
 
     # Run each strategy
     final_states = []
