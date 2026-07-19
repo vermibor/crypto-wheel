@@ -13,6 +13,22 @@ from datetime import datetime, timezone
 logger = logging.getLogger(__name__)
 
 
+def clean_error_message(e: Exception) -> str:
+    """Format exception/error message to strip HTML and limit length for clean logging."""
+    err_msg = str(e)
+    if "<!DOCTYPE" in err_msg:
+        err_msg = err_msg.split("<!DOCTYPE")[0].strip()
+    elif "<html" in err_msg.lower():
+        err_msg = err_msg.split("<html")[0].strip()
+    
+    # Split by newline and take the first line to keep logs clean
+    err_msg = err_msg.split("\n")[0].strip()
+    
+    if len(err_msg) > 200:
+        err_msg = err_msg[:200] + "... [truncated]"
+    return err_msg
+
+
 class DeribitClient:
     """Wrapper around ccxt for Deribit testnet/mainnet."""
 
@@ -46,9 +62,7 @@ class DeribitClient:
             try:
                 return func(*args, **kwargs)
             except (ccxt.BaseError, requests.RequestException) as e:
-                err_msg = str(e)
-                if len(err_msg) > 500:
-                    err_msg = err_msg[:500] + "... [truncated]"
+                err_msg = clean_error_message(e)
                 
                 if attempt == max_retries - 1:
                     logger.error(
@@ -86,9 +100,7 @@ class DeribitClient:
                 )
                 return float(response.get("result", {}).get("index_price", 0))
             except Exception as ex:
-                err_msg = str(ex)
-                if len(err_msg) > 500:
-                    err_msg = err_msg[:500] + "... [truncated]"
+                err_msg = clean_error_message(ex)
                 logger.warning("Failed to fetch index price: %s", err_msg)
                 raise ex
 
@@ -102,9 +114,7 @@ class DeribitClient:
             ohlcv = self._retry_call(self.exchange.fetch_ohlcv, symbol, timeframe=timeframe, limit=limit)
             return ohlcv
         except Exception as e:
-            err_msg = str(e)
-            if len(err_msg) > 500:
-                err_msg = err_msg[:500] + "... [truncated]"
+            err_msg = clean_error_message(e)
             logger.warning("OHLCV fetch failed for %s: %s, falling back to index", symbol, err_msg)
             return []
 
@@ -132,9 +142,7 @@ class DeribitClient:
             if data:
                 return float(data[-1][1])  # Last DVOL value
         except Exception as e:
-            err_msg = str(e)
-            if len(err_msg) > 500:
-                err_msg = err_msg[:500] + "... [truncated]"
+            err_msg = clean_error_message(e)
             logger.warning("Failed to fetch DVOL: %s", err_msg)
         return None
 

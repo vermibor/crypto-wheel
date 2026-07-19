@@ -46,7 +46,7 @@ logger = logging.getLogger("main")
 # Imports (after logging setup)
 # -------------------------------------------------------------------
 
-from deribit_client import DeribitClient
+from deribit_client import DeribitClient, clean_error_message
 from strategy import run_strategy
 from state_manager import load_state
 from export import export_trades_csv, export_cashflow_csv, export_summary_csv
@@ -112,9 +112,7 @@ def main():
         btc_price = client.get_btc_price()
         logger.info("BTC Price: %.2f %s", btc_price, settlement)
     except Exception as e:
-        err_msg = str(e)
-        if len(err_msg) > 500:
-            err_msg = err_msg[:500] + "... [truncated]"
+        err_msg = clean_error_message(e)
         logger.critical("Failed to initialize Deribit client or fetch initial BTC price: %s", err_msg)
         logger.info("=" * 70)
         logger.info("ABORTED. Log saved to %s", log_file)
