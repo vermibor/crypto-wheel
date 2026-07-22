@@ -212,7 +212,7 @@ def compute_risk_metrics(trades: list[dict]) -> dict:
     if total_losses > 0:
         result["profit_factor"] = round(total_wins / total_losses, 4)
     elif total_wins > 0:
-        result["profit_factor"] = float("inf")
+        result["profit_factor"] = 99.0  # Represents infinity in UI (>90 renders as ∞)
 
     # --- Expectancy ---
     win_rate = len(wins) / n if n else 0
@@ -668,6 +668,9 @@ class DashboardEncoder(json.JSONEncoder):
 
     def encode(self, obj):
         return super().encode(self._sanitize(obj))
+
+    def iterencode(self, obj, _one_shot=False):
+        return super().iterencode(self._sanitize(obj), _one_shot)
 
     def _sanitize(self, obj):
         if isinstance(obj, float):
