@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-22T09:54:21Z",
-  "btc_price": 65807.92,
+  "generated_at": "2026-07-22T10:03:11Z",
+  "btc_price": 65884.5,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -424,7 +424,7 @@
         "sharpe_ratio": null,
         "sortino_ratio": null,
         "calmar_ratio": null,
-        "profit_factor": Infinity,
+        "profit_factor": 99.0,
         "expectancy": 0.00055,
         "max_drawdown_pct": 0.0,
         "current_drawdown_pct": 0.0,
@@ -521,8 +521,8 @@
   "hodl": {
     "start_date": "2026-05-31",
     "start_price": 73876.61,
-    "current_price": 65807.92,
-    "return_pct": -10.92,
+    "current_price": 65884.5,
+    "return_pct": -10.82,
     "prices": [
       {
         "date": "2026-05-31",
@@ -734,7 +734,7 @@
       },
       {
         "date": "2026-07-22",
-        "price": 65807.92
+        "price": 65884.5
       }
     ]
   },
