@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-22T08:15:11Z",
-  "btc_price": 65989.51,
+  "generated_at": "2026-07-22T09:52:30Z",
+  "btc_price": 65835.92,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -521,8 +521,8 @@
   "hodl": {
     "start_date": "2026-05-31",
     "start_price": 73876.61,
-    "current_price": 65989.51,
-    "return_pct": -10.68,
+    "current_price": 65835.92,
+    "return_pct": -10.88,
     "prices": [
       {
         "date": "2026-05-31",
@@ -734,7 +734,7 @@
       },
       {
         "date": "2026-07-22",
-        "price": 65989.51
+        "price": 65835.92
       }
     ]
   },
