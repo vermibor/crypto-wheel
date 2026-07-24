@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-23T08:16:20Z",
-  "btc_price": 65498.17,
+  "generated_at": "2026-07-24T08:16:17Z",
+  "btc_price": 65404.47,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -68,28 +68,28 @@
     "aggressive": {
       "summary": {
         "initial_budget": 0.1,
-        "current_cash": 0.1013,
-        "equity": 0.1013,
-        "total_return_pct": 1.25,
+        "current_cash": 0.103,
+        "equity": 0.103,
+        "total_return_pct": 3.0,
         "drawdown_pct": 0.0,
-        "high_water_mark": 0.1013,
+        "high_water_mark": 0.103,
         "phase": "selling_puts",
-        "total_trades": 1,
-        "puts_sold": 1,
+        "total_trades": 3,
+        "puts_sold": 2,
         "calls_sold": 0,
         "assignments": 0,
-        "expired_otm": 0,
-        "total_premium": 0.0013,
+        "expired_otm": 1,
+        "total_premium": 0.003,
         "total_pnl": 0.0,
-        "win_rate_pct": 0,
+        "win_rate_pct": 100.0,
         "active_option": {
-          "symbol": "BTC/USD:BTC-260724-64000-P",
+          "symbol": "BTC/USD:BTC-260807-64000-P",
           "strike": 64000.0,
-          "expiry": 1784880000000,
+          "expiry": 1786089600000,
           "option_type": "put",
           "size_btc": 0.1,
-          "entry_premium": 0.0012500000000000002,
-          "entry_price": 0.0125
+          "entry_premium": 0.0017500000000000003,
+          "entry_price": 0.0175
         },
         "active_future": null
       },
@@ -98,7 +98,7 @@
         "sortino_ratio": null,
         "calmar_ratio": null,
         "profit_factor": null,
-        "expectancy": null,
+        "expectancy": 0.0,
         "max_drawdown_pct": 0.0,
         "current_drawdown_pct": 0.0,
         "avg_win": null,
@@ -121,6 +121,32 @@
           "pnl": null,
           "btc_price": 64889.5,
           "notes": "Opened CSP"
+        },
+        {
+          "timestamp": "2026-07-24T08:15:10.008311+00:00",
+          "action": "put_expired_otm",
+          "symbol": "BTC/USD:BTC-260724-64000-P",
+          "strike": 64000.0,
+          "delta": 0.0,
+          "dte": 0.0,
+          "amount_btc": 0.1,
+          "premium": null,
+          "pnl": null,
+          "btc_price": 65397.0,
+          "notes": "Put expired worthless. Premium retained."
+        },
+        {
+          "timestamp": "2026-07-24T08:16:16.097676+00:00",
+          "action": "sell_put",
+          "symbol": "BTC/USD:BTC-260807-64000-P",
+          "strike": 64000.0,
+          "delta": -0.36179,
+          "dte": 14.0,
+          "amount_btc": 0.1,
+          "premium": 0.0017500000000000003,
+          "pnl": null,
+          "btc_price": 65397.0,
+          "notes": "Opened CSP"
         }
       ],
       "cashflow": [
@@ -131,6 +157,22 @@
           "pnl": 0,
           "cash_after": 0.1013,
           "notes": "Opened CSP"
+        },
+        {
+          "timestamp": "2026-07-24T08:15:10.008311+00:00",
+          "action": "put_expired_otm",
+          "premium": 0,
+          "pnl": 0,
+          "cash_after": 0.1013,
+          "notes": "Put expired worthless. Premium retained."
+        },
+        {
+          "timestamp": "2026-07-24T08:16:16.097676+00:00",
+          "action": "sell_put",
+          "premium": 0.0017500000000000003,
+          "pnl": 0,
+          "cash_after": 0.103,
+          "notes": "Opened CSP"
         }
       ],
       "daily_pnl": [
@@ -139,6 +181,12 @@
           "pnl": 0.00125,
           "trades": 1,
           "premium": 0.00125
+        },
+        {
+          "date": "2026-07-24",
+          "pnl": 0.00175,
+          "trades": 2,
+          "premium": 0.00175
         }
       ]
     },
@@ -569,8 +617,8 @@
   "hodl": {
     "start_date": "2026-05-31",
     "start_price": 73890.13,
-    "current_price": 65498.17,
-    "return_pct": -11.36,
+    "current_price": 65404.47,
+    "return_pct": -11.48,
     "prices": [
       {
         "date": "2026-05-31",
@@ -758,119 +806,51 @@
       },
       {
         "date": "2026-07-16",
-        "price": 63939.6
+        "price": 63923.91
       },
       {
         "date": "2026-07-17",
-        "price": 63900.26
+        "price": 63944.35
       },
       {
         "date": "2026-07-18",
-        "price": 64761.54
+        "price": 64769.14
       },
       {
         "date": "2026-07-19",
-        "price": 64577.43
+        "price": 64628.11
       },
       {
         "date": "2026-07-20",
-        "price": 65108.19
+        "price": 65095.61
       },
       {
         "date": "2026-07-21",
-        "price": 66205.36
+        "price": 66264.36
       },
       {
         "date": "2026-07-22",
-        "price": 66007.39
+        "price": 66004.18
       },
       {
         "date": "2026-07-23",
-        "price": 65498.17
+        "price": 65155.99
+      },
+      {
+        "date": "2026-07-24",
+        "price": 65404.47
       }
     ]
   },
   "portfolio": {
-    "total_equity": 0.4011,
+    "total_equity": 0.4028,
     "total_initial": 0.4,
-    "total_return_pct": 0.27,
-    "total_premium_collected": 0.0075,
+    "total_return_pct": 0.7,
+    "total_premium_collected": 0.0092,
     "total_realized_pnl": -0.0059,
-    "total_trades": 12
+    "total_trades": 14
   },
   "logs": [
-    {
-      "timestamp": "2026-06-24T07:35:09",
-      "level": "INFO",
-      "message": "BTC=62822 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:09",
-      "level": "INFO",
-      "message": "Risk check: BTC 62822 < SMA50 71348. Trend filter blocks new puts.",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:09",
-      "level": "INFO",
-      "message": "BTC=62822 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "Risk check: BTC 62822 < SMA50 71348. Trend filter blocks new puts.",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "BTC=62822 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "Risk check: BTC 62822 < SMA50 71348. Trend filter blocks new puts.",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "BTC=62822 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "Risk check: BTC 62822 < SMA50 71348. Trend filter blocks new puts.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-06-24T07:35:10",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "daily"
-    },
     {
       "timestamp": "2026-06-26T11:18:11",
       "level": "INFO",
@@ -2699,19 +2679,75 @@
       "level": "INFO",
       "message": "END: Equity=0.0969 | Cash=0.0969 | DD=3.8% | Trades=7",
       "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:09",
+      "level": "INFO",
+      "message": "BTC=65398 | Cash=0.1012 | Phase=selling_puts | Equity=0.1012",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:09",
+      "level": "INFO",
+      "message": "END: Equity=0.1012 | Cash=0.1012 | DD=0.0% | Trades=1",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:09",
+      "level": "INFO",
+      "message": "BTC=65398 | Cash=0.1017 | Phase=selling_puts | Equity=0.1017",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:09",
+      "level": "INFO",
+      "message": "END: Equity=0.1017 | Cash=0.1017 | DD=0.0% | Trades=3",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:10",
+      "level": "INFO",
+      "message": "BTC=65397 | Cash=0.1013 | Phase=selling_puts | Equity=0.1013",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:10",
+      "level": "INFO",
+      "message": "PUT EXPIRED OTM: BTC 65397 > strike 64000. Premium kept.",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-24T10:15:10",
+      "level": "INFO",
+      "message": "Risk check: All risk checks passed.",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-24T10:16:15",
+      "level": "INFO",
+      "message": "Selling PUT BTC/USD:BTC-260807-64000-P | strike=64000 delta=-0.362 dte=14.0",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-24T10:16:16",
+      "level": "INFO",
+      "message": "END: Equity=0.1030 | Cash=0.1030 | DD=0.0% | Trades=3",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-24T10:16:16",
+      "level": "INFO",
+      "message": "BTC=65403 | Cash=0.0969 | Phase=selling_calls | Equity=0.0969",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-07-24T10:16:16",
+      "level": "INFO",
+      "message": "END: Equity=0.0969 | Cash=0.0969 | DD=3.8% | Trades=7",
+      "strategy": "daily"
     }
   ],
   "daily_snapshots": [
-    {
-      "date": "2026-06-24",
-      "btc_price": 62822.5,
-      "strategies_run": 4,
-      "trades_executed": 0,
-      "risk_filter_blocks": 4,
-      "risk_filter_reasons": [
-        "BTC 62822 < SMA50 71348"
-      ]
-    },
     {
       "date": "2026-06-26",
       "btc_price": 60081.0,
@@ -2961,6 +2997,14 @@
       "btc_price": 65510.0,
       "strategies_run": 4,
       "trades_executed": 2,
+      "risk_filter_blocks": 0,
+      "risk_filter_reasons": []
+    },
+    {
+      "date": "2026-07-24",
+      "btc_price": 65397.5,
+      "strategies_run": 4,
+      "trades_executed": 1,
       "risk_filter_blocks": 0,
       "risk_filter_reasons": []
     }
