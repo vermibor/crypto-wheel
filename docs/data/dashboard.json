@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-29T08:16:18Z",
-  "btc_price": 64333.75,
+  "generated_at": "2026-07-30T08:15:11Z",
+  "btc_price": 63955.94,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -760,249 +760,253 @@
   },
   "hodl": {
     "start_date": "2026-05-31",
-    "start_price": 73890.13,
-    "current_price": 64333.75,
-    "return_pct": -12.93,
+    "start_price": 73876.61,
+    "current_price": 63955.94,
+    "return_pct": -13.43,
     "prices": [
       {
         "date": "2026-05-31",
-        "price": 73890.13
+        "price": 73876.61
       },
       {
         "date": "2026-06-01",
-        "price": 71338.43
+        "price": 71348.67
       },
       {
         "date": "2026-06-02",
-        "price": 66366.72
+        "price": 66315.56
       },
       {
         "date": "2026-06-03",
-        "price": 64807.54
+        "price": 64813.38
       },
       {
         "date": "2026-06-04",
-        "price": 63679.44
+        "price": 63661.25
       },
       {
         "date": "2026-06-05",
-        "price": 61598.52
+        "price": 61658.39
       },
       {
         "date": "2026-06-06",
-        "price": 60576.61
+        "price": 60583.53
       },
       {
         "date": "2026-06-07",
-        "price": 62881.56
+        "price": 62898.84
       },
       {
         "date": "2026-06-08",
-        "price": 63350.09
+        "price": 63404.54
       },
       {
         "date": "2026-06-09",
-        "price": 61674.0
+        "price": 61649.11
       },
       {
         "date": "2026-06-10",
-        "price": 61349.92
+        "price": 61356.37
       },
       {
         "date": "2026-06-11",
-        "price": 63458.28
+        "price": 63477.66
       },
       {
         "date": "2026-06-12",
-        "price": 63480.19
+        "price": 63474.25
       },
       {
         "date": "2026-06-13",
-        "price": 64438.39
+        "price": 64438.0
       },
       {
         "date": "2026-06-14",
-        "price": 65360.48
+        "price": 65347.35
       },
       {
         "date": "2026-06-15",
-        "price": 66178.57
+        "price": 66179.29
       },
       {
         "date": "2026-06-16",
-        "price": 65725.58
+        "price": 65716.96
       },
       {
         "date": "2026-06-17",
-        "price": 64260.31
+        "price": 64280.2
       },
       {
         "date": "2026-06-18",
-        "price": 62823.09
+        "price": 62822.61
       },
       {
         "date": "2026-06-19",
-        "price": 63258.03
+        "price": 63266.16
       },
       {
         "date": "2026-06-20",
-        "price": 64232.33
+        "price": 64230.36
       },
       {
         "date": "2026-06-21",
-        "price": 63742.54
+        "price": 63730.37
       },
       {
         "date": "2026-06-22",
-        "price": 63896.99
+        "price": 63911.61
       },
       {
         "date": "2026-06-23",
-        "price": 62524.18
+        "price": 62515.96
       },
       {
         "date": "2026-06-24",
-        "price": 60791.16
+        "price": 60783.2
       },
       {
         "date": "2026-06-25",
-        "price": 59775.39
+        "price": 59787.08
       },
       {
         "date": "2026-06-26",
-        "price": 59972.04
+        "price": 59981.18
       },
       {
         "date": "2026-06-27",
-        "price": 60156.1
+        "price": 60142.21
       },
       {
         "date": "2026-06-28",
-        "price": 59009.78
+        "price": 58971.24
       },
       {
         "date": "2026-06-29",
-        "price": 60281.35
+        "price": 60277.65
       },
       {
         "date": "2026-06-30",
-        "price": 58531.71
+        "price": 58519.11
       },
       {
         "date": "2026-07-01",
-        "price": 60414.94
+        "price": 60415.22
       },
       {
         "date": "2026-07-02",
-        "price": 61420.89
+        "price": 61438.58
       },
       {
         "date": "2026-07-03",
-        "price": 62528.15
+        "price": 62533.83
       },
       {
         "date": "2026-07-04",
-        "price": 63131.96
+        "price": 63133.66
       },
       {
         "date": "2026-07-05",
-        "price": 63668.21
+        "price": 63625.7
       },
       {
         "date": "2026-07-06",
-        "price": 64196.23
+        "price": 64180.63
       },
       {
         "date": "2026-07-07",
-        "price": 63498.44
+        "price": 63505.74
       },
       {
         "date": "2026-07-08",
-        "price": 62279.44
+        "price": 62267.37
       },
       {
         "date": "2026-07-09",
-        "price": 63178.57
+        "price": 63178.83
       },
       {
         "date": "2026-07-10",
-        "price": 64072.77
+        "price": 64065.46
       },
       {
         "date": "2026-07-11",
-        "price": 64167.39
+        "price": 64154.88
       },
       {
         "date": "2026-07-12",
-        "price": 63852.36
+        "price": 63861.44
       },
       {
         "date": "2026-07-13",
-        "price": 61864.28
+        "price": 61848.88
       },
       {
         "date": "2026-07-14",
-        "price": 64827.81
+        "price": 64829.31
       },
       {
         "date": "2026-07-15",
-        "price": 64831.35
+        "price": 64831.34
       },
       {
         "date": "2026-07-16",
-        "price": 63923.91
+        "price": 63920.25
       },
       {
         "date": "2026-07-17",
-        "price": 63944.35
+        "price": 63933.54
       },
       {
         "date": "2026-07-18",
-        "price": 64769.14
+        "price": 64774.66
       },
       {
         "date": "2026-07-19",
-        "price": 64628.11
+        "price": 64637.03
       },
       {
         "date": "2026-07-20",
-        "price": 65095.61
+        "price": 65094.29
       },
       {
         "date": "2026-07-21",
-        "price": 66264.36
+        "price": 66257.34
       },
       {
         "date": "2026-07-22",
-        "price": 66004.18
+        "price": 65988.02
       },
       {
         "date": "2026-07-23",
-        "price": 65155.99
+        "price": 65144.92
       },
       {
         "date": "2026-07-24",
-        "price": 64105.63
+        "price": 64113.12
       },
       {
         "date": "2026-07-25",
-        "price": 64358.53
+        "price": 64348.6
       },
       {
         "date": "2026-07-26",
-        "price": 65378.24
+        "price": 65339.5
       },
       {
         "date": "2026-07-27",
-        "price": 63688.83
+        "price": 63799.75
       },
       {
         "date": "2026-07-28",
-        "price": 63687.66
+        "price": 63732.85
       },
       {
         "date": "2026-07-29",
-        "price": 64333.75
+        "price": 63862.03
+      },
+      {
+        "date": "2026-07-30",
+        "price": 63955.94
       }
     ]
   },
@@ -1015,78 +1019,6 @@
     "total_trades": 20
   },
   "logs": [
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "BTC=59316 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "Risk check: BTC 59316 < SMA50 68923. Trend filter blocks new puts.",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "BTC=59316 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "Risk check: BTC 59316 < SMA50 68923. Trend filter blocks new puts.",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "BTC=59316 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "Risk check: BTC 59316 < SMA50 68923. Trend filter blocks new puts.",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "BTC=59316 | Cash=0.1000 | Phase=selling_puts | Equity=0.1000",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "Risk check: BTC 59316 < SMA50 68923. Trend filter blocks new puts.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-06-30T07:35:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1000 | Cash=0.1000 | DD=0.0% | Trades=0",
-      "strategy": "daily"
-    },
     {
       "timestamp": "2026-07-01T07:35:09",
       "level": "INFO",
@@ -2915,19 +2847,57 @@
       "level": "INFO",
       "message": "END: Equity=0.0959 | Cash=0.0959 | DD=4.8% | Trades=13",
       "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:09",
+      "level": "INFO",
+      "message": "BTC=63930 | Cash=0.1012 | Phase=selling_puts | Equity=0.1012",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:09",
+      "level": "INFO",
+      "message": "END: Equity=0.1012 | Cash=0.1012 | DD=0.0% | Trades=1",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:10",
+      "level": "INFO",
+      "message": "BTC=63930 | Cash=0.1017 | Phase=selling_puts | Equity=0.1017",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:10",
+      "level": "INFO",
+      "message": "END: Equity=0.1017 | Cash=0.1017 | DD=0.0% | Trades=3",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:10",
+      "level": "INFO",
+      "message": "BTC=63930 | Cash=0.1030 | Phase=selling_puts | Equity=0.1030",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:10",
+      "level": "INFO",
+      "message": "END: Equity=0.1030 | Cash=0.1030 | DD=0.0% | Trades=3",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:10",
+      "level": "INFO",
+      "message": "BTC=63930 | Cash=0.0959 | Phase=selling_calls | Equity=0.0959",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-07-30T10:15:10",
+      "level": "INFO",
+      "message": "END: Equity=0.0959 | Cash=0.0959 | DD=4.8% | Trades=13",
+      "strategy": "daily"
     }
   ],
   "daily_snapshots": [
-    {
-      "date": "2026-06-30",
-      "btc_price": 59316.0,
-      "strategies_run": 4,
-      "trades_executed": 0,
-      "risk_filter_blocks": 4,
-      "risk_filter_reasons": [
-        "BTC 59316 < SMA50 68923"
-      ]
-    },
     {
       "date": "2026-07-01",
       "btc_price": 59117.5,
@@ -3172,6 +3142,14 @@
       "btc_price": 64313.5,
       "strategies_run": 4,
       "trades_executed": 2,
+      "risk_filter_blocks": 0,
+      "risk_filter_reasons": []
+    },
+    {
+      "date": "2026-07-30",
+      "btc_price": 63930.5,
+      "strategies_run": 4,
+      "trades_executed": 0,
       "risk_filter_blocks": 0,
       "risk_filter_reasons": []
     }
