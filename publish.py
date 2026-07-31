@@ -182,16 +182,9 @@ def compute_risk_metrics(trades: list[dict]) -> dict:
         return result
 
     # Gather PnL values for closed trades
-    # A "win" for premium-only trades (expired OTM) uses premium; otherwise pnl
     pnl_values = []
     for t in closed:
-        pnl = _safe_float(t.get("pnl"))
-        premium = _safe_float(t.get("premium"))
-        # For expired OTM, there's typically no pnl field — the premium IS the profit
-        if t["action"] in ("put_expired_otm", "call_expired_otm"):
-            pnl_values.append(premium if premium != 0 else pnl)
-        else:
-            pnl_values.append(pnl)
+        pnl_values.append(_safe_float(t.get("realized_pnl")))
 
     if not pnl_values:
         return result
@@ -281,6 +274,55 @@ def compute_risk_metrics(trades: list[dict]) -> dict:
 # Per-strategy summary builder
 # ===========================================================================
 
+def compute_realized_pnl_for_trades(trades: list[dict]) -> list[dict]:
+    """Pre-calculate display PnL for each trade by matching opening and closing positions."""
+    sorted_trades = sorted(trades, key=lambda x: x.get("timestamp", ""))
+    processed_trades = []
+    
+    for i, t in enumerate(sorted_trades):
+        trade = dict(t)
+        action = trade.get("action", "")
+        symbol = trade.get("symbol", "")
+        premium = _safe_float(trade.get("premium"))
+        pnl = _safe_float(trade.get("pnl"))
+        
+        is_closing = (
+            "closed" in action or
+            "expired" in action or
+            "assigned" in action
+        )
+        
+        realized_pnl = 0.0
+        
+        if is_closing:
+            opening_trade = None
+            for prev_t in reversed(sorted_trades[:i]):
+                if (prev_t.get("symbol") == symbol and 
+                    prev_t.get("action") in ("sell_put", "sell_call")):
+                    opening_trade = prev_t
+                    break
+            
+            if opening_trade:
+                open_premium = _safe_float(opening_trade.get("premium"))
+                if "expired" in action:
+                    realized_pnl = open_premium
+                elif "closed" in action:
+                    realized_pnl = open_premium + premium
+                elif "assigned" in action:
+                    realized_pnl = open_premium + pnl
+            else:
+                realized_pnl = pnl
+        elif action in ("sell_put", "sell_call"):
+            realized_pnl = None
+        else:
+            realized_pnl = pnl if pnl != 0.0 else None
+            
+        trade["realized_pnl"] = realized_pnl
+        processed_trades.append(trade)
+        
+    return processed_trades
+
+
 def build_strategy_summary(state: dict, settlement: str) -> dict:
     """Build the summary sub-object for a strategy from its state JSON."""
     cash_key, budget_key, hwm_key = get_state_keys(settlement)
@@ -291,13 +333,11 @@ def build_strategy_summary(state: dict, settlement: str) -> dict:
     cash = _safe_float(state.get(cash_key))
     hwm = _safe_float(state.get(hwm_key))
 
-    # Equity — simplified: cash for BTC settlement (no open future positions tracked)
-    equity = cash
-    if settlement != "BTC" and state.get("active_future"):
-        entry = state["active_future"].get("entry_price", 0)
-        size = state["active_future"].get("size_btc", 0)
-        # We don't have a live price here, so equity = cash (conservative)
-        pass
+    total_premium = sum(_safe_float(t.get("premium")) for t in trades)
+    total_pnl = sum(_safe_float(t.get("realized_pnl")) for t in trades if t.get("realized_pnl") is not None)
+
+    # Closed-position equity: initial budget plus total realized PnL of closed positions
+    equity = initial + total_pnl
 
     total_return_pct = ((equity - initial) / initial * 100) if initial else 0
     drawdown_pct = ((hwm - equity) / hwm * 100) if hwm > 0 else 0
@@ -307,11 +347,8 @@ def build_strategy_summary(state: dict, settlement: str) -> dict:
     assignments = sum(1 for t in trades if t.get("action") in ("put_assigned", "call_assigned"))
     expired_otm = sum(1 for t in trades if t.get("action") in ("put_expired_otm", "call_expired_otm"))
 
-    total_premium = sum(_safe_float(t.get("premium")) for t in trades)
-    total_pnl = sum(_safe_float(t.get("pnl")) for t in trades)
-
     closed = [t for t in trades if t.get("action") in CLOSED_ACTIONS]
-    wins = sum(1 for t in closed if _safe_float(t.get("pnl")) >= 0)
+    wins = sum(1 for t in closed if _safe_float(t.get("realized_pnl")) >= 0)
     win_rate = (wins / len(closed) * 100) if closed else 0
 
     return {
@@ -348,7 +385,7 @@ def build_trades_list(state: dict) -> list[dict]:
             "dte": _safe_float(t.get("dte")),
             "amount_btc": _safe_float(t.get("amount_btc")),
             "premium": _safe_float(t.get("premium")) or None,
-            "pnl": _safe_float(t.get("pnl")) or None,
+            "pnl": t.get("realized_pnl"),
             "btc_price": _safe_float(t.get("btc_price")),
             "notes": t.get("notes", ""),
         })
@@ -384,10 +421,10 @@ def build_cashflow_list(state: dict, settlement: str) -> list[dict]:
 
 
 def build_daily_pnl(state: dict, settlement: str) -> list[dict]:
-    """Aggregate trades by date into daily cash flow and track running cash/equity."""
+    """Aggregate trades by date into daily realized PnL and track running realized equity."""
     cash_key, budget_key, _ = get_state_keys(settlement)
     initial_budget = _safe_float(state.get(budget_key))
-    running_cash = initial_budget
+    running_equity = initial_budget
     precision = 4 if settlement == "BTC" else 2
     
     trades = state.get("trades", [])
@@ -402,19 +439,16 @@ def build_daily_pnl(state: dict, settlement: str) -> list[dict]:
             continue
         date_str = ts[:10]
         
-        premium = _safe_float(t.get("premium"))
-        pnl = _safe_float(t.get("pnl"))
-        
-        trade_cashflow = premium if premium != 0.0 else (pnl if pnl != 0.0 else 0.0)
-        running_cash += trade_cashflow
+        realized_pnl = t.get("realized_pnl")
+        trade_pnl = _safe_float(realized_pnl) if realized_pnl is not None else 0.0
+        running_equity += trade_pnl
         
         if date_str not in daily:
-            daily[date_str] = {"pnl": 0.0, "trades": 0, "premium": 0.0, "equity": 0.0}
+            daily[date_str] = {"pnl": 0.0, "trades": 0, "equity": 0.0}
             
-        daily[date_str]["pnl"] += trade_cashflow
+        daily[date_str]["pnl"] += trade_pnl
         daily[date_str]["trades"] += 1
-        daily[date_str]["premium"] += premium
-        daily[date_str]["equity"] = running_cash
+        daily[date_str]["equity"] = running_equity
 
     result = []
     for date_str in sorted(daily.keys()):
@@ -423,7 +457,6 @@ def build_daily_pnl(state: dict, settlement: str) -> list[dict]:
             "date": date_str,
             "pnl": round(d["pnl"], 8),
             "trades": d["trades"],
-            "premium": round(d["premium"], 8),
             "equity": round(d["equity"], precision),
         })
     return result
@@ -743,16 +776,20 @@ def main():
     strategies_data = {}
     for state in states:
         sid = state["strategy_id"]
-        trades = state.get("trades", [])
+        raw_trades = state.get("trades", [])
+        processed_trades = compute_realized_pnl_for_trades(raw_trades)
+        
+        # Override state["trades"] with processed_trades so all builders see it
+        state["trades"] = processed_trades
 
         strategies_data[sid] = {
             "summary": build_strategy_summary(state, settlement),
-            "risk": compute_risk_metrics(trades),
+            "risk": compute_risk_metrics(processed_trades),
             "trades": build_trades_list(state),
             "cashflow": build_cashflow_list(state, settlement),
             "daily_pnl": build_daily_pnl(state, settlement),
         }
-        logger.info("Built data for strategy '%s' (%d trades)", sid, len(trades))
+        logger.info("Built data for strategy '%s' (%d trades)", sid, len(processed_trades))
 
     # -----------------------------------------------------------------------
     # 4. HODL benchmark
