@@ -59,18 +59,19 @@ export default function CalendarPage() {
     ? allTrades.filter(t => t.strategy_id === strategyFilter) 
     : allTrades;
   
-  // Aggregate daily
-  const dailyData: Record<string, { pnl: number; count: number; dateObj: Date; trades: FlatTrade[] }> = {};
+  // Aggregate daily cash flow
+  const dailyData: Record<string, { cashflow: number; count: number; dateObj: Date; trades: FlatTrade[] }> = {};
   filteredTrades.forEach(t => {
     if (!t.timestamp) return;
     const d = new Date(t.timestamp);
     const dateKey = d.toISOString().split('T')[0];
     if (!dailyData[dateKey]) {
-      dailyData[dateKey] = { pnl: 0, count: 0, dateObj: d, trades: [] };
+      dailyData[dateKey] = { cashflow: 0, count: 0, dateObj: d, trades: [] };
     }
     dailyData[dateKey].count++;
     dailyData[dateKey].trades.push(t);
-    if (t.pnl) dailyData[dateKey].pnl += t.pnl;
+    const tradeCashflow = t.premium !== null && t.premium !== 0 ? t.premium : (t.pnl !== null ? t.pnl : 0);
+    dailyData[dateKey].cashflow += tradeCashflow;
   });
 
   const calendarDays = Object.values(dailyData).sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
@@ -110,7 +111,7 @@ export default function CalendarPage() {
               <tr>
                 <th>Date</th>
                 <th>Total Trades</th>
-                <th className="text-right">Daily PNL</th>
+                <th className="text-right">Daily Cash Flow</th>
                 <th>Activity Summary</th>
               </tr>
             </thead>
@@ -118,8 +119,8 @@ export default function CalendarPage() {
               {calendarDays.map((day, i) => {
                 const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
                 const dateNum = day.dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
-                const isProfit = day.pnl > 0;
-                const isLoss = day.pnl < 0;
+                const isProfit = day.cashflow > 0;
+                const isLoss = day.cashflow < 0;
                 
                 return (
                   <tr key={i}>
@@ -131,8 +132,8 @@ export default function CalendarPage() {
                     </td>
                     <td>{day.count}</td>
                     <td className="text-right" style={{ color: isProfit ? 'var(--success)' : (isLoss ? 'var(--danger)' : 'inherit'), fontWeight: 600 }}>
-                      {day.pnl > 0 ? '+' : (day.pnl < 0 ? '-' : '')}{currSym}{Math.abs(day.pnl).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}
-                      {day.pnl === 0 && day.count === 0 ? `${currSym}0.00` : ''}
+                      {day.cashflow > 0 ? '+' : (day.cashflow < 0 ? '-' : '')}{currSym}{Math.abs(day.cashflow).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}
+                      {day.cashflow === 0 && day.count === 0 ? `${currSym}0.00` : ''}
                     </td>
                     <td style={{ color: 'var(--text-secondary)' }}>
                       {Array.from(new Set(day.trades.map(t => t.strategy_id))).join(', ')} strategies active

@@ -383,19 +383,38 @@ def build_cashflow_list(state: dict, settlement: str) -> list[dict]:
     return result
 
 
-def build_daily_pnl(trades: list[dict]) -> list[dict]:
-    """Aggregate trades by date into daily PnL entries."""
-    daily = defaultdict(lambda: {"pnl": 0.0, "trades": 0, "premium": 0.0})
-
-    for t in trades:
+def build_daily_pnl(state: dict, settlement: str) -> list[dict]:
+    """Aggregate trades by date into daily cash flow and track running cash/equity."""
+    cash_key, budget_key, _ = get_state_keys(settlement)
+    initial_budget = _safe_float(state.get(budget_key))
+    running_cash = initial_budget
+    precision = 4 if settlement == "BTC" else 2
+    
+    trades = state.get("trades", [])
+    # Sort trades chronologically
+    sorted_trades = sorted(trades, key=lambda x: x.get("timestamp", ""))
+    
+    daily = {}
+    
+    for t in sorted_trades:
         ts = t.get("timestamp", "")
         if not ts:
             continue
-        # Parse ISO date — take first 10 chars for date part
         date_str = ts[:10]
-        daily[date_str]["pnl"] += _safe_float(t.get("pnl")) + _safe_float(t.get("premium"))
+        
+        premium = _safe_float(t.get("premium"))
+        pnl = _safe_float(t.get("pnl"))
+        
+        trade_cashflow = premium if premium != 0.0 else (pnl if pnl != 0.0 else 0.0)
+        running_cash += trade_cashflow
+        
+        if date_str not in daily:
+            daily[date_str] = {"pnl": 0.0, "trades": 0, "premium": 0.0, "equity": 0.0}
+            
+        daily[date_str]["pnl"] += trade_cashflow
         daily[date_str]["trades"] += 1
-        daily[date_str]["premium"] += _safe_float(t.get("premium"))
+        daily[date_str]["premium"] += premium
+        daily[date_str]["equity"] = running_cash
 
     result = []
     for date_str in sorted(daily.keys()):
@@ -405,6 +424,7 @@ def build_daily_pnl(trades: list[dict]) -> list[dict]:
             "pnl": round(d["pnl"], 8),
             "trades": d["trades"],
             "premium": round(d["premium"], 8),
+            "equity": round(d["equity"], precision),
         })
     return result
 
@@ -730,7 +750,7 @@ def main():
             "risk": compute_risk_metrics(trades),
             "trades": build_trades_list(state),
             "cashflow": build_cashflow_list(state, settlement),
-            "daily_pnl": build_daily_pnl(trades),
+            "daily_pnl": build_daily_pnl(state, settlement),
         }
         logger.info("Built data for strategy '%s' (%d trades)", sid, len(trades))
 

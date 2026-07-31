@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
 import { currencySymbol, pricePrecision } from '@/lib/data';
 import { MoreVertical, FileText, ArrowUpRight, ArrowDownRight } from 'lucide-react';
@@ -66,7 +66,9 @@ export default function Dashboard() {
   if (days !== 'all') {
     cutoffDate.setDate(cutoffDate.getDate() - parseInt(days, 10));
   } else {
-    cutoffDate.setFullYear(2000); // all time
+    // Find the oldest trade date in allTrades
+    const oldestTradeDate = allTrades.length > 0 ? new Date(allTrades[0].timestamp) : new Date();
+    cutoffDate.setTime(oldestTradeDate.getTime());
   }
 
   // Filter trades by cutoff
@@ -75,17 +77,54 @@ export default function Dashboard() {
   // Filter for metrics and calendar based on selected strategy
   const metricsTrades = strategy ? filteredTrades.filter(t => t.strategy_id === strategy) : filteredTrades;
 
-  // Aggregate daily
-  const dailyData: Record<string, { pnl: number; count: number; dateObj: Date }> = {};
+  // Setup the history slider and sliding window
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const startDay = new Date(cutoffDate);
+  startDay.setHours(0, 0, 0, 0);
+  const endDay = new Date(latestTradeDate);
+  endDay.setHours(0, 0, 0, 0);
+  
+  const totalDays = Math.max(1, Math.ceil((endDay.getTime() - startDay.getTime()) / msPerDay) + 1);
+  const windowSize = 14; // 2 weeks window
+  const maxDaysBack = Math.max(0, totalDays - windowSize);
+
+  const [sliderVal, setSliderVal] = useState<number | null>(null);
+
+  // Reset slider value to max when timeframe/strategy or maxDaysBack changes
+  useEffect(() => {
+    setSliderVal(maxDaysBack);
+  }, [maxDaysBack]);
+
+  const activeSliderVal = sliderVal !== null ? sliderVal : maxDaysBack;
+  const daysBack = Math.max(0, maxDaysBack - activeSliderVal);
+
+  const windowEnd = new Date(endDay);
+  windowEnd.setDate(windowEnd.getDate() - daysBack);
+  const windowStart = new Date(windowEnd);
+  windowStart.setDate(windowStart.getDate() - (windowSize - 1));
+
+  const calendarStart = totalDays > windowSize ? windowStart : startDay;
+  const calendarEnd = totalDays > windowSize ? windowEnd : endDay;
+
+  // Aggregate daily cash flow for the dates inside the window
+  const dailyData: Record<string, { cashflow: number; count: number; dateObj: Date }> = {};
+  
+  // Pre-fill daily data with all days in the window range
+  for (let d = new Date(calendarStart); d <= calendarEnd; d.setDate(d.getDate() + 1)) {
+    const dateKey = d.toISOString().split('T')[0];
+    dailyData[dateKey] = { cashflow: 0, count: 0, dateObj: new Date(d) };
+  }
+
+  // Populate trades in window
   metricsTrades.forEach(t => {
     if (!t.timestamp) return;
     const d = new Date(t.timestamp);
     const dateKey = d.toISOString().split('T')[0];
-    if (!dailyData[dateKey]) {
-      dailyData[dateKey] = { pnl: 0, count: 0, dateObj: d };
+    if (dailyData[dateKey]) {
+      dailyData[dateKey].count++;
+      const tradeCashflow = t.premium !== null && t.premium !== 0 ? t.premium : (t.pnl !== null ? t.pnl : 0);
+      dailyData[dateKey].cashflow += tradeCashflow;
     }
-    dailyData[dateKey].count++;
-    if (t.pnl) dailyData[dateKey].pnl += t.pnl;
   });
 
   const calendarDays = Object.values(dailyData).sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
@@ -163,23 +202,52 @@ export default function Dashboard() {
       </div>
 
       <div className="section">
-        <div className="section-header">
-          <h2 className="section-title">Daily Trades Aggregation {strategy ? `(${strategy.toUpperCase()})` : ''}</h2>
+        <div className="section-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <h2 className="section-title" style={{ margin: 0 }}>Daily Cash Flow {strategy ? `(${strategy.toUpperCase()})` : ''}</h2>
+            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', background: 'rgba(255, 255, 255, 0.05)', padding: '0.25rem 0.75rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
+              {calendarStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} – {calendarEnd.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
+          </div>
+
+          {totalDays > windowSize && (
+            <div className="history-slider-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: '8px' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, minWidth: '80px' }}>History Slider</span>
+              <input 
+                type="range" 
+                min={0} 
+                max={maxDaysBack} 
+                value={activeSliderVal} 
+                onChange={(e) => setSliderVal(parseInt(e.target.value, 10))} 
+                className="history-slider" 
+                style={{ 
+                  flex: 1, 
+                  height: '6px', 
+                  borderRadius: '3px', 
+                  outline: 'none', 
+                  cursor: 'pointer' 
+                }} 
+              />
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, minWidth: '80px', textAlign: 'right' }}>
+                {daysBack === 0 ? 'Present' : `${daysBack} days back`}
+              </span>
+            </div>
+          )}
         </div>
         
-        <div className="calendar-row">
+        <div className="calendar-row" style={{ marginTop: '0.5rem' }}>
           {calendarDays.map((day, i) => {
             const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
             const dateNum = day.dateObj.toLocaleDateString('en-US', { day: '2-digit' });
             return (
-              <div key={i} className="day-card">
+              <div key={i} className="day-card" style={{ minWidth: '130px', padding: '1rem' }}>
                 <div className="day-header">
                   <span className="day-date">{dateNum} {weekday}</span>
                   <FileText size={14} />
                 </div>
-                <div className={`day-pnl ${day.pnl > 0 ? 'text-success' : (day.pnl < 0 ? 'text-danger' : 'text-neutral')}`}>
-                  {day.pnl > 0 ? '+' : ''}{currSym}{Math.abs(day.pnl).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: precision })}
-                  {day.pnl === 0 && day.count === 0 ? `${currSym}0` : ''}
+                <div className={`day-pnl ${day.cashflow > 0 ? 'text-success' : (day.cashflow < 0 ? 'text-danger' : 'text-neutral')}`} style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+                  {day.cashflow > 0 ? '+' : ''}{currSym}{Math.abs(day.cashflow).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: precision })}
+                  {day.cashflow === 0 && day.count === 0 ? `${currSym}0` : ''}
                 </div>
                 <div className="day-trades">{day.count} trades</div>
               </div>

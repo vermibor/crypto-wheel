@@ -535,3 +535,48 @@ tr:hover td {
 .error-container p {
   color: var(--text-secondary);
 }
+
+/* History Slider Custom Styles */
+.history-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border-color);
+  transition: background 0.15s ease-in-out;
+}
+
+.history-slider:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.history-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+  transition: transform 0.1s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.history-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+  background: var(--accent-secondary);
+}
+
+.history-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+  transition: transform 0.1s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.history-slider::-moz-range-thumb:hover {
+  transform: scale(1.25);
+  background: var(--accent-secondary);
+}

@@ -50,6 +50,9 @@ export default function HodlPage() {
 
   const selectAll = () => setSelectedStrategies(Object.keys(data.strategies));
 
+  // Sort prices by date ascending
+  const allPrices = [...hodl.prices].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
   // Calculate daily portfolio equity for selected strategies
   const dailyPortfolioEquity: Record<string, number> = {};
   Object.entries(data.strategies)
@@ -65,8 +68,16 @@ export default function HodlPage() {
     .filter(([id]) => selectedStrategies.includes(id))
     .reduce((acc, [_, s]) => acc + s.summary.initial_budget, 0);
 
-  // Sort prices by date ascending
-  const allPrices = [...hodl.prices].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  // Forward fill the daily portfolio equity
+  const dailyPortfolioEquityFilled: Record<string, number> = {};
+  let lastEquity = totalInitialBudget;
+  allPrices.forEach(p => {
+    const dateStr = p.date;
+    if (dailyPortfolioEquity[dateStr] !== undefined) {
+      lastEquity = dailyPortfolioEquity[dateStr];
+    }
+    dailyPortfolioEquityFilled[dateStr] = lastEquity;
+  });
    
   // Determine the cutoff date based on the latest date in the dataset
   const latestDate = allPrices.length > 0 ? new Date(allPrices[allPrices.length - 1].date) : new Date();
@@ -109,7 +120,7 @@ export default function HodlPage() {
   const baselineBtcPrice = baselinePriceObj.price;
   
   const firstDateStr = baselinePriceObj.date;
-  const baselinePortEquity = dailyPortfolioEquity[firstDateStr] || totalInitialBudget;
+  const baselinePortEquity = dailyPortfolioEquityFilled[firstDateStr] || totalInitialBudget;
 
   // Map and align dates for comparison relative to baseline
   const comparisonData = filteredPrices.map(item => {
@@ -121,7 +132,7 @@ export default function HodlPage() {
     const hodlReturn = isBtc ? 0 : ((btcPrice - baselineBtcPrice) / baselineBtcPrice) * 100;
     
     // Portfolio return percentage relative to baseline (0% on start date)
-    const portEquity = dailyPortfolioEquity[dateStr] || totalInitialBudget;
+    const portEquity = dailyPortfolioEquityFilled[dateStr] || totalInitialBudget;
     const portReturn = ((portEquity - baselinePortEquity) / baselinePortEquity) * 100;
 
     return {
@@ -136,7 +147,7 @@ export default function HodlPage() {
   // Calculate final metrics for the period
   const finalPriceObj = filteredPrices[filteredPrices.length - 1];
   const finalBtcPrice = finalPriceObj.price;
-  const finalPortfolioEquity = dailyPortfolioEquity[finalPriceObj.date] || totalInitialBudget;
+  const finalPortfolioEquity = dailyPortfolioEquityFilled[finalPriceObj.date] || totalInitialBudget;
 
   const finalPortfolioReturn = ((finalPortfolioEquity - baselinePortEquity) / baselinePortEquity) * 100;
   const finalHodlReturn = isBtc ? 0 : ((finalBtcPrice - baselineBtcPrice) / baselineBtcPrice) * 100;

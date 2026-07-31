@@ -61,6 +61,51 @@ export default function TradesPage() {
   // Sort by most recent first
   filteredTrades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
+  // Pre-calculate display PnL for each trade
+  const chronologicalTrades = [...allTrades].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+  const tradesWithDisplayPnl = filteredTrades.map(trade => {
+    const isOption = trade.symbol && (trade.symbol.endsWith('-P') || trade.symbol.endsWith('-C'));
+    
+    // We only modify option closing/expiration/assignment trades
+    const isClosingOptionTrade = isOption && (
+      trade.action.includes('closed') || 
+      trade.action.includes('expired') || 
+      trade.action.includes('assigned')
+    );
+
+    let displayPnl: number | null = trade.pnl;
+
+    if (isClosingOptionTrade) {
+      // Find the corresponding opening trade (sell_put or sell_call with the same symbol and strategy)
+      const openingTrade = chronologicalTrades.find(t => 
+        t.symbol === trade.symbol && 
+        t.strategy_id === trade.strategy_id && 
+        (t.action === 'sell_put' || t.action === 'sell_call') &&
+        new Date(t.timestamp) < new Date(trade.timestamp)
+      );
+
+      if (openingTrade) {
+        const openingPremium = openingTrade.premium || 0;
+        if (trade.action.includes('expired')) {
+          displayPnl = openingPremium;
+        } else if (trade.action.includes('closed')) {
+          displayPnl = openingPremium + (trade.premium || 0);
+        } else if (trade.action.includes('assigned')) {
+          displayPnl = openingPremium + (trade.pnl || 0);
+        }
+      }
+    } else if (isOption && (trade.action === 'sell_put' || trade.action === 'sell_call')) {
+      // Opening option trades show no PNL until closed
+      displayPnl = null;
+    }
+
+    return {
+      ...trade,
+      displayPnl
+    };
+  });
+
   return (
     <>
       <div className="top-header">
@@ -106,9 +151,9 @@ export default function TradesPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredTrades.map((trade, i) => {
-                const isProfit = trade.pnl && trade.pnl > 0;
-                const isLoss = trade.pnl && trade.pnl < 0;
+              {tradesWithDisplayPnl.map((trade, i) => {
+                const isProfit = trade.displayPnl !== null && trade.displayPnl > 0;
+                const isLoss = trade.displayPnl !== null && trade.displayPnl < 0;
                 
                 const isOption = trade.symbol && (trade.symbol.endsWith('-P') || trade.symbol.endsWith('-C'));
                 const instrumentType = isOption ? 'Option' : (trade.symbol ? 'Future' : '-');
@@ -146,7 +191,7 @@ export default function TradesPage() {
                       {trade.premium ? `${currSym}${trade.premium.toFixed(precision)}` : '-'}
                     </td>
                     <td className="text-right" style={{ color: isProfit ? 'var(--success)' : (isLoss ? 'var(--danger)' : 'inherit'), fontWeight: 600 }}>
-                      {trade.pnl ? `${currSym}${trade.pnl.toFixed(precision)}` : '-'}
+                      {trade.displayPnl !== null && trade.displayPnl !== undefined ? `${currSym}${trade.displayPnl.toFixed(precision)}` : '-'}
                     </td>
                   </tr>
                 );
