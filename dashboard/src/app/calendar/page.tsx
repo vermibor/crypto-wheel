@@ -59,19 +59,52 @@ export default function CalendarPage() {
     ? allTrades.filter(t => t.strategy_id === strategyFilter) 
     : allTrades;
   
-  // Aggregate daily cash flow
-  const dailyData: Record<string, { cashflow: number; count: number; dateObj: Date; trades: FlatTrade[] }> = {};
+  // Aggregate daily cash flow, premium collected, and assignments/buyins
+  const dailyData: Record<string, { 
+    cashflow: number; 
+    premiumCollected: number;
+    assignmentsBuyins: number;
+    count: number; 
+    dateObj: Date; 
+    trades: FlatTrade[] 
+  }> = {};
+
   filteredTrades.forEach(t => {
     if (!t.timestamp) return;
     const d = new Date(t.timestamp);
     const dateKey = d.toISOString().split('T')[0];
     if (!dailyData[dateKey]) {
-      dailyData[dateKey] = { cashflow: 0, count: 0, dateObj: d, trades: [] };
+      dailyData[dateKey] = { 
+        cashflow: 0, 
+        premiumCollected: 0,
+        assignmentsBuyins: 0,
+        count: 0, 
+        dateObj: d, 
+        trades: [] 
+      };
     }
     dailyData[dateKey].count++;
     dailyData[dateKey].trades.push(t);
-    const tradeCashflow = t.premium !== null && t.premium !== 0 ? t.premium : (t.pnl !== null ? t.pnl : 0);
-    dailyData[dateKey].cashflow += tradeCashflow;
+
+    // Calculate premium collected (new positions)
+    let premCollected = 0;
+    if (t.action === 'sell_put' || t.action === 'sell_call') {
+      premCollected = t.premium || 0;
+    }
+
+    // Calculate assignments and buyins (SL/TP and assignments)
+    let assignBuyins = 0;
+    if (t.action.includes('closed') || t.action.includes('assigned')) {
+      if (t.action.includes('closed')) {
+        assignBuyins = t.premium || 0; // Buyback premium is negative
+      } else if (t.action.includes('assigned')) {
+        assignBuyins = t.pnl || 0; // Assignment settlement PnL is negative
+      }
+    }
+
+    dailyData[dateKey].premiumCollected += premCollected;
+    dailyData[dateKey].assignmentsBuyins += assignBuyins;
+    dailyData[dateKey].cashflow += (premCollected + assignBuyins);
   });
 
   const calendarDays = Object.values(dailyData).sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
@@ -112,6 +145,8 @@ export default function CalendarPage() {
                 <th>Date</th>
                 <th>Total Trades</th>
                 <th className="text-right">Daily Cash Flow</th>
+                <th className="text-right">Premium Collected</th>
+                <th className="text-right">Assignments/Buyins</th>
                 <th>Activity Summary</th>
               </tr>
             </thead>
@@ -135,6 +170,12 @@ export default function CalendarPage() {
                       {day.cashflow > 0 ? '+' : (day.cashflow < 0 ? '-' : '')}{currSym}{Math.abs(day.cashflow).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}
                       {day.cashflow === 0 && day.count === 0 ? `${currSym}0.00` : ''}
                     </td>
+                    <td className="text-right" style={{ color: day.premiumCollected > 0 ? 'var(--success)' : (day.premiumCollected < 0 ? 'var(--danger)' : 'inherit') }}>
+                      {day.premiumCollected > 0 ? '+' : (day.premiumCollected < 0 ? '-' : '')}{currSym}{Math.abs(day.premiumCollected).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}
+                    </td>
+                    <td className="text-right" style={{ color: day.assignmentsBuyins < 0 ? 'var(--danger)' : (day.assignmentsBuyins > 0 ? 'var(--success)' : 'inherit') }}>
+                      {day.assignmentsBuyins > 0 ? '+' : (day.assignmentsBuyins < 0 ? '-' : '')}{currSym}{Math.abs(day.assignmentsBuyins).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}
+                    </td>
                     <td style={{ color: 'var(--text-secondary)' }}>
                       {Array.from(new Set(day.trades.map(t => t.strategy_id))).join(', ')} strategies active
                     </td>
@@ -143,7 +184,7 @@ export default function CalendarPage() {
               })}
               {calendarDays.length === 0 && (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                  <td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
                     No calendar data found
                   </td>
                 </tr>
