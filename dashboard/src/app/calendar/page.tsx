@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
-import { currencySymbol, pricePrecision } from '@/lib/data';
+import { currencySymbol, pricePrecision, formatDate } from '@/lib/data';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
 export default function CalendarPage() {
@@ -152,8 +152,6 @@ export default function CalendarPage() {
             </thead>
             <tbody>
               {calendarDays.map((day, i) => {
-                const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-                const dateNum = day.dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
                 const isProfit = day.cashflow > 0;
                 const isLoss = day.cashflow < 0;
                 
@@ -162,7 +160,7 @@ export default function CalendarPage() {
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
                         <CalendarIcon size={16} className="text-muted" />
-                        {weekday}, {dateNum}
+                        {formatDate(day.dateObj)}
                       </div>
                     </td>
                     <td>{day.count}</td>

@@ -2,7 +2,7 @@
 
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import type { CashflowEntry } from '@/lib/types';
-import { currencySymbol, pricePrecision } from '@/lib/data';
+import { currencySymbol, pricePrecision, formatDate } from '@/lib/data';
 
 export default function ChartClient({ data, settlement }: { data: CashflowEntry[], settlement: string }) {
   const isBTC = settlement === 'BTC';
@@ -14,7 +14,7 @@ export default function ChartClient({ data, settlement }: { data: CashflowEntry[
   }
 
   const chartData = data.map(row => ({
-    time: new Date(row.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+    time: formatDate(row.timestamp),
     cash: row.cash_after || 0,
   })).filter(d => d.cash > 0);
 

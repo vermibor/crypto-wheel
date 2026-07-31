@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
-import { currencySymbol, pricePrecision } from '@/lib/data';
+import { currencySymbol, pricePrecision, formatDate } from '@/lib/data';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 
@@ -136,7 +136,7 @@ export default function HodlPage() {
     const portReturn = ((portEquity - baselinePortEquity) / baselinePortEquity) * 100;
 
     return {
-      date: new Date(dateStr).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+      date: formatDate(dateStr),
       'HODL BTC (%)': parseFloat(hodlReturn.toFixed(2)),
       'Portfolio (%)': parseFloat(portReturn.toFixed(2)),
       btcPrice,
@@ -167,7 +167,7 @@ export default function HodlPage() {
       <div className="top-header">
         <div className="header-title">
           <h1>Wheel vs HODL BTC</h1>
-          <span className="last-updated">Benchmark: Buy & Hold BTC starting on {new Date(firstDateStr).toLocaleDateString()} (Baseline: 0%)</span>
+          <span className="last-updated">Benchmark: Buy & Hold BTC starting on {formatDate(firstDateStr)} (Baseline: 0%)</span>
         </div>
 
         <div className="time-toggles">
@@ -371,8 +371,8 @@ export default function HodlPage() {
             <thead>
               <tr>
                 <th>Strategy / Benchmark</th>
-                <th className="text-right">Baseline Value ({new Date(firstDateStr).toLocaleDateString()})</th>
-                <th className="text-right">Ending Value ({new Date(finalPriceObj.date).toLocaleDateString()})</th>
+                <th className="text-right">Baseline Value ({formatDate(firstDateStr)})</th>
+                <th className="text-right">Ending Value ({formatDate(finalPriceObj.date)})</th>
                 <th className="text-right">Window Profit</th>
                 <th className="text-right">Total Return (%)</th>
               </tr>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
-import { currencySymbol, pricePrecision } from '@/lib/data';
+import { currencySymbol, pricePrecision, formatDate, formatDateTime } from '@/lib/data';
 import { MoreVertical, FileText, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { MiniSparkline, DonutChart, GaugeChart } from './components/DashboardCharts';
 
@@ -138,7 +138,7 @@ export default function Dashboard() {
       id,
       name: id.toUpperCase(),
       date: filteredCashflow[0]?.timestamp 
-        ? new Date(filteredCashflow[0].timestamp).toLocaleString(undefined, { dateStyle: 'long', timeStyle: 'short' }) 
+        ? formatDateTime(filteredCashflow[0].timestamp) 
         : 'No trades in period',
       data: chartPoints,
       color: isPositive ? 'var(--success)' : 'var(--danger)',
@@ -167,7 +167,7 @@ export default function Dashboard() {
       <div className="top-header">
         <div className="header-title">
           <h1>Dashboard Overview</h1>
-          <span className="last-updated">Last simulation run: {new Date(data.generated_at).toLocaleString()}</span>
+          <span className="last-updated">Last simulation run: {formatDateTime(data.generated_at)}</span>
         </div>
         
         <div className="time-toggles">
@@ -182,18 +182,16 @@ export default function Dashboard() {
         <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
           <h2 className="section-title" style={{ margin: 0 }}>Daily Cash Flow {strategy ? `(${strategy.toUpperCase()})` : ''}</h2>
           <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', background: 'rgba(255, 255, 255, 0.05)', padding: '0.25rem 0.75rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
-            {startDay.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} – {endDay.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+            {formatDate(startDay)} – {formatDate(endDay)}
           </span>
         </div>
         
         <div className="calendar-row" style={{ marginTop: '1rem' }}>
           {calendarDays.map((day, i) => {
-            const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-            const dateNum = day.dateObj.toLocaleDateString('en-US', { day: '2-digit' });
             return (
               <div key={i} className="day-card" style={{ minWidth: '130px', padding: '1rem' }}>
                 <div className="day-header">
-                  <span className="day-date">{dateNum} {weekday}</span>
+                  <span className="day-date">{formatDate(day.dateObj)}</span>
                   <FileText size={14} />
                 </div>
                 <div className={`day-pnl ${day.cashflow > 0 ? 'text-success' : (day.cashflow < 0 ? 'text-danger' : 'text-neutral')}`} style={{ fontSize: '1.1rem', fontWeight: 700 }}>

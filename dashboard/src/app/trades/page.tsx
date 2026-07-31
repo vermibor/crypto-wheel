@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useDashboard } from '@/lib/DashboardContext';
-import { currencySymbol, pricePrecision } from '@/lib/data';
+import { currencySymbol, pricePrecision, formatDateTime } from '@/lib/data';
 
 export default function TradesPage() {
   const { data, loading, error } = useDashboard();
@@ -174,7 +174,7 @@ export default function TradesPage() {
 
                 return (
                   <tr key={i}>
-                    <td>{new Date(trade.timestamp).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</td>
+                    <td>{formatDateTime(trade.timestamp)}</td>
                     <td style={{ textTransform: 'capitalize', fontWeight: 500 }}>{trade.strategy_id}</td>
                     <td>
                       <span style={{ 

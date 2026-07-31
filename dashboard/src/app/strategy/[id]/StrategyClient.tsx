@@ -1,7 +1,7 @@
 'use client';
 
 import { useDashboard } from '@/lib/DashboardContext';
-import { currencySymbol, pricePrecision } from '@/lib/data';
+import { currencySymbol, pricePrecision, formatDateTime } from '@/lib/data';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import ChartClient from './ChartClient';
@@ -118,7 +118,7 @@ export default function StrategyClient({ id }: { id: string }) {
               const isLoss = trade.pnl < 0;
               return (
                 <tr key={i}>
-                  <td>{new Date(trade.timestamp).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</td>
+                  <td>{formatDateTime(trade.timestamp)}</td>
                   <td>
                     <span style={{ 
                       color: trade.action.includes('sell') ? 'var(--accent-secondary)' : 'var(--success)',
