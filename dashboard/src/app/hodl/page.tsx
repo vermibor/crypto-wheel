@@ -53,14 +53,28 @@ export default function HodlPage() {
   // Sort prices by date ascending
   const allPrices = [...hodl.prices].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  // Calculate daily portfolio equity for selected strategies
-  const dailyPortfolioEquity: Record<string, number> = {};
+  // For each strategy, build a map of date -> equity (forward-filled)
+  const strategyEquityTimeline: Record<string, Record<string, number>> = {};
+
   Object.entries(data.strategies)
     .filter(([id]) => selectedStrategies.includes(id))
-    .forEach(([_, strategy]) => {
+    .forEach(([id, strategy]) => {
+      strategyEquityTimeline[id] = {};
+      
+      // Build a map of dates that have trade updates
+      const tradeUpdates: Record<string, number> = {};
       strategy.daily_pnl.forEach(day => {
-        const dateKey = day.date; // e.g. "YYYY-MM-DD"
-        dailyPortfolioEquity[dateKey] = (dailyPortfolioEquity[dateKey] || 0) + day.equity;
+        tradeUpdates[day.date] = day.equity;
+      });
+
+      // Forward fill for all prices dates
+      let lastStratEquity = strategy.summary.initial_budget;
+      allPrices.forEach(p => {
+        const dateStr = p.date;
+        if (tradeUpdates[dateStr] !== undefined) {
+          lastStratEquity = tradeUpdates[dateStr];
+        }
+        strategyEquityTimeline[id][dateStr] = lastStratEquity;
       });
     });
 
@@ -68,15 +82,15 @@ export default function HodlPage() {
     .filter(([id]) => selectedStrategies.includes(id))
     .reduce((acc, [_, s]) => acc + s.summary.initial_budget, 0);
 
-  // Forward fill the daily portfolio equity
+  // Now, sum them up for each date to get the true total portfolio equity
   const dailyPortfolioEquityFilled: Record<string, number> = {};
-  let lastEquity = totalInitialBudget;
   allPrices.forEach(p => {
     const dateStr = p.date;
-    if (dailyPortfolioEquity[dateStr] !== undefined) {
-      lastEquity = dailyPortfolioEquity[dateStr];
-    }
-    dailyPortfolioEquityFilled[dateStr] = lastEquity;
+    let totalEquityForDay = 0;
+    Object.keys(strategyEquityTimeline).forEach(id => {
+      totalEquityForDay += strategyEquityTimeline[id][dateStr];
+    });
+    dailyPortfolioEquityFilled[dateStr] = totalEquityForDay;
   });
    
   // Determine the cutoff date based on the latest date in the dataset
