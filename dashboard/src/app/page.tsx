@@ -77,45 +77,22 @@ export default function Dashboard() {
   // Filter for metrics and calendar based on selected strategy
   const metricsTrades = strategy ? filteredTrades.filter(t => t.strategy_id === strategy) : filteredTrades;
 
-  // Setup the history slider and sliding window
-  const msPerDay = 24 * 60 * 60 * 1000;
+  // Setup the timeline range
   const startDay = new Date(cutoffDate);
   startDay.setHours(0, 0, 0, 0);
   const endDay = new Date(latestTradeDate);
   endDay.setHours(0, 0, 0, 0);
-  
-  const totalDays = Math.max(1, Math.ceil((endDay.getTime() - startDay.getTime()) / msPerDay) + 1);
-  const windowSize = 14; // 2 weeks window
-  const maxDaysBack = Math.max(0, totalDays - windowSize);
 
-  const [sliderVal, setSliderVal] = useState<number | null>(null);
-
-  // Reset slider value to max when timeframe/strategy or maxDaysBack changes
-  useEffect(() => {
-    setSliderVal(maxDaysBack);
-  }, [maxDaysBack]);
-
-  const activeSliderVal = sliderVal !== null ? sliderVal : maxDaysBack;
-  const daysBack = Math.max(0, maxDaysBack - activeSliderVal);
-
-  const windowEnd = new Date(endDay);
-  windowEnd.setDate(windowEnd.getDate() - daysBack);
-  const windowStart = new Date(windowEnd);
-  windowStart.setDate(windowStart.getDate() - (windowSize - 1));
-
-  const calendarStart = totalDays > windowSize ? windowStart : startDay;
-  const calendarEnd = totalDays > windowSize ? windowEnd : endDay;
-
-  // Aggregate daily cash flow for the dates inside the window
+  // Aggregate daily cash flow for all dates in the selected range
   const dailyData: Record<string, { cashflow: number; count: number; dateObj: Date }> = {};
   
-  // Pre-fill daily data with all days in the window range
-  for (let d = new Date(calendarStart); d <= calendarEnd; d.setDate(d.getDate() + 1)) {
+  // Pre-fill daily data with all days in the range
+  for (let d = new Date(startDay); d <= endDay; d.setDate(d.getDate() + 1)) {
     const dateKey = d.toISOString().split('T')[0];
     dailyData[dateKey] = { cashflow: 0, count: 0, dateObj: new Date(d) };
   }
 
-  // Populate trades in window
+  // Populate trades in range
   metricsTrades.forEach(t => {
     if (!t.timestamp) return;
     const d = new Date(t.timestamp);
@@ -202,40 +179,14 @@ export default function Dashboard() {
       </div>
 
       <div className="section">
-        <div className="section-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '0.75rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <h2 className="section-title" style={{ margin: 0 }}>Daily Cash Flow {strategy ? `(${strategy.toUpperCase()})` : ''}</h2>
-            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', background: 'rgba(255, 255, 255, 0.05)', padding: '0.25rem 0.75rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
-              {calendarStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} – {calendarEnd.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-            </span>
-          </div>
-
-          {totalDays > windowSize && (
-            <div className="history-slider-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: '8px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, minWidth: '80px' }}>History Slider</span>
-              <input 
-                type="range" 
-                min={0} 
-                max={maxDaysBack} 
-                value={activeSliderVal} 
-                onChange={(e) => setSliderVal(parseInt(e.target.value, 10))} 
-                className="history-slider" 
-                style={{ 
-                  flex: 1, 
-                  height: '6px', 
-                  borderRadius: '3px', 
-                  outline: 'none', 
-                  cursor: 'pointer' 
-                }} 
-              />
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, minWidth: '80px', textAlign: 'right' }}>
-                {daysBack === 0 ? 'Present' : `${daysBack} days back`}
-              </span>
-            </div>
-          )}
+        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h2 className="section-title" style={{ margin: 0 }}>Daily Cash Flow {strategy ? `(${strategy.toUpperCase()})` : ''}</h2>
+          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)', background: 'rgba(255, 255, 255, 0.05)', padding: '0.25rem 0.75rem', borderRadius: '20px', border: '1px solid var(--border-color)' }}>
+            {startDay.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} – {endDay.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+          </span>
         </div>
         
-        <div className="calendar-row" style={{ marginTop: '0.5rem' }}>
+        <div className="calendar-row" style={{ marginTop: '1rem' }}>
           {calendarDays.map((day, i) => {
             const weekday = day.dateObj.toLocaleDateString('en-US', { weekday: 'short' });
             const dateNum = day.dateObj.toLocaleDateString('en-US', { day: '2-digit' });
