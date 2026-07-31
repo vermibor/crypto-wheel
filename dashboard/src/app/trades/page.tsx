@@ -61,7 +61,7 @@ export default function TradesPage() {
   // Sort by most recent first
   filteredTrades.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-  // Pre-calculate display PnL for each trade
+  // Pre-calculate display PnL and Premium for each trade
   const chronologicalTrades = [...allTrades].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
   const tradesWithDisplayPnl = filteredTrades.map(trade => {
@@ -75,6 +75,7 @@ export default function TradesPage() {
     );
 
     let displayPnl: number | null = trade.pnl;
+    let displayPremium: number | null = trade.premium;
 
     if (isClosingOptionTrade) {
       // Find the corresponding opening trade (sell_put or sell_call with the same symbol and strategy)
@@ -89,22 +90,35 @@ export default function TradesPage() {
         const openingPremium = openingTrade.premium || 0;
         if (trade.action.includes('expired')) {
           displayPnl = openingPremium;
+          displayPremium = null; // Option expired, no premium cashflow on expiration day
         } else if (trade.action.includes('closed')) {
           displayPnl = openingPremium + (trade.premium || 0);
+          displayPremium = trade.premium; // Buyback premium cost (negative)
         } else if (trade.action.includes('assigned')) {
           displayPnl = openingPremium + (trade.pnl || 0);
+          displayPremium = trade.pnl; // Assignment cost (settlement cost) displayed as premium (negative)
         }
       }
     } else if (isOption && (trade.action === 'sell_put' || trade.action === 'sell_call')) {
       // Opening option trades show no PNL until closed
       displayPnl = null;
+      displayPremium = trade.premium;
     }
 
     return {
       ...trade,
-      displayPnl
+      displayPnl,
+      displayPremium
     };
   });
+
+  const formatOptionValue = (val: number | null, showPlusSign: boolean = false) => {
+    if (val === null || val === undefined) return '-';
+    const isNeg = val < 0;
+    const absStr = Math.abs(val).toFixed(precision);
+    const sign = isNeg ? '-' : (showPlusSign && val > 0 ? '+' : '');
+    return `${sign}${currSym}${absStr}`;
+  };
 
   return (
     <>
@@ -187,11 +201,11 @@ export default function TradesPage() {
                     </td>
                     <td>{trade.strike ? `$${trade.strike}` : '-'}</td>
                     <td>{trade.dte ? trade.dte.toFixed(1) : '-'}</td>
-                    <td className="text-right" style={{ color: trade.premium > 0 ? 'var(--success)' : 'inherit', fontWeight: 500 }}>
-                      {trade.premium ? `${currSym}${trade.premium.toFixed(precision)}` : '-'}
+                    <td className="text-right" style={{ color: (trade.displayPremium !== null && trade.displayPremium > 0) ? 'var(--success)' : ((trade.displayPremium !== null && trade.displayPremium < 0) ? 'var(--danger)' : 'inherit'), fontWeight: 500 }}>
+                      {formatOptionValue(trade.displayPremium, false)}
                     </td>
                     <td className="text-right" style={{ color: isProfit ? 'var(--success)' : (isLoss ? 'var(--danger)' : 'inherit'), fontWeight: 600 }}>
-                      {trade.displayPnl !== null && trade.displayPnl !== undefined ? `${currSym}${trade.displayPnl.toFixed(precision)}` : '-'}
+                      {formatOptionValue(trade.displayPnl, true)}
                     </td>
                   </tr>
                 );
