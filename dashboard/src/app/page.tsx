@@ -197,8 +197,12 @@ export default function Dashboard() {
                   <FileText size={14} />
                 </div>
                 <div className={`day-pnl ${day.cashflow > 0 ? 'text-success' : (day.cashflow < 0 ? 'text-danger' : 'text-neutral')}`} style={{ fontSize: '1.1rem', fontWeight: 700 }}>
-                  {day.cashflow > 0 ? '+' : ''}{currSym}{Math.abs(day.cashflow).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: precision })}
-                  {day.cashflow === 0 && day.count === 0 ? `${currSym}0` : ''}
+                  {day.cashflow > 0 ? '+' : (day.cashflow < 0 ? '-' : '')}
+                  {currSym}
+                  {Math.abs(day.cashflow).toLocaleString(undefined, { 
+                    minimumFractionDigits: day.count === 0 ? 0 : precision, 
+                    maximumFractionDigits: precision 
+                  })}
                 </div>
                 <div className="day-trades">{day.count} trades</div>
               </div>
