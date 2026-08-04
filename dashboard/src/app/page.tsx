@@ -45,6 +45,7 @@ export default function Dashboard() {
     amount_btc: number;
     premium: number;
     pnl: number;
+    realized_pnl?: number | null;
     btc_price: number;
     order_id: string;
     notes: string;
@@ -126,11 +127,11 @@ export default function Dashboard() {
       if (val > 0) chartPoints.push({ value: val });
     });
     
-    // Calculate custom metrics for the period
-    const stratTrades = filteredTrades.filter(t => t.strategy_id === id && t.pnl);
-    const stratWins = stratTrades.filter(t => t.pnl > 0);
+    // Calculate custom metrics for the period using realized PnL
+    const stratTrades = filteredTrades.filter(t => t.strategy_id === id && t.realized_pnl !== undefined && t.realized_pnl !== null);
+    const stratWins = stratTrades.filter(t => (t.realized_pnl ?? 0) > 0);
     const stratWinRate = stratTrades.length > 0 ? (stratWins.length / stratTrades.length) * 100 : 0;
-    const stratPnl = stratTrades.reduce((acc, t) => acc + t.pnl, 0);
+    const stratPnl = stratTrades.reduce((acc, t) => acc + (t.realized_pnl ?? 0), 0);
     
     // ROI relative to the start of this specific time period
     const stratReturnPct = startingBalance > 0 ? (stratPnl / startingBalance) * 100 : 0;
@@ -151,14 +152,14 @@ export default function Dashboard() {
     };
   });
 
-  // Calculate Win vs Loss avg for the metrics
-  const winTrades = metricsTrades.filter(t => t.pnl && t.pnl > 0);
-  const lossTrades = metricsTrades.filter(t => t.pnl && t.pnl < 0);
+  // Calculate Win vs Loss avg for the metrics using realized PnL
+  const winTrades = metricsTrades.filter(t => t.realized_pnl !== undefined && t.realized_pnl !== null && t.realized_pnl > 0);
+  const lossTrades = metricsTrades.filter(t => t.realized_pnl !== undefined && t.realized_pnl !== null && t.realized_pnl < 0);
   
-  const avgWin = winTrades.length ? winTrades.reduce((acc, t) => acc + t.pnl, 0) / winTrades.length : 0;
-  const avgLoss = lossTrades.length ? Math.abs(lossTrades.reduce((acc, t) => acc + t.pnl, 0)) / lossTrades.length : 0;
+  const avgWin = winTrades.length ? winTrades.reduce((acc, t) => acc + (t.realized_pnl || 0), 0) / winTrades.length : 0;
+  const avgLoss = lossTrades.length ? Math.abs(lossTrades.reduce((acc, t) => acc + (t.realized_pnl || 0), 0)) / lossTrades.length : 0;
   
-  const tradesWithPnl = metricsTrades.filter(t => t.pnl !== null);
+  const tradesWithPnl = metricsTrades.filter(t => t.realized_pnl !== undefined && t.realized_pnl !== null);
   const winRate = tradesWithPnl.length ? (winTrades.length / tradesWithPnl.length) * 100 : 0;
   
   const profitFactor = avgLoss === 0 
