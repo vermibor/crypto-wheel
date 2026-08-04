@@ -250,8 +250,7 @@ export default function Dashboard() {
                   boxShadow: strategy === chart.id ? '0 0 10px rgba(59, 130, 246, 0.2)' : 'none'
                 }}
               >
-                <div className="chart-header">
-                  <span>{chart.date}</span>
+                <div className="chart-header" style={{ justifyContent: 'flex-end' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: chart.pnl >= 0 ? 'var(--success)' : 'var(--danger)', fontWeight: 600 }}>
                     {chart.pnl >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                     {chart.returnPct.toFixed(2)}%
