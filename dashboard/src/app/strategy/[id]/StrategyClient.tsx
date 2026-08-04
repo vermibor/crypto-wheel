@@ -114,8 +114,9 @@ export default function StrategyClient({ id }: { id: string }) {
           </thead>
           <tbody>
             {trades.map((trade, i) => {
-              const isProfit = trade.pnl > 0;
-              const isLoss = trade.pnl < 0;
+              const displayPnl = trade.realized_pnl !== undefined && trade.realized_pnl !== null ? trade.realized_pnl : trade.pnl;
+              const isProfit = displayPnl > 0;
+              const isLoss = displayPnl < 0;
               return (
                 <tr key={i}>
                   <td>{formatDateTime(trade.timestamp)}</td>
@@ -137,7 +138,7 @@ export default function StrategyClient({ id }: { id: string }) {
                     {trade.premium ? `${currSym}${trade.premium.toFixed(precision)}` : '-'}
                   </td>
                   <td className="text-right" style={{ color: isProfit ? 'var(--success)' : (isLoss ? 'var(--danger)' : 'inherit'), fontWeight: 600 }}>
-                    {trade.pnl ? `${currSym}${trade.pnl.toFixed(precision)}` : '-'}
+                    {displayPnl !== null && displayPnl !== undefined ? `${currSym}${displayPnl.toFixed(precision)}` : '-'}
                   </td>
                   <td style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{trade.notes}</td>
                 </tr>

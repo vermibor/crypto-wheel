@@ -385,7 +385,8 @@ def build_trades_list(state: dict) -> list[dict]:
             "dte": _safe_float(t.get("dte")),
             "amount_btc": _safe_float(t.get("amount_btc")),
             "premium": _safe_float(t.get("premium")) or None,
-            "pnl": t.get("realized_pnl"),
+            "pnl": _safe_float(t.get("pnl")) or None,
+            "realized_pnl": t.get("realized_pnl"),
             "btc_price": _safe_float(t.get("btc_price")),
             "notes": t.get("notes", ""),
         })

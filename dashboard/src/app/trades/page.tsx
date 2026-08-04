@@ -41,6 +41,7 @@ export default function TradesPage() {
     amount_btc: number;
     premium: number;
     pnl: number;
+    realized_pnl?: number | null;
     btc_price: number;
     order_id: string;
     notes: string;

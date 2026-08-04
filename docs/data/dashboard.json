@@ -120,7 +120,8 @@
           "premium": 0.0012500000000000002,
           "pnl": null,
           "btc_price": 64889.5,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-24T08:15:10.008311+00:00",
@@ -131,9 +132,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": 0.0012500000000000002,
+          "pnl": 0.0,
           "btc_price": 65397.0,
-          "notes": "Put expired worthless. Premium retained."
+          "notes": "Put expired worthless. Premium retained.",
+          "realized_pnl": 0.0012500000000000002
         },
         {
           "timestamp": "2026-07-24T08:16:16.097676+00:00",
@@ -146,7 +148,8 @@
           "premium": 0.0017500000000000003,
           "pnl": null,
           "btc_price": 65397.0,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         }
       ],
       "cashflow": [
@@ -245,7 +248,8 @@
           "premium": 0.00115,
           "pnl": null,
           "btc_price": 64883.5,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         }
       ],
       "cashflow": [
@@ -314,7 +318,8 @@
           "premium": 0.00075,
           "pnl": null,
           "btc_price": 64890.0,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-18T08:15:10.507808+00:00",
@@ -325,9 +330,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": -0.0009022398680084765,
+          "pnl": -0.0016522398680084765,
           "btc_price": 63943.5,
-          "notes": "Put assigned. Paid 0.0017 BTC settlement."
+          "notes": "Put assigned. Paid 0.0017 BTC settlement.",
+          "realized_pnl": -0.0009022398680084765
         },
         {
           "timestamp": "2026-07-18T08:16:14.213074+00:00",
@@ -340,7 +346,8 @@
           "premium": 0.0006000000000000001,
           "pnl": null,
           "btc_price": 63943.5,
-          "notes": "Opened covered call"
+          "notes": "Opened covered call",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-21T08:16:16.765178+00:00",
@@ -351,9 +358,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": -0.0027342144016916517,
+          "pnl": -0.0033342144016916516,
           "btc_price": 66207.5,
-          "notes": "Call assigned. Paid 0.0033 BTC settlement."
+          "notes": "Call assigned. Paid 0.0033 BTC settlement.",
+          "realized_pnl": -0.0027342144016916517
         },
         {
           "timestamp": "2026-07-21T08:17:20.485220+00:00",
@@ -366,7 +374,8 @@
           "premium": 0.00115,
           "pnl": null,
           "btc_price": 66207.5,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-23T08:15:10.925293+00:00",
@@ -377,9 +386,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": -0.0003612196611204397,
+          "pnl": -0.0015112196611204397,
           "btc_price": 65510.0,
-          "notes": "Put assigned. Paid 0.0015 BTC settlement."
+          "notes": "Put assigned. Paid 0.0015 BTC settlement.",
+          "realized_pnl": -0.0003612196611204397
         },
         {
           "timestamp": "2026-07-23T08:16:18.964887+00:00",
@@ -392,7 +402,8 @@
           "premium": 0.0009,
           "pnl": null,
           "btc_price": 65510.0,
-          "notes": "Opened covered call"
+          "notes": "Opened covered call",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-25T08:15:10.725392+00:00",
@@ -403,9 +414,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": 0.0009,
+          "pnl": 0.0,
           "btc_price": 63897.5,
-          "notes": "Call expired worthless. Premium retained."
+          "notes": "Call expired worthless. Premium retained.",
+          "realized_pnl": 0.0009
         },
         {
           "timestamp": "2026-07-25T08:16:17.390121+00:00",
@@ -418,7 +430,8 @@
           "premium": 1e-05,
           "pnl": null,
           "btc_price": 63897.5,
-          "notes": "Opened covered call"
+          "notes": "Opened covered call",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-27T08:15:10.126755+00:00",
@@ -429,9 +442,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": -0.0017920851713476896,
+          "pnl": -0.0018020851713476897,
           "btc_price": 65174.5,
-          "notes": "Call assigned. Paid 0.0018 BTC settlement."
+          "notes": "Call assigned. Paid 0.0018 BTC settlement.",
+          "realized_pnl": -0.0017920851713476896
         },
         {
           "timestamp": "2026-07-27T08:16:14.821986+00:00",
@@ -444,7 +458,8 @@
           "premium": 0.0008500000000000001,
           "pnl": null,
           "btc_price": 65174.5,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-29T08:15:10.971947+00:00",
@@ -455,9 +470,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": -0.00021742752299283986,
+          "pnl": -0.00106742752299284,
           "btc_price": 64313.5,
-          "notes": "Put assigned. Paid 0.0011 BTC settlement."
+          "notes": "Put assigned. Paid 0.0011 BTC settlement.",
+          "realized_pnl": -0.00021742752299283986
         },
         {
           "timestamp": "2026-07-29T08:16:17.213220+00:00",
@@ -470,7 +486,8 @@
           "premium": 0.0010500000000000002,
           "pnl": null,
           "btc_price": 64313.5,
-          "notes": "Opened covered call"
+          "notes": "Opened covered call",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-31T08:15:10.245500+00:00",
@@ -481,9 +498,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": 0.0010500000000000002,
+          "pnl": 0.0,
           "btc_price": 63880.5,
-          "notes": "Call expired worthless. Premium retained."
+          "notes": "Call expired worthless. Premium retained.",
+          "realized_pnl": 0.0010500000000000002
         },
         {
           "timestamp": "2026-07-31T08:16:13.146174+00:00",
@@ -496,7 +514,8 @@
           "premium": 0.00055,
           "pnl": null,
           "btc_price": 63880.5,
-          "notes": "Opened covered call"
+          "notes": "Opened covered call",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-08-02T08:15:10.295721+00:00",
@@ -507,9 +526,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": 0.00055,
+          "pnl": 0.0,
           "btc_price": 63440.5,
-          "notes": "Call expired worthless. Premium retained."
+          "notes": "Call expired worthless. Premium retained.",
+          "realized_pnl": 0.00055
         },
         {
           "timestamp": "2026-08-02T08:16:12.881359+00:00",
@@ -522,7 +542,8 @@
           "premium": 0.00075,
           "pnl": null,
           "btc_price": 63440.5,
-          "notes": "Opened covered call"
+          "notes": "Opened covered call",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-08-04T08:15:11.186797+00:00",
@@ -533,9 +554,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": null,
-          "pnl": 0.0004555937193326791,
+          "pnl": -0.0002944062806673209,
           "btc_price": 63687.5,
-          "notes": "Call assigned. Paid 0.0003 BTC settlement."
+          "notes": "Call assigned. Paid 0.0003 BTC settlement.",
+          "realized_pnl": 0.0004555937193326791
         }
       ],
       "cashflow": [
@@ -802,7 +824,8 @@
           "premium": 0.0011,
           "pnl": null,
           "btc_price": 64859.0,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         },
         {
           "timestamp": "2026-07-21T08:15:10.885205+00:00",
@@ -813,9 +836,10 @@
           "dte": 0.0,
           "amount_btc": 0.1,
           "premium": -0.00055,
-          "pnl": 0.00055,
+          "pnl": -0.00055,
           "btc_price": 66239.0,
-          "notes": "Take profit at 51.8%"
+          "notes": "Take profit at 51.8%",
+          "realized_pnl": 0.00055
         },
         {
           "timestamp": "2026-07-21T08:16:16.564837+00:00",
@@ -828,7 +852,8 @@
           "premium": 0.00115,
           "pnl": null,
           "btc_price": 66239.0,
-          "notes": "Opened CSP"
+          "notes": "Opened CSP",
+          "realized_pnl": null
         }
       ],
       "cashflow": [
