@@ -57,10 +57,10 @@ export function pricePrecision(settlement: string): number {
 export function formatDate(dateInput: Date | string | number): string {
   const date = new Date(dateInput);
   if (isNaN(date.getTime())) return '-';
-  const day = String(date.getDate()).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
+  const month = months[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
   return `${day}-${month}-${year}`;
 }
 
@@ -68,11 +68,11 @@ export function formatDate(dateInput: Date | string | number): string {
 export function formatDateTime(dateInput: Date | string | number): string {
   const date = new Date(dateInput);
   if (isNaN(date.getTime())) return '-';
-  const day = String(date.getDate()).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const month = months[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
   return `${day}-${month}-${year} ${hours}:${minutes}`;
 }

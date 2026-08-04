@@ -77,19 +77,22 @@ export default function Dashboard() {
   // Filter for metrics and calendar based on selected strategy
   const metricsTrades = strategy ? filteredTrades.filter(t => t.strategy_id === strategy) : filteredTrades;
 
-  // Setup the timeline range
-  const startDay = new Date(cutoffDate);
-  startDay.setHours(0, 0, 0, 0);
-  const endDay = new Date(latestTradeDate);
-  endDay.setHours(0, 0, 0, 0);
+  // Setup the timeline range in UTC to prevent timezone offsets
+  const startDayStr = cutoffDate.toISOString().split('T')[0];
+  const endDayStr = latestTradeDate.toISOString().split('T')[0];
+  
+  const startDay = new Date(startDayStr + 'T00:00:00Z');
+  const endDay = new Date(endDayStr + 'T00:00:00Z');
 
   // Aggregate daily cash flow for all dates in the selected range
   const dailyData: Record<string, { cashflow: number; count: number; dateObj: Date }> = {};
   
-  // Pre-fill daily data with all days in the range
-  for (let d = new Date(startDay); d <= endDay; d.setDate(d.getDate() + 1)) {
-    const dateKey = d.toISOString().split('T')[0];
-    dailyData[dateKey] = { cashflow: 0, count: 0, dateObj: new Date(d) };
+  // Pre-fill daily data with all days in the range (using UTC date increments)
+  const cur = new Date(startDay);
+  while (cur <= endDay) {
+    const dateKey = cur.toISOString().split('T')[0];
+    dailyData[dateKey] = { cashflow: 0, count: 0, dateObj: new Date(cur) };
+    cur.setUTCDate(cur.getUTCDate() + 1);
   }
 
   // Populate trades in range
