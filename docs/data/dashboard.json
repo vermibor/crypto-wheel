@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T18:51:05Z",
+  "generated_at": "2026-08-15T18:51:20Z",
   "btc_price": 62986.43,
   "settlement": "BTC",
   "config": {
@@ -3202,6 +3202,60 @@
       "level": "INFO",
       "message": "END: Equity=0.0979 | Cash=0.0979 | DD=2.8% | Trades=26",
       "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "BTC=62990 | Cash=0.1018 | Phase=selling_puts | Equity=0.1018",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "END: Equity=0.1018 | Cash=0.1018 | DD=0.0% | Trades=3",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "BTC=62990 | Cash=0.1028 | Phase=selling_puts | Equity=0.1028",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "END: Equity=0.1028 | Cash=0.1028 | DD=0.0% | Trades=5",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "BTC=62990 | Cash=0.1042 | Phase=selling_puts | Equity=0.1042",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "END: Equity=0.1042 | Cash=0.1042 | DD=0.0% | Trades=5",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "BTC=62990 | Cash=0.0979 | Phase=selling_calls | Equity=0.0979",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "Risk check: BTC 62990 < SMA50 63440. Trend filter blocks new puts.",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-08-15T20:51:19",
+      "level": "INFO",
+      "message": "END: Equity=0.0979 | Cash=0.0979 | DD=2.8% | Trades=26",
+      "strategy": "daily"
     }
   ],
   "daily_snapshots": [
@@ -3410,7 +3464,7 @@
       "btc_price": 62990.0,
       "strategies_run": 4,
       "trades_executed": 0,
-      "risk_filter_blocks": 1,
+      "risk_filter_blocks": 2,
       "risk_filter_reasons": [
         "BTC 62990 < SMA50 63440"
       ]
