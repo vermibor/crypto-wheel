@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-25T08:16:23Z",
-  "btc_price": 79936.88,
+  "generated_at": "2026-08-26T08:15:12Z",
+  "btc_price": 79086.25,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -1761,8 +1761,8 @@
   "hodl": {
     "start_date": "2026-05-31",
     "start_price": 73890.13,
-    "current_price": 79936.88,
-    "return_pct": 8.18,
+    "current_price": 79086.25,
+    "return_pct": 7.03,
     "prices": [
       {
         "date": "2026-05-31",
@@ -1982,79 +1982,79 @@
       },
       {
         "date": "2026-07-24",
-        "price": 64105.63
+        "price": 64113.07
       },
       {
         "date": "2026-07-25",
-        "price": 64358.53
+        "price": 64360.91
       },
       {
         "date": "2026-07-26",
-        "price": 65378.24
+        "price": 65362.0
       },
       {
         "date": "2026-07-27",
-        "price": 63688.83
+        "price": 63750.48
       },
       {
         "date": "2026-07-28",
-        "price": 63687.66
+        "price": 63735.08
       },
       {
         "date": "2026-07-29",
-        "price": 63860.43
+        "price": 63874.13
       },
       {
         "date": "2026-07-30",
-        "price": 64804.03
+        "price": 64803.41
       },
       {
         "date": "2026-07-31",
-        "price": 62904.77
+        "price": 62888.41
       },
       {
         "date": "2026-08-01",
-        "price": 62798.37
+        "price": 62780.24
       },
       {
         "date": "2026-08-02",
-        "price": 63370.59
+        "price": 63371.4
       },
       {
         "date": "2026-08-03",
-        "price": 63529.22
+        "price": 63550.01
       },
       {
         "date": "2026-08-04",
-        "price": 64188.29
+        "price": 64217.99
       },
       {
         "date": "2026-08-05",
-        "price": 64547.73
+        "price": 64579.57
       },
       {
         "date": "2026-08-06",
-        "price": 64293.67
+        "price": 64302.93
       },
       {
         "date": "2026-08-07",
-        "price": 64850.57
+        "price": 64850.45
       },
       {
         "date": "2026-08-08",
-        "price": 64900.2
+        "price": 64906.3
       },
       {
         "date": "2026-08-09",
-        "price": 65006.43
+        "price": 65029.73
       },
       {
         "date": "2026-08-10",
-        "price": 63951.46
+        "price": 63959.64
       },
       {
         "date": "2026-08-11",
-        "price": 63560.38
+        "price": 63614.07
       },
       {
         "date": "2026-08-12",
@@ -2062,55 +2062,59 @@
       },
       {
         "date": "2026-08-13",
-        "price": 63452.96
+        "price": 63475.09
       },
       {
         "date": "2026-08-14",
-        "price": 62833.64
+        "price": 62829.82
       },
       {
         "date": "2026-08-15",
-        "price": 63075.67
+        "price": 63076.89
       },
       {
         "date": "2026-08-16",
-        "price": 62914.44
+        "price": 62837.38
       },
       {
         "date": "2026-08-17",
-        "price": 64243.0
+        "price": 64239.06
       },
       {
         "date": "2026-08-18",
-        "price": 64632.57
+        "price": 64595.78
       },
       {
         "date": "2026-08-19",
-        "price": 69223.87
+        "price": 69221.14
       },
       {
         "date": "2026-08-20",
-        "price": 72686.98
+        "price": 72660.84
       },
       {
         "date": "2026-08-21",
-        "price": 78407.25
+        "price": 78447.0
       },
       {
         "date": "2026-08-22",
-        "price": 77011.38
+        "price": 76998.18
       },
       {
         "date": "2026-08-23",
-        "price": 77498.47
+        "price": 77588.63
       },
       {
         "date": "2026-08-24",
-        "price": 78649.61
+        "price": 78727.76
       },
       {
         "date": "2026-08-25",
-        "price": 79936.88
+        "price": 78879.42
+      },
+      {
+        "date": "2026-08-26",
+        "price": 79086.25
       }
     ]
   },
@@ -2123,72 +2127,6 @@
     "total_trades": 58
   },
   "logs": [
-    {
-      "timestamp": "2026-07-27T10:15:09",
-      "level": "INFO",
-      "message": "BTC=65174 | Cash=0.1012 | Phase=selling_puts | Equity=0.1012",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1012 | Cash=0.1012 | DD=0.0% | Trades=1",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:09",
-      "level": "INFO",
-      "message": "BTC=65174 | Cash=0.1017 | Phase=selling_puts | Equity=0.1017",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1017 | Cash=0.1017 | DD=0.0% | Trades=3",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:09",
-      "level": "INFO",
-      "message": "BTC=65174 | Cash=0.1030 | Phase=selling_puts | Equity=0.1030",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:10",
-      "level": "INFO",
-      "message": "END: Equity=0.1030 | Cash=0.1030 | DD=0.0% | Trades=3",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:10",
-      "level": "INFO",
-      "message": "BTC=65174 | Cash=0.0969 | Phase=selling_calls | Equity=0.0969",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:10",
-      "level": "INFO",
-      "message": "CALL ASSIGNED: BTC 65174 >= strike 64000.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-07-27T10:15:10",
-      "level": "INFO",
-      "message": "Risk check: All risk checks passed.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-07-27T10:16:14",
-      "level": "INFO",
-      "message": "Selling PUT BTC/USD:BTC-260729-65000-P | strike=65000 delta=-0.454 dte=2.0",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-07-27T10:16:14",
-      "level": "INFO",
-      "message": "END: Equity=0.0960 | Cash=0.0960 | DD=4.8% | Trades=11",
-      "strategy": "daily"
-    },
     {
       "timestamp": "2026-07-28T10:15:09",
       "level": "INFO",
@@ -3938,17 +3876,57 @@
       "level": "INFO",
       "message": "END: Equity=0.0923 | Cash=0.0923 | DD=8.4% | Trades=33",
       "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:10",
+      "level": "INFO",
+      "message": "BTC=79054 | Cash=0.1030 | Phase=selling_puts | Equity=0.1030",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:10",
+      "level": "INFO",
+      "message": "END: Equity=0.1030 | Cash=0.1030 | DD=0.0% | Trades=7",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:10",
+      "level": "INFO",
+      "message": "BTC=79054 | Cash=0.1053 | Phase=selling_puts | Equity=0.1053",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:10",
+      "level": "INFO",
+      "message": "END: Equity=0.1053 | Cash=0.1053 | DD=0.0% | Trades=11",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:11",
+      "level": "INFO",
+      "message": "BTC=79054 | Cash=0.1059 | Phase=selling_puts | Equity=0.1059",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:11",
+      "level": "INFO",
+      "message": "END: Equity=0.1059 | Cash=0.1059 | DD=0.0% | Trades=7",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:11",
+      "level": "INFO",
+      "message": "BTC=79054 | Cash=0.0923 | Phase=selling_calls | Equity=0.0923",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-08-26T10:15:11",
+      "level": "INFO",
+      "message": "END: Equity=0.0923 | Cash=0.0923 | DD=8.4% | Trades=33",
+      "strategy": "daily"
     }
   ],
   "daily_snapshots": [
-    {
-      "date": "2026-07-27",
-      "btc_price": 65174.5,
-      "strategies_run": 4,
-      "trades_executed": 2,
-      "risk_filter_blocks": 0,
-      "risk_filter_reasons": []
-    },
     {
       "date": "2026-07-28",
       "btc_price": 63370.0,
@@ -4152,6 +4130,14 @@
       "btc_price": 79917.5,
       "strategies_run": 4,
       "trades_executed": 1,
+      "risk_filter_blocks": 0,
+      "risk_filter_reasons": []
+    },
+    {
+      "date": "2026-08-26",
+      "btc_price": 79053.5,
+      "strategies_run": 4,
+      "trades_executed": 0,
       "risk_filter_blocks": 0,
       "risk_filter_reasons": []
     }
