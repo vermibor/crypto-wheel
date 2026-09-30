@@ -6,10 +6,89 @@ import { currencySymbol, pricePrecision, formatDate } from '@/lib/data';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 
+// ─── Toggle Switch Component ─────────────────────────────────────────────────
+
+interface ToggleSwitchProps {
+  labelLeft: string;
+  labelRight: string;
+  isRight: boolean;
+  onChange: (isRight: boolean) => void;
+}
+
+function ToggleSwitch({ labelLeft, labelRight, isRight, onChange }: ToggleSwitchProps) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <span
+        style={{
+          fontSize: '0.85rem',
+          fontWeight: isRight ? 400 : 600,
+          color: isRight ? 'var(--text-muted)' : 'var(--text-primary)',
+          transition: 'all 0.2s',
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+        onClick={() => onChange(false)}
+      >
+        {labelLeft}
+      </span>
+      <button
+        onClick={() => onChange(!isRight)}
+        style={{
+          position: 'relative',
+          width: '44px',
+          height: '24px',
+          borderRadius: '12px',
+          background: isRight ? 'var(--accent-secondary)' : 'var(--accent-primary)',
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'background 0.25s',
+          flexShrink: 0,
+        }}
+        aria-label={`Toggle between ${labelLeft} and ${labelRight}`}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            top: '3px',
+            left: isRight ? '23px' : '3px',
+            width: '18px',
+            height: '18px',
+            borderRadius: '50%',
+            background: '#fff',
+            transition: 'left 0.25s',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+          }}
+        />
+      </button>
+      <span
+        style={{
+          fontSize: '0.85rem',
+          fontWeight: isRight ? 600 : 400,
+          color: isRight ? 'var(--text-primary)' : 'var(--text-muted)',
+          transition: 'all 0.2s',
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+        onClick={() => onChange(true)}
+      >
+        {labelRight}
+      </span>
+    </div>
+  );
+}
+
+// ─── Page ────────────────────────────────────────────────────────────────────
+
 export default function HodlPage() {
   const { data, loading, error } = useDashboard();
   const [days, setDays] = useState<string>('30');
   const [selectedStrategiesState, setSelectedStrategies] = useState<string[] | null>(null);
+
+  // Two new toggles:
+  // currencyMode: false = BTC, true = USD
+  // displayMode:  false = percent, true = nominal
+  const [currencyIsUSD, setCurrencyIsUSD] = useState(false);
+  const [displayIsNominal, setDisplayIsNominal] = useState(false);
 
   if (loading) {
     return (
@@ -82,7 +161,7 @@ export default function HodlPage() {
     .filter(([id]) => selectedStrategies.includes(id))
     .reduce((acc, [_, s]) => acc + s.summary.initial_budget, 0);
 
-  // Now, sum them up for each date to get the true total portfolio equity
+  // Sum up daily portfolio equity (in settlement currency, i.e. BTC if settlement=BTC)
   const dailyPortfolioEquityFilled: Record<string, number> = {};
   allPrices.forEach(p => {
     const dateStr = p.date;
@@ -92,7 +171,7 @@ export default function HodlPage() {
     });
     dailyPortfolioEquityFilled[dateStr] = totalEquityForDay;
   });
-   
+
   // Determine the cutoff date based on the latest date in the dataset
   const latestDate = allPrices.length > 0 ? new Date(allPrices[allPrices.length - 1].date) : new Date();
   const cutoffDate = new Date(latestDate);
@@ -114,81 +193,172 @@ export default function HodlPage() {
     );
   }
 
-  const isBtc = settlement === 'BTC';
+  const isBtcSettlement = settlement === 'BTC';
   const precision = pricePrecision(settlement);
 
-  // Format helpers
+  // ─── Currency helpers ──────────────────────────────────────────────────────
+  // When currencyIsUSD=true: multiply BTC-denominated values by BTC price on that day.
+  // When currencyIsUSD=false: keep values as-is (BTC or native settlement).
+  // Note: if settlement is already USD, USD toggle effectively does nothing to equity values,
+  // but HODL BTC line becomes USD-denominated (which equals BTC price movement).
+
+  const displaySym = currencyIsUSD ? '$' : currSym;
+  const displayPrecision = currencyIsUSD ? 2 : precision;
+
+  // Convert a BTC-denominated equity value to display currency using the btcPrice on that day
+  const toDisplay = (btcEquity: number, btcPrice: number): number => {
+    if (!isBtcSettlement) {
+      // settlement already in USD — no conversion needed regardless of toggle
+      return btcEquity;
+    }
+    return currencyIsUSD ? btcEquity * btcPrice : btcEquity;
+  };
+
+  // Format helpers for display currency
   const formatValue = (val: number) => {
-    return `${currSym}${val.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}`;
+    return `${displaySym}${val.toLocaleString(undefined, { minimumFractionDigits: displayPrecision, maximumFractionDigits: displayPrecision })}`;
   };
 
   const formatProfit = (profit: number) => {
     const sign = profit > 0 ? '+' : profit < 0 ? '-' : '';
-    // For BTC, if the profit is 0, we don't display '+' or '-'
     const showSign = Math.abs(profit) < 1e-9 ? '' : sign;
-    return `${showSign}${currSym}${Math.abs(profit).toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision })}`;
+    return `${showSign}${displaySym}${Math.abs(profit).toLocaleString(undefined, { minimumFractionDigits: displayPrecision, maximumFractionDigits: displayPrecision })}`;
   };
 
-  // Establish baseline (0% start point)
+  // ─── Baseline ──────────────────────────────────────────────────────────────
   const baselinePriceObj = filteredPrices[0];
   const baselineBtcPrice = baselinePriceObj.price;
-  
   const firstDateStr = baselinePriceObj.date;
-  const baselinePortEquity = dailyPortfolioEquityFilled[firstDateStr] || totalInitialBudget;
 
-  // Map and align dates for comparison relative to baseline
-  const comparisonData = filteredPrices.map(item => {
-    const dateStr = item.date;
-    const btcPrice = item.price;
-    
-    // HODL return percentage relative to baseline (0% on start date)
-    // If settled in BTC, holding BTC results in 0% change in BTC balance.
-    const hodlReturn = isBtc ? 0 : ((btcPrice - baselineBtcPrice) / baselineBtcPrice) * 100;
-    
-    // Portfolio return percentage relative to baseline (0% on start date)
-    const portEquity = dailyPortfolioEquityFilled[dateStr] || totalInitialBudget;
-    const portReturn = ((portEquity - baselinePortEquity) / baselinePortEquity) * 100;
+  const baselinePortEquityBtc = dailyPortfolioEquityFilled[firstDateStr] || totalInitialBudget;
+  // HODL BTC baseline: always equal to portfolio budget (same starting point)
+  const baselineHodlValueBtc = totalInitialBudget;
 
-    return {
-      date: formatDate(dateStr),
-      'HODL BTC (%)': parseFloat(hodlReturn.toFixed(2)),
-      'Portfolio (%)': parseFloat(portReturn.toFixed(2)),
-      btcPrice,
-      portEquity,
-    };
-  });
-
-  // Calculate final metrics for the period
+  // ─── Final metrics ─────────────────────────────────────────────────────────
   const finalPriceObj = filteredPrices[filteredPrices.length - 1];
   const finalBtcPrice = finalPriceObj.price;
-  const finalPortfolioEquity = dailyPortfolioEquityFilled[finalPriceObj.date] || totalInitialBudget;
+  const finalPortfolioEquityBtc = dailyPortfolioEquityFilled[finalPriceObj.date] || totalInitialBudget;
+  // HODL BTC final: if settled in BTC the BTC count is constant; in USD it grows with BTC price
+  const finalHodlValueBtc = isBtcSettlement
+    ? totalInitialBudget  // holding BTC → BTC balance unchanged
+    : totalInitialBudget * (finalBtcPrice / baselineBtcPrice); // holding BTC in USD terms
 
-  const finalPortfolioReturn = ((finalPortfolioEquity - baselinePortEquity) / baselinePortEquity) * 100;
-  const finalHodlReturn = isBtc ? 0 : ((finalBtcPrice - baselineBtcPrice) / baselineBtcPrice) * 100;
+  // Convert final values to display currency
+  const baselinePortEquityDisplay = toDisplay(baselinePortEquityBtc, baselineBtcPrice);
+  const finalPortfolioEquityDisplay = toDisplay(finalPortfolioEquityBtc, finalBtcPrice);
+  const baselineHodlDisplay = toDisplay(baselineHodlValueBtc, baselineBtcPrice);
+  const finalHodlDisplay = toDisplay(finalHodlValueBtc, finalBtcPrice);
+
+  // Return percentages (independent of currency toggle — percentages are always relative)
+  const finalPortfolioReturn = ((finalPortfolioEquityBtc - baselinePortEquityBtc) / baselinePortEquityBtc) * 100;
+  const finalHodlReturn = isBtcSettlement
+    ? (currencyIsUSD ? ((finalBtcPrice - baselineBtcPrice) / baselineBtcPrice) * 100 : 0)
+    : ((finalHodlValueBtc - totalInitialBudget) / totalInitialBudget) * 100;
 
   const outperforming = finalPortfolioReturn > finalHodlReturn;
   const underperforming = finalPortfolioReturn < finalHodlReturn;
   const performanceStatus = outperforming ? 'Outperforming' : underperforming ? 'Underperforming' : 'On Par';
   const statusColor = outperforming ? 'var(--success)' : underperforming ? 'var(--accent-secondary)' : 'var(--text-muted)';
 
-  // Calculate HODL values scaled to portfolio budget (for direct comparison in the table)
-  const baselineHodlValue = totalInitialBudget;
-  const finalHodlValue = isBtc ? totalInitialBudget : totalInitialBudget * (finalBtcPrice / baselineBtcPrice);
-  const hodlProfit = finalHodlValue - baselineHodlValue;
+  // ─── Chart data ────────────────────────────────────────────────────────────
+  // Keys for recharts data must be stable; build them based on mode
+  const hodlKey = displayIsNominal ? `HODL BTC (${displaySym})` : 'HODL BTC (%)';
+  const portKey = displayIsNominal ? `Portfolio (${displaySym})` : 'Portfolio (%)';
+
+  const comparisonData = filteredPrices.map(item => {
+    const dateStr = item.date;
+    const btcPrice = item.price;
+
+    const portEquityBtc = dailyPortfolioEquityFilled[dateStr] || totalInitialBudget;
+    const hodlEquityBtc = isBtcSettlement
+      ? totalInitialBudget  // BTC-settled HODL: BTC count never changes
+      : totalInitialBudget * (btcPrice / baselineBtcPrice);
+
+    const portDisplay = toDisplay(portEquityBtc, btcPrice);
+    const hodlDisplay = toDisplay(hodlEquityBtc, btcPrice);
+
+    // HODL in display currency for percent calculation baseline
+    const baselineHodlDisplayDay = toDisplay(baselineHodlValueBtc, baselineBtcPrice);
+    const baselinePortDisplayDay = toDisplay(baselinePortEquityBtc, baselineBtcPrice);
+
+    const hodlReturnPct = ((hodlDisplay - baselineHodlDisplayDay) / baselineHodlDisplayDay) * 100;
+    const portReturnPct = ((portDisplay - baselinePortDisplayDay) / baselinePortDisplayDay) * 100;
+
+    return {
+      date: formatDate(dateStr),
+      [hodlKey]: displayIsNominal
+        ? parseFloat(hodlDisplay.toFixed(displayPrecision))
+        : parseFloat(hodlReturnPct.toFixed(2)),
+      [portKey]: displayIsNominal
+        ? parseFloat(portDisplay.toFixed(displayPrecision))
+        : parseFloat(portReturnPct.toFixed(2)),
+      btcPrice,
+      portEquityBtc,
+    };
+  });
+
+  // ─── Chart Y-axis formatter ────────────────────────────────────────────────
+  const yAxisFormatter = displayIsNominal
+    ? (value: number) => {
+        if (Math.abs(value) >= 1000) return `${displaySym}${(value / 1000).toFixed(1)}k`;
+        return `${displaySym}${value.toFixed(displayPrecision === 4 ? 2 : 0)}`;
+      }
+    : (value: number) => `${value}%`;
+
+  const chartTitle = displayIsNominal
+    ? `Absolute Value Trend (${displaySym})`
+    : 'Cumulative Returns Trend (%)';
+
+  // ─── Summary card helpers ──────────────────────────────────────────────────
+  const portfolioCardPrimary = displayIsNominal
+    ? formatValue(finalPortfolioEquityDisplay)
+    : `${finalPortfolioReturn > 0 ? '+' : ''}${finalPortfolioReturn.toFixed(2)}%`;
+
+  const portfolioCardSecondary = displayIsNominal
+    ? `Return: ${finalPortfolioReturn > 0 ? '+' : ''}${finalPortfolioReturn.toFixed(2)}%`
+    : `Ending Equity: ${formatValue(finalPortfolioEquityDisplay)}`;
+
+  const hodlCardPrimary = displayIsNominal
+    ? formatValue(finalHodlDisplay)
+    : `${finalHodlReturn > 0 ? '+' : ''}${finalHodlReturn.toFixed(2)}%`;
+
+  const hodlCardSecondary = displayIsNominal
+    ? `Return: ${finalHodlReturn > 0 ? '+' : ''}${finalHodlReturn.toFixed(2)}%`
+    : `BTC Price: $${finalBtcPrice.toLocaleString()} (vs $${baselineBtcPrice.toLocaleString()} start)`;
 
   return (
     <>
       <div className="top-header">
         <div className="header-title">
           <h1>Wheel vs HODL BTC</h1>
-          <span className="last-updated">Benchmark: Buy & Hold BTC starting on {formatDate(firstDateStr)} (Baseline: 0%)</span>
+          <span className="last-updated">Benchmark: Buy &amp; Hold BTC starting on {formatDate(firstDateStr)} (Baseline: 0%)</span>
         </div>
 
-        <div className="time-toggles">
-          <button onClick={() => setDays('30')} className={`time-toggle ${days === '30' ? 'active' : ''}`}>30 days</button>
-          <button onClick={() => setDays('60')} className={`time-toggle ${days === '60' ? 'active' : ''}`}>60 days</button>
-          <button onClick={() => setDays('90')} className={`time-toggle ${days === '90' ? 'active' : ''}`}>90 days</button>
-          <button onClick={() => setDays('all')} className={`time-toggle ${days === 'all' ? 'active' : ''}`}>All time</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+          {/* View toggles */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <ToggleSwitch
+              labelLeft="BTC"
+              labelRight="USD"
+              isRight={currencyIsUSD}
+              onChange={setCurrencyIsUSD}
+            />
+            <div style={{ width: '1px', height: '20px', background: 'var(--border-color)' }} />
+            <ToggleSwitch
+              labelLeft="%"
+              labelRight="Nominal"
+              isRight={displayIsNominal}
+              onChange={setDisplayIsNominal}
+            />
+          </div>
+
+          {/* Time toggles */}
+          <div className="time-toggles">
+            <button onClick={() => setDays('30')} className={`time-toggle ${days === '30' ? 'active' : ''}`}>30 days</button>
+            <button onClick={() => setDays('60')} className={`time-toggle ${days === '60' ? 'active' : ''}`}>60 days</button>
+            <button onClick={() => setDays('90')} className={`time-toggle ${days === '90' ? 'active' : ''}`}>90 days</button>
+            <button onClick={() => setDays('all')} className={`time-toggle ${days === 'all' ? 'active' : ''}`}>All time</button>
+          </div>
         </div>
       </div>
 
@@ -291,10 +461,10 @@ export default function HodlPage() {
             <span>Theta Wheel Portfolio Return</span>
           </div>
           <div className="metric-value" style={{ fontSize: '2rem', fontWeight: 800, color: finalPortfolioReturn > 0 ? 'var(--success)' : finalPortfolioReturn < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
-            {finalPortfolioReturn > 0 ? '+' : ''}{finalPortfolioReturn.toFixed(2)}%
+            {portfolioCardPrimary}
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-            Ending Equity: {formatValue(finalPortfolioEquity)}
+            {portfolioCardSecondary}
           </div>
         </div>
 
@@ -303,10 +473,10 @@ export default function HodlPage() {
             <span>HODL BTC Return</span>
           </div>
           <div className="metric-value" style={{ fontSize: '2rem', fontWeight: 800, color: finalHodlReturn > 0 ? 'var(--success)' : finalHodlReturn < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
-            {finalHodlReturn > 0 ? '+' : ''}{finalHodlReturn.toFixed(2)}%
+            {hodlCardPrimary}
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-            BTC Price: ${finalBtcPrice.toLocaleString()} (vs ${baselineBtcPrice.toLocaleString()} start)
+            {hodlCardSecondary}
           </div>
         </div>
 
@@ -327,7 +497,7 @@ export default function HodlPage() {
       <div className="section" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
         <h2 className="section-title" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <TrendingUp size={20} color="var(--accent-primary)" />
-          Cumulative Returns Trend (%)
+          {chartTitle}
         </h2>
         <div style={{ width: '100%', height: '400px' }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -346,17 +516,24 @@ export default function HodlPage() {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `${value}%`}
+                tickFormatter={yAxisFormatter}
+                width={70}
               />
               <Tooltip 
                 contentStyle={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', borderRadius: '8px' }}
                 itemStyle={{ color: 'var(--text-primary)' }}
                 labelStyle={{ color: 'var(--text-muted)' }}
+                formatter={(value, name) => {
+                  const v = typeof value === 'number' ? value : 0;
+                  const n = String(name);
+                  if (displayIsNominal) return [`${displaySym}${v.toLocaleString(undefined, { minimumFractionDigits: displayPrecision, maximumFractionDigits: displayPrecision })}`, n];
+                  return [`${v.toFixed(2)}%`, n];
+                }}
               />
               <Legend verticalAlign="top" height={36} />
               <Line 
                 type="monotone" 
-                dataKey="Portfolio (%)" 
+                dataKey={portKey} 
                 stroke="var(--accent-primary)" 
                 strokeWidth={3}
                 dot={false}
@@ -364,7 +541,7 @@ export default function HodlPage() {
               />
               <Line 
                 type="monotone" 
-                dataKey="HODL BTC (%)" 
+                dataKey={hodlKey} 
                 stroke="var(--accent-secondary)" 
                 strokeWidth={3}
                 dot={false}
@@ -394,21 +571,21 @@ export default function HodlPage() {
             <tbody>
               <tr>
                 <td style={{ fontWeight: 600 }}>Theta Wheel Options Portfolio</td>
-                <td className="text-right">{formatValue(baselinePortEquity)}</td>
-                <td className="text-right">{formatValue(finalPortfolioEquity)}</td>
+                <td className="text-right">{formatValue(baselinePortEquityDisplay)}</td>
+                <td className="text-right">{formatValue(finalPortfolioEquityDisplay)}</td>
                 <td className="text-right" style={{ color: finalPortfolioReturn > 0 ? 'var(--success)' : finalPortfolioReturn < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
-                  {formatProfit(finalPortfolioEquity - baselinePortEquity)}
+                  {formatProfit(finalPortfolioEquityDisplay - baselinePortEquityDisplay)}
                 </td>
                 <td className="text-right" style={{ color: finalPortfolioReturn > 0 ? 'var(--success)' : finalPortfolioReturn < 0 ? 'var(--danger)' : 'var(--text-muted)', fontWeight: 700 }}>
                   {finalPortfolioReturn > 0 ? '+' : ''}{finalPortfolioReturn.toFixed(2)}%
                 </td>
               </tr>
               <tr>
-                <td style={{ fontWeight: 600 }}>Buy & Hold BTC (HODL)</td>
-                <td className="text-right">{formatValue(baselineHodlValue)}</td>
-                <td className="text-right">{formatValue(finalHodlValue)}</td>
+                <td style={{ fontWeight: 600 }}>Buy &amp; Hold BTC (HODL)</td>
+                <td className="text-right">{formatValue(baselineHodlDisplay)}</td>
+                <td className="text-right">{formatValue(finalHodlDisplay)}</td>
                 <td className="text-right" style={{ color: finalHodlReturn > 0 ? 'var(--success)' : finalHodlReturn < 0 ? 'var(--danger)' : 'var(--text-muted)' }}>
-                  {formatProfit(hodlProfit)}
+                  {formatProfit(finalHodlDisplay - baselineHodlDisplay)}
                 </td>
                 <td className="text-right" style={{ color: finalHodlReturn > 0 ? 'var(--success)' : finalHodlReturn < 0 ? 'var(--danger)' : 'var(--text-muted)', fontWeight: 700 }}>
                   {finalHodlReturn > 0 ? '+' : ''}{finalHodlReturn.toFixed(2)}%
