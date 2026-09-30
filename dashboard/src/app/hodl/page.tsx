@@ -13,9 +13,10 @@ interface ToggleSwitchProps {
   labelRight: string;
   isRight: boolean;
   onChange: (isRight: boolean) => void;
+  color: string;
 }
 
-function ToggleSwitch({ labelLeft, labelRight, isRight, onChange }: ToggleSwitchProps) {
+function ToggleSwitch({ labelLeft, labelRight, isRight, onChange, color }: ToggleSwitchProps) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
       <span
@@ -38,7 +39,7 @@ function ToggleSwitch({ labelLeft, labelRight, isRight, onChange }: ToggleSwitch
           width: '44px',
           height: '24px',
           borderRadius: '12px',
-          background: isRight ? 'var(--accent-secondary)' : 'var(--accent-primary)',
+          background: color,
           border: 'none',
           cursor: 'pointer',
           transition: 'background 0.25s',
@@ -343,6 +344,7 @@ export default function HodlPage() {
               labelRight="USD"
               isRight={currencyIsUSD}
               onChange={setCurrencyIsUSD}
+              color="#f59e0b"
             />
             <div style={{ width: '1px', height: '20px', background: 'var(--border-color)' }} />
             <ToggleSwitch
@@ -350,6 +352,7 @@ export default function HodlPage() {
               labelRight="Nominal"
               isRight={displayIsNominal}
               onChange={setDisplayIsNominal}
+              color="#8b5cf6"
             />
           </div>
 
