@@ -249,11 +249,12 @@ export default function HodlPage() {
   const baselineHodlDisplay = toDisplay(baselineHodlValueBtc, baselineBtcPrice);
   const finalHodlDisplay = toDisplay(finalHodlValueBtc, finalBtcPrice);
 
-  // Return percentages (independent of currency toggle — percentages are always relative)
-  const finalPortfolioReturn = ((finalPortfolioEquityBtc - baselinePortEquityBtc) / baselinePortEquityBtc) * 100;
-  const finalHodlReturn = isBtcSettlement
-    ? (currencyIsUSD ? ((finalBtcPrice - baselineBtcPrice) / baselineBtcPrice) * 100 : 0)
-    : ((finalHodlValueBtc - totalInitialBudget) / totalInitialBudget) * 100;
+  // Return percentages — always computed in the active display currency so both lines are comparable.
+  // In BTC mode: display values == BTC values → same result as before.
+  // In USD mode: display values are BTC-denominated equity × daily BTC price, so portfolio
+  //   and HODL returns both reflect USD-denominated performance.
+  const finalPortfolioReturn = ((finalPortfolioEquityDisplay - baselinePortEquityDisplay) / baselinePortEquityDisplay) * 100;
+  const finalHodlReturn = ((finalHodlDisplay - baselineHodlDisplay) / baselineHodlDisplay) * 100;
 
   const outperforming = finalPortfolioReturn > finalHodlReturn;
   const underperforming = finalPortfolioReturn < finalHodlReturn;
