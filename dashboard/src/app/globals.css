@@ -580,3 +580,157 @@ tr:hover td {
   transform: scale(1.25);
   background: var(--accent-secondary);
 }
+
+/* ─── Mobile bottom navigation bar ──────────────────────────────────────── */
+
+.mobile-nav {
+  display: none;
+}
+
+/* ─── Responsive: ≤ 768px ────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* Hide desktop sidebar */
+  .sidebar {
+    display: none;
+  }
+
+  /* Main content: full width, safe bottom padding for tab bar */
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1.25rem 1rem 5.5rem;
+    gap: 1.25rem;
+  }
+
+  /* Header: stack vertically */
+  .top-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .header-title h1 {
+    font-size: 1.35rem;
+  }
+
+  /* Time toggles: smaller padding so they fit */
+  .time-toggle {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  /* Cards: reduce padding */
+  .section {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .chart-card {
+    padding: 1rem;
+  }
+
+  .metric-card {
+    padding: 1.25rem;
+  }
+
+  /* Tables: compact cells, allow horizontal scroll */
+  .table-container {
+    border-radius: 12px;
+  }
+
+  th, td {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.8rem;
+  }
+
+  /* Charts grid: single column */
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Show mobile bottom nav */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--bg-sidebar);
+    border-top: 1px solid var(--border-color);
+    padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom));
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .mobile-nav-item svg {
+    flex-shrink: 0;
+  }
+
+  .mobile-nav-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--accent-secondary);
+  }
+
+  /* HODL page: stack header controls on mobile */
+  .hodl-controls {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    width: 100%;
+  }
+
+  /* Summary grid: 2 columns on mobile, 1 if very narrow */
+  .grid-summary {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 1rem 0.75rem 5.5rem;
+  }
+
+  .header-title h1 {
+    font-size: 1.2rem;
+  }
+
+  /* Single column on very small screens */
+  .grid-summary {
+    grid-template-columns: 1fr !important;
+  }
+
+  th, td {
+    padding: 0.6rem 0.625rem;
+    font-size: 0.75rem;
+  }
+}

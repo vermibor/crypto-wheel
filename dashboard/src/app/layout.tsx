@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description: 'Trading dashboard inspired by TraderVue',
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
+
 export default function RootLayout({
   children,
 }: {

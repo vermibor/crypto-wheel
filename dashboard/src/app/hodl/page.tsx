@@ -336,7 +336,7 @@ export default function HodlPage() {
           <span className="last-updated">Benchmark: Buy &amp; Hold BTC starting on {formatDate(firstDateStr)} (Baseline: 0%)</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div className="hodl-controls" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
           {/* View toggles */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <ToggleSwitch
