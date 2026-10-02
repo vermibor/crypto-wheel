@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-01T08:15:09Z",
-  "btc_price": 83354.89,
+  "generated_at": "2026-10-02T08:18:33Z",
+  "btc_price": 86388.87,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -68,45 +68,45 @@
     "aggressive": {
       "summary": {
         "initial_budget": 0.1,
-        "current_cash": 0.1077,
-        "equity": 0.1059,
-        "total_return_pct": 5.93,
-        "drawdown_pct": 1.67,
+        "current_cash": 0.1008,
+        "equity": 0.0992,
+        "total_return_pct": -0.85,
+        "drawdown_pct": 7.96,
         "high_water_mark": 0.1077,
-        "phase": "selling_calls",
-        "total_trades": 11,
-        "puts_sold": 5,
+        "phase": "selling_puts",
+        "total_trades": 13,
+        "puts_sold": 6,
         "calls_sold": 1,
-        "assignments": 1,
+        "assignments": 2,
         "expired_otm": 4,
-        "total_premium": 0.0094,
-        "total_pnl": 0.0059,
-        "win_rate_pct": 100.0,
+        "total_premium": 0.011,
+        "total_pnl": -0.0008,
+        "win_rate_pct": 83.3,
         "active_option": {
-          "symbol": "BTC/USD:BTC-261002-79000-C",
-          "strike": 79000.0,
-          "expiry": 1790928000000,
-          "option_type": "call",
+          "symbol": "BTC/USD:BTC-261016-85000-P",
+          "strike": 85000.0,
+          "expiry": 1792137600000,
+          "option_type": "put",
           "size_btc": 0.1,
-          "entry_premium": 0.0018,
-          "entry_price": 0.018
+          "entry_premium": 0.0016500000000000002,
+          "entry_price": 0.0165
         },
         "active_future": null
       },
       "risk": {
-        "sharpe_ratio": 28.3726,
-        "sortino_ratio": null,
-        "calmar_ratio": null,
-        "profit_factor": 99.0,
-        "expectancy": 0.00118597,
-        "max_drawdown_pct": 0.0,
-        "current_drawdown_pct": 0.0,
+        "sharpe_ratio": -0.6797,
+        "sortino_ratio": -0.7411,
+        "calmar_ratio": -5.2614,
+        "profit_factor": 0.8747,
+        "expectancy": -0.00014154,
+        "max_drawdown_pct": 114.32,
+        "current_drawdown_pct": 114.32,
         "avg_win": 0.00118597,
-        "avg_loss": null,
+        "avg_loss": -0.0067791,
         "largest_win": 0.00175,
-        "largest_loss": null,
+        "largest_loss": -0.0067791,
         "max_consecutive_wins": 5,
-        "max_consecutive_losses": 0
+        "max_consecutive_losses": 1
       },
       "trades": [
         {
@@ -262,6 +262,34 @@
           "realized_pnl": null,
           "btc_price": 77740.5,
           "notes": "Opened covered call"
+        },
+        {
+          "timestamp": "2026-10-02T08:16:19.942156+00:00",
+          "action": "call_assigned",
+          "symbol": "BTC/USD:BTC-261002-79000-C",
+          "strike": 79000.0,
+          "delta": 0.0,
+          "dte": 0.0,
+          "amount_btc": 0.1,
+          "premium": null,
+          "pnl": -0.008579099330544416,
+          "realized_pnl": -0.006779099330544417,
+          "btc_price": 86413.5,
+          "notes": "Call assigned. Paid 0.0086 BTC settlement."
+        },
+        {
+          "timestamp": "2026-10-02T08:17:27.307116+00:00",
+          "action": "sell_put",
+          "symbol": "BTC/USD:BTC-261016-85000-P",
+          "strike": 85000.0,
+          "delta": -0.37525,
+          "dte": 14.0,
+          "amount_btc": 0.1,
+          "premium": 0.0016500000000000002,
+          "pnl": null,
+          "realized_pnl": null,
+          "btc_price": 86413.5,
+          "notes": "Opened CSP"
         }
       ],
       "cashflow": [
@@ -352,6 +380,22 @@
           "pnl": 0,
           "cash_after": 0.1077,
           "notes": "Opened covered call"
+        },
+        {
+          "timestamp": "2026-10-02T08:16:19.942156+00:00",
+          "action": "call_assigned",
+          "premium": 0,
+          "pnl": -0.008579099330544416,
+          "cash_after": 0.0992,
+          "notes": "Call assigned. Paid 0.0086 BTC settlement."
+        },
+        {
+          "timestamp": "2026-10-02T08:17:27.307116+00:00",
+          "action": "sell_put",
+          "premium": 0.0016500000000000002,
+          "pnl": 0,
+          "cash_after": 0.1008,
+          "notes": "Opened CSP"
         }
       ],
       "daily_pnl": [
@@ -390,6 +434,12 @@
           "pnl": 7.987e-05,
           "trades": 2,
           "equity": 0.1059
+        },
+        {
+          "date": "2026-10-02",
+          "pnl": -0.0067791,
+          "trades": 2,
+          "equity": 0.0992
         }
       ]
     },
@@ -786,40 +836,40 @@
     "daily": {
       "summary": {
         "initial_budget": 0.1,
-        "current_cash": 0.0934,
-        "equity": 0.0925,
-        "total_return_pct": -7.52,
-        "drawdown_pct": 8.21,
+        "current_cash": 0.0941,
+        "equity": 0.0934,
+        "total_return_pct": -6.62,
+        "drawdown_pct": 7.32,
         "high_water_mark": 0.1008,
         "phase": "selling_puts",
-        "total_trades": 69,
-        "puts_sold": 14,
+        "total_trades": 71,
+        "puts_sold": 15,
         "calls_sold": 21,
         "assignments": 18,
-        "expired_otm": 16,
-        "total_premium": 0.0303,
-        "total_pnl": -0.0075,
-        "win_rate_pct": 61.8,
+        "expired_otm": 17,
+        "total_premium": 0.031,
+        "total_pnl": -0.0066,
+        "win_rate_pct": 62.9,
         "active_option": {
-          "symbol": "BTC/USD:BTC-261002-83000-P",
-          "strike": 83000.0,
-          "expiry": 1790928000000,
+          "symbol": "BTC/USD:BTC-261004-86500-P",
+          "strike": 86500.0,
+          "expiry": 1791100800000,
           "option_type": "put",
           "size_btc": 0.1,
-          "entry_premium": 0.0009,
-          "entry_price": 0.009
+          "entry_premium": 0.00075,
+          "entry_price": 0.0075
         },
         "active_future": null
       },
       "risk": {
-        "sharpe_ratio": -1.7631,
-        "sortino_ratio": -1.8676,
-        "calmar_ratio": -4.9078,
-        "profit_factor": 0.6894,
-        "expectancy": -0.00022122,
+        "sharpe_ratio": -1.5234,
+        "sortino_ratio": -1.6212,
+        "calmar_ratio": -4.1971,
+        "profit_factor": 0.7266,
+        "expectancy": -0.00018919,
         "max_drawdown_pct": 0.0,
         "current_drawdown_pct": 0.0,
-        "avg_win": 0.00079511,
+        "avg_win": 0.00079988,
         "avg_loss": -0.00186299,
         "largest_win": 0.0015,
         "largest_loss": -0.00921631,
@@ -1792,6 +1842,34 @@
           "realized_pnl": null,
           "btc_price": 83074.0,
           "notes": "Opened CSP"
+        },
+        {
+          "timestamp": "2026-10-02T08:17:27.386477+00:00",
+          "action": "put_expired_otm",
+          "symbol": "BTC/USD:BTC-261002-83000-P",
+          "strike": 83000.0,
+          "delta": 0.0,
+          "dte": 0.0,
+          "amount_btc": 0.1,
+          "premium": null,
+          "pnl": null,
+          "realized_pnl": 0.0009,
+          "btc_price": 86570.5,
+          "notes": "Put expired worthless. Premium retained."
+        },
+        {
+          "timestamp": "2026-10-02T08:18:31.927691+00:00",
+          "action": "sell_put",
+          "symbol": "BTC/USD:BTC-261004-86500-P",
+          "strike": 86500.0,
+          "delta": -0.48536,
+          "dte": 2.0,
+          "amount_btc": 0.1,
+          "premium": 0.00075,
+          "pnl": null,
+          "realized_pnl": null,
+          "btc_price": 86570.5,
+          "notes": "Opened CSP"
         }
       ],
       "cashflow": [
@@ -2346,6 +2424,22 @@
           "pnl": 0,
           "cash_after": 0.0934,
           "notes": "Opened CSP"
+        },
+        {
+          "timestamp": "2026-10-02T08:17:27.386477+00:00",
+          "action": "put_expired_otm",
+          "premium": 0,
+          "pnl": 0,
+          "cash_after": 0.0934,
+          "notes": "Put expired worthless. Premium retained."
+        },
+        {
+          "timestamp": "2026-10-02T08:18:31.927691+00:00",
+          "action": "sell_put",
+          "premium": 0.00075,
+          "pnl": 0,
+          "cash_after": 0.0941,
+          "notes": "Opened CSP"
         }
       ],
       "daily_pnl": [
@@ -2576,46 +2670,52 @@
           "pnl": 0.00091092,
           "trades": 2,
           "equity": 0.0925
+        },
+        {
+          "date": "2026-10-02",
+          "pnl": 0.0009,
+          "trades": 2,
+          "equity": 0.0934
         }
       ]
     },
     "moderate": {
       "summary": {
         "initial_budget": 0.1,
-        "current_cash": 0.1071,
-        "equity": 0.106,
-        "total_return_pct": 5.97,
-        "drawdown_pct": 1.03,
-        "high_water_mark": 0.1071,
+        "current_cash": 0.108,
+        "equity": 0.1068,
+        "total_return_pct": 6.81,
+        "drawdown_pct": 1.11,
+        "high_water_mark": 0.108,
         "phase": "selling_puts",
-        "total_trades": 21,
-        "puts_sold": 11,
+        "total_trades": 23,
+        "puts_sold": 12,
         "calls_sold": 0,
         "assignments": 0,
         "expired_otm": 0,
-        "total_premium": 0.0071,
-        "total_pnl": 0.006,
-        "win_rate_pct": 90.0,
+        "total_premium": 0.008,
+        "total_pnl": 0.0068,
+        "win_rate_pct": 90.9,
         "active_option": {
-          "symbol": "BTC/USD:BTC-261009-81000-P",
-          "strike": 81000.0,
-          "expiry": 1791532800000,
+          "symbol": "BTC/USD:BTC-261023-82000-P",
+          "strike": 82000.0,
+          "expiry": 1792742400000,
           "option_type": "put",
           "size_btc": 0.1,
-          "entry_premium": 0.0011,
-          "entry_price": 0.011
+          "entry_premium": 0.0012000000000000001,
+          "entry_price": 0.012
         },
         "active_future": null
       },
       "risk": {
-        "sharpe_ratio": 14.4782,
-        "sortino_ratio": 24.3002,
-        "calmar_ratio": 128.5846,
-        "profit_factor": 6.1026,
-        "expectancy": 0.000597,
-        "max_drawdown_pct": 19.6,
+        "sharpe_ratio": 15.7171,
+        "sortino_ratio": 26.5625,
+        "calmar_ratio": 133.3427,
+        "profit_factor": 6.8205,
+        "expectancy": 0.00061909,
+        "max_drawdown_pct": 17.18,
         "current_drawdown_pct": 0.0,
-        "avg_win": 0.00079333,
+        "avg_win": 0.000798,
         "avg_loss": -0.00117,
         "largest_win": 0.00123,
         "largest_loss": -0.00117,
@@ -2916,6 +3016,34 @@
           "realized_pnl": null,
           "btc_price": 85491.5,
           "notes": "Opened CSP"
+        },
+        {
+          "timestamp": "2026-10-02T08:15:10.778659+00:00",
+          "action": "put_closed_tp",
+          "symbol": "BTC/USD:BTC-261009-81000-P",
+          "strike": 81000.0,
+          "delta": 0.0,
+          "dte": 0.0,
+          "amount_btc": 0.1,
+          "premium": -0.00026,
+          "pnl": 0.00084,
+          "realized_pnl": 0.00084,
+          "btc_price": 86314.5,
+          "notes": "Take profit at 78.2%"
+        },
+        {
+          "timestamp": "2026-10-02T08:16:19.862294+00:00",
+          "action": "sell_put",
+          "symbol": "BTC/USD:BTC-261023-82000-P",
+          "strike": 82000.0,
+          "delta": -0.24449,
+          "dte": 21.0,
+          "amount_btc": 0.1,
+          "premium": 0.0012000000000000001,
+          "pnl": null,
+          "realized_pnl": null,
+          "btc_price": 86314.5,
+          "notes": "Opened CSP"
         }
       ],
       "cashflow": [
@@ -3086,6 +3214,22 @@
           "pnl": 0,
           "cash_after": 0.1071,
           "notes": "Opened CSP"
+        },
+        {
+          "timestamp": "2026-10-02T08:15:10.778659+00:00",
+          "action": "put_closed_tp",
+          "premium": -0.00026,
+          "pnl": 0.00084,
+          "cash_after": 0.1068,
+          "notes": "Take profit at 78.2%"
+        },
+        {
+          "timestamp": "2026-10-02T08:16:19.862294+00:00",
+          "action": "sell_put",
+          "premium": 0.0012000000000000001,
+          "pnl": 0,
+          "cash_after": 0.108,
+          "notes": "Opened CSP"
         }
       ],
       "daily_pnl": [
@@ -3160,20 +3304,22 @@
           "pnl": 0.00054,
           "trades": 2,
           "equity": 0.106
+        },
+        {
+          "date": "2026-10-02",
+          "pnl": 0.00084,
+          "trades": 2,
+          "equity": 0.1068
         }
       ]
     }
   },
   "hodl": {
-    "start_date": "2026-07-03",
-    "start_price": 62528.15,
-    "current_price": 83354.89,
-    "return_pct": 33.31,
+    "start_date": "2026-07-04",
+    "start_price": 63131.96,
+    "current_price": 86388.87,
+    "return_pct": 36.84,
     "prices": [
-      {
-        "date": "2026-07-03",
-        "price": 62528.15
-      },
       {
         "date": "2026-07-04",
         "price": 63131.96
@@ -3532,97 +3678,23 @@
       },
       {
         "date": "2026-10-01",
-        "price": 83354.89
+        "price": 84688.47
+      },
+      {
+        "date": "2026-10-02",
+        "price": 86388.87
       }
     ]
   },
   "portfolio": {
-    "total_equity": 0.4081,
+    "total_equity": 0.4031,
     "total_initial": 0.4,
-    "total_return_pct": 2.02,
-    "total_premium_collected": 0.0513,
-    "total_realized_pnl": 0.0081,
-    "total_trades": 114
+    "total_return_pct": 0.77,
+    "total_premium_collected": 0.0545,
+    "total_realized_pnl": 0.0031,
+    "total_trades": 120
   },
   "logs": [
-    {
-      "timestamp": "2026-09-02T10:15:10",
-      "level": "INFO",
-      "message": "BTC=77422 | Cash=0.1026 | Phase=selling_puts | Equity=0.1026",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-09-02T10:15:10",
-      "level": "INFO",
-      "message": "Risk check: All risk checks passed.",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "WARNING",
-      "message": "No suitable put found.",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "END: Equity=0.1026 | Cash=0.1026 | DD=0.4% | Trades=8",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "BTC=77414 | Cash=0.1053 | Phase=selling_puts | Equity=0.1053",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "END: Equity=0.1053 | Cash=0.1053 | DD=0.0% | Trades=15",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "BTC=77414 | Cash=0.1059 | Phase=selling_puts | Equity=0.1059",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "END: Equity=0.1059 | Cash=0.1059 | DD=0.0% | Trades=7",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "BTC=77414 | Cash=0.0942 | Phase=selling_puts | Equity=0.0942",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:16",
-      "level": "INFO",
-      "message": "PUT ASSIGNED: BTC 77414 <= strike 78000.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-09-02T10:16:17",
-      "level": "INFO",
-      "message": "Risk check: All risk checks passed.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-09-02T10:17:23",
-      "level": "INFO",
-      "message": "Selling CALL BTC/USD:BTC-260904-77500-C | strike=77500 delta=0.487 dte=2.0",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-09-02T10:17:24",
-      "level": "INFO",
-      "message": "END: Equity=0.0942 | Cash=0.0942 | DD=6.5% | Trades=41",
-      "strategy": "daily"
-    },
     {
       "timestamp": "2026-09-03T10:15:10",
       "level": "INFO",
@@ -5548,17 +5620,111 @@
       "level": "INFO",
       "message": "END: Equity=0.0934 | Cash=0.0934 | DD=7.3% | Trades=69",
       "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-10-02T10:15:10",
+      "level": "INFO",
+      "message": "BTC=86314 | Cash=0.1045 | Phase=selling_puts | Equity=0.1045",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-10-02T10:15:10",
+      "level": "INFO",
+      "message": "END: Equity=0.1045 | Cash=0.1045 | DD=0.0% | Trades=13",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-10-02T10:15:10",
+      "level": "INFO",
+      "message": "BTC=86314 | Cash=0.1071 | Phase=selling_puts | Equity=0.1071",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-10-02T10:15:10",
+      "level": "INFO",
+      "message": "TAKE PROFIT triggered at 78.2% (target: 50%)",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-10-02T10:15:10",
+      "level": "INFO",
+      "message": "Risk check: All risk checks passed.",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-10-02T10:16:19",
+      "level": "INFO",
+      "message": "Selling PUT BTC/USD:BTC-261023-82000-P | strike=82000 delta=-0.244 dte=21.0",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-10-02T10:16:19",
+      "level": "INFO",
+      "message": "END: Equity=0.1080 | Cash=0.1080 | DD=0.0% | Trades=23",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-10-02T10:16:19",
+      "level": "INFO",
+      "message": "BTC=86414 | Cash=0.1077 | Phase=selling_calls | Equity=0.1077",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-10-02T10:16:19",
+      "level": "INFO",
+      "message": "CALL ASSIGNED: BTC 86414 >= strike 79000.",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-10-02T10:16:20",
+      "level": "INFO",
+      "message": "Risk check: All risk checks passed.",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-10-02T10:17:26",
+      "level": "INFO",
+      "message": "Selling PUT BTC/USD:BTC-261016-85000-P | strike=85000 delta=-0.375 dte=14.0",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-10-02T10:17:27",
+      "level": "INFO",
+      "message": "END: Equity=0.1008 | Cash=0.1008 | DD=6.4% | Trades=13",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-10-02T10:17:27",
+      "level": "INFO",
+      "message": "BTC=86570 | Cash=0.0934 | Phase=selling_puts | Equity=0.0934",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-10-02T10:17:27",
+      "level": "INFO",
+      "message": "PUT EXPIRED OTM: BTC 86570 > strike 83000. Premium kept.",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-10-02T10:17:27",
+      "level": "INFO",
+      "message": "Risk check: All risk checks passed.",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-10-02T10:18:31",
+      "level": "INFO",
+      "message": "Selling PUT BTC/USD:BTC-261004-86500-P | strike=86500 delta=-0.485 dte=2.0",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-10-02T10:18:31",
+      "level": "INFO",
+      "message": "END: Equity=0.0941 | Cash=0.0941 | DD=6.6% | Trades=71",
+      "strategy": "daily"
     }
   ],
   "daily_snapshots": [
-    {
-      "date": "2026-09-02",
-      "btc_price": 77422.0,
-      "strategies_run": 4,
-      "trades_executed": 2,
-      "risk_filter_blocks": 0,
-      "risk_filter_reasons": []
-    },
     {
       "date": "2026-09-03",
       "btc_price": 77901.0,
@@ -5788,6 +5954,14 @@
       "btc_price": 84279.0,
       "strategies_run": 4,
       "trades_executed": 0,
+      "risk_filter_blocks": 0,
+      "risk_filter_reasons": []
+    },
+    {
+      "date": "2026-10-02",
+      "btc_price": 86314.5,
+      "strategies_run": 4,
+      "trades_executed": 5,
       "risk_filter_blocks": 0,
       "risk_filter_reasons": []
     }
