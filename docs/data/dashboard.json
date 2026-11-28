@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-27T09:15:14Z",
-  "btc_price": 61674.52,
+  "generated_at": "2026-11-28T09:15:09Z",
+  "btc_price": 59568.21,
   "settlement": "BTC",
   "config": {
     "global": {
@@ -4001,15 +4001,11 @@
     }
   },
   "hodl": {
-    "start_date": "2026-08-29",
-    "start_price": 78221.79,
-    "current_price": 61674.52,
-    "return_pct": -21.15,
+    "start_date": "2026-08-30",
+    "start_price": 78415.92,
+    "current_price": 59568.21,
+    "return_pct": -24.04,
     "prices": [
-      {
-        "date": "2026-08-29",
-        "price": 78221.79
-      },
       {
         "date": "2026-08-30",
         "price": 78415.92
@@ -4368,7 +4364,11 @@
       },
       {
         "date": "2026-11-27",
-        "price": 61674.52
+        "price": 59705.96
+      },
+      {
+        "date": "2026-11-28",
+        "price": 59568.21
       }
     ]
   },
@@ -4381,60 +4381,6 @@
     "total_trades": 148
   },
   "logs": [
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "BTC=80126 | Cash=0.1052 | Phase=selling_puts | Equity=0.1052",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1052 | Cash=0.1052 | DD=0.0% | Trades=15",
-      "strategy": "conservative"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "BTC=80126 | Cash=0.1088 | Phase=selling_puts | Equity=0.1088",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "END: Equity=0.1088 | Cash=0.1088 | DD=0.0% | Trades=25",
-      "strategy": "moderate"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "BTC=80126 | Cash=0.0990 | Phase=selling_calls | Equity=0.0990",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "END: Equity=0.0990 | Cash=0.0990 | DD=8.1% | Trades=15",
-      "strategy": "aggressive"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "BTC=80126 | Cash=0.0943 | Phase=selling_calls | Equity=0.0943",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "Risk check: BTC 80126 < SMA50 81927. Trend filter blocks new puts.",
-      "strategy": "daily"
-    },
-    {
-      "timestamp": "2026-10-29T10:15:09",
-      "level": "INFO",
-      "message": "END: Equity=0.0943 | Cash=0.0943 | DD=6.4% | Trades=90",
-      "strategy": "daily"
-    },
     {
       "timestamp": "2026-10-30T10:15:08",
       "level": "INFO",
@@ -6630,19 +6576,91 @@
       "level": "INFO",
       "message": "END: Equity=0.0943 | Cash=0.0943 | DD=6.4% | Trades=90",
       "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "INFO",
+      "message": "BTC=59548 | Cash=0.1027 | Phase=selling_puts | Equity=0.1027",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "INFO",
+      "message": "Risk check: BTC 59548 < SMA50 73701. Trend filter blocks new puts.",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "INFO",
+      "message": "END: Equity=0.1027 | Cash=0.1027 | DD=2.4% | Trades=16",
+      "strategy": "conservative"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "INFO",
+      "message": "BTC=59548 | Cash=0.1055 | Phase=selling_puts | Equity=0.1055",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "INFO",
+      "message": "Risk check: BTC 59548 < SMA50 73701. Trend filter blocks new puts.",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "INFO",
+      "message": "END: Equity=0.1055 | Cash=0.1055 | DD=3.0% | Trades=26",
+      "strategy": "moderate"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:04",
+      "level": "WARNING",
+      "message": "Exchange call fetch_ticker failed (attempt 1/5). Retrying in 2.0s... Error: deribit {\"jsonrpc\":\"2.0\",\"error\":{\"code\":10028,\"message\":\"too_many_requests\"},\"testnet\":true,\"usIn\":1795857304860762,\"usOut\":1795857304860833,\"usDiff\":71}"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:06",
+      "level": "INFO",
+      "message": "BTC=59544 | Cash=0.0990 | Phase=selling_calls | Equity=0.0990",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:07",
+      "level": "INFO",
+      "message": "Risk check: BTC 59544 < SMA50 73701. Trend filter blocks new puts.",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:07",
+      "level": "INFO",
+      "message": "END: Equity=0.0990 | Cash=0.0990 | DD=8.1% | Trades=16",
+      "strategy": "aggressive"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:07",
+      "level": "WARNING",
+      "message": "Exchange call fetch_ticker failed (attempt 1/5). Retrying in 2.0s... Error: deribit {\"jsonrpc\":\"2.0\",\"error\":{\"code\":10028,\"message\":\"too_many_requests\"},\"testnet\":true,\"usIn\":1795857307098544,\"usOut\":1795857307098634,\"usDiff\":90}"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:09",
+      "level": "INFO",
+      "message": "BTC=59544 | Cash=0.0943 | Phase=selling_calls | Equity=0.0943",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:09",
+      "level": "INFO",
+      "message": "Risk check: BTC 59544 < SMA50 73701. Trend filter blocks new puts.",
+      "strategy": "daily"
+    },
+    {
+      "timestamp": "2026-11-28T10:15:09",
+      "level": "INFO",
+      "message": "END: Equity=0.0943 | Cash=0.0943 | DD=6.4% | Trades=90",
+      "strategy": "daily"
     }
   ],
   "daily_snapshots": [
-    {
-      "date": "2026-10-29",
-      "btc_price": 80126.0,
-      "strategies_run": 4,
-      "trades_executed": 0,
-      "risk_filter_blocks": 1,
-      "risk_filter_reasons": [
-        "BTC 80126 < SMA50 81927"
-      ]
-    },
     {
       "date": "2026-10-30",
       "btc_price": 77661.0,
@@ -6950,6 +6968,17 @@
       "risk_filter_blocks": 4,
       "risk_filter_reasons": [
         "BTC 61460 < SMA50 74199"
+      ]
+    },
+    {
+      "date": "2026-11-28",
+      "btc_price": 59547.5,
+      "strategies_run": 4,
+      "trades_executed": 0,
+      "risk_filter_blocks": 4,
+      "risk_filter_reasons": [
+        "BTC 59544 < SMA50 73701",
+        "BTC 59548 < SMA50 73701"
       ]
     }
   ]
